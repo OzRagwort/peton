@@ -29,8 +29,10 @@ dependencies:
   cupertino_icons: ^1.0.1
   dio: ^3.0.9
   json_annotation: ^3.1.1
-  googleapis: ^0.56.1
-  youtube_player_flutter: ^7.0.0+6
+  flutter_inappwebview: ^4.0.0+4
+#  youtube_player_iframe: ^1.1.0
+#  youtube_player_flutter: ^7.0.0+6
+#  googleapis: ^0.56.1
 
 dev_dependencies:
   flutter_test:
