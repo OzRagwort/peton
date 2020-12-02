@@ -3,8 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:peton/youtube_player_iframe/src/enums/playback_quality.dart';
-import 'package:peton/youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 ///
 class PlayPauseButtonBar extends StatelessWidget {

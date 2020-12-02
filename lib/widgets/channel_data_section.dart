@@ -1,8 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:peton/model/Channels.dart';
-import 'package:peton/model/VideosResponse.dart';
-import 'package:peton/youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 import 'line.dart';
 
