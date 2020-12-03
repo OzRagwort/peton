@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:peton/Server.dart';
 
+import 'model/VideosResponse.dart';
 import 'widgets/line.dart';
 import 'widgets/cards.dart';
 
@@ -17,18 +18,39 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  List<String> myList = <String>['Item1','Item2','Item3','Item4','Item5'];
-  List<String> addList = <String>['Add1','Add2','Add3','Add4','Add5'];
+  List<VideosResponse> myList;
+  // List<String> addList = <String>['Add1','Add2','Add3','Add4','Add5'];
 
   RefreshController _refreshController =
   RefreshController(initialRefresh: false);
+
+  void _setup() async {
+
+
+    FutureBuilder(
+      future: server.getReq('RGsIiuf-6Zg'),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        // myList.add(snapshot.data);
+        setState(() {
+          myList.add(snapshot.data);
+        });
+        return snapshot.data;
+      },
+    );
+
+    // setState(() {});
+  }
 
   void _onRefresh() async{
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use refreshFailed()
 
-    myList = <String>['Item1','Item2','Item3','Item4','Item5'];
     setState(() {});
 
     _refreshController.refreshCompleted();
@@ -38,7 +60,22 @@ class _HomePageState extends State<HomePage> {
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use loadFailed(),if no data return,use LoadNodata()
-    myList.addAll(addList);
+    // myList.addAll(addList);
+
+    await FutureBuilder(
+      future: server.getReq('RGsIiuf-6Zg'),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        myList.add(snapshot.data);
+        setState(() {});
+        return null;
+      },
+    );
+
     if(mounted)
       setState(() {
 
@@ -50,6 +87,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
 
     double width = MediaQuery.of(context).size.width;
+
+    log('start');
+    _setup();
 
     // 썸네일, 제목, 채널, 시간, 채널썸네일, 보관함여부
 
@@ -93,19 +133,22 @@ class _HomePageState extends State<HomePage> {
         onRefresh: _onRefresh,
         onLoading: _onLoading,
         child: ListView.builder(
-            itemCount: myList?.length+1,
+            // itemCount: myList?.length+1,
+            itemCount: 10,
             itemBuilder: (context, index) {
               log(index.toString());
-              if(myList.length == index) {
-                return RaisedButton(
-                    onPressed: () {
-                      myList.add('value');
-                      setState(() {});
-                    }
-                );
+              // if(myList.length == index) {
+              //   return RaisedButton(
+              //       onPressed: () {
+              //         myList.add('value');
+              //         setState(() {});
+              //       }
+              //   );
+              // }
+              if (myList.length != 0){
+                return videoCard(myList[index], width);
               }
-              return videoCard(width);
-              // return Text(myList[index]);
+              return Text(myList[index].videoName);
             }
         ),
       )
