@@ -113,5 +113,5 @@ Widget homeCardMetadata(String thumbnail, String title, int viewCount, String pu
         ],
       ),
     ],
-  ),
+  );
 }

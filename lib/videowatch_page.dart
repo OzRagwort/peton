@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:peton/model/VideosResponse.dart';
+import 'package:peton/widgets/line.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 import 'widgets/video_data_section.dart';
@@ -153,7 +154,24 @@ class Controls extends StatelessWidget {
         future: server.updateAndCall(videoId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            // return CircularProgressIndicator();
+            return Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  space,
+                  VideoDataSection(videoName: snapshot.data.videoName, viewCount: snapshot.data.viewCount, videoPublishedDate: snapshot.data.videoPublishedDate,),
+                  divline,
+                  ChannelDataSection(channelName: snapshot.data.channels.channelName, channelThumbnail: snapshot.data.channels.channelThumbnail, subscribers: snapshot.data.channels.subscribers,),
+                  divline,
+                  PlayPauseButtonBar(),
+                  space,
+                  VolumeSlider(),
+                  space,
+                  PlayerStateSection(),
+                ],
+              ),
+            );
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
@@ -162,15 +180,15 @@ class Controls extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _space,
-                VideoDataSection(videoName: snapshot.data.videoName, viewCount: snapshot.data.viewCount, videoPublishedDate: snapshot.data.videoPublishedDate,),
-                _divline,
-                ChannelDataSection(channelName: snapshot.data.channels.channelName, channelThumbnail: snapshot.data.channels.channelThumbnail, subscribers: snapshot.data.channels.subscribers,),
-                _divline,
+                space,
+                VideoDataSection(videoName: '', viewCount: 0, videoPublishedDate: '',),
+                divline,
+                ChannelDataSection(channelName: '', channelThumbnail: '', subscribers: 0,),
+                divline,
                 PlayPauseButtonBar(),
-                _space,
+                space,
                 VolumeSlider(),
-                _space,
+                space,
                 PlayerStateSection(),
               ],
             ),
@@ -179,12 +197,6 @@ class Controls extends StatelessWidget {
       );
 
   }
-
-  Widget get _space => const SizedBox(height: 10);
-
-  Widget get _divline => const Divider(color: Colors.grey,);
-
-
 
 }
 
