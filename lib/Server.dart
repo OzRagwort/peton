@@ -21,6 +21,24 @@ class Server {
     }
   }
 
+  Future<List<VideosResponse>> getRandbyCategoryId(String categoryId, int count) async {
+    Response response;
+    Dio dio = new Dio();
+
+    response = await dio.get('http://ec2-13-125-6-3.ap-northeast-2.compute.amazonaws.com:8080/api/moaon/v1/videos/rand?category=' + categoryId + '&count=' + count.toString());
+
+    List<VideosResponse> getList = [];
+
+    if (response.statusCode == 200) {
+      for(int i = 0 ; i < count ; i++) {
+        getList.add(VideosResponse.fromJson(response.data[i]));
+      }
+      return getList;
+    } else {
+      throw Exception('Faliled to load getData');
+    }
+  }
+
   Future<void> putReq(String url) async {
     Response response;
     Dio dio = new Dio();

@@ -82,10 +82,10 @@ Widget channelThumbnailCircle(String thumbnail, double cThumbnailWidth) => Stack
 /// Home.listView.Card.메타데이터
 Widget homeCardMetadata(String thumbnail, String title, int viewCount, String publishedDate, double width)  {
 
-  thumbnail = 'https://yt3.ggpht.com/ytc/AAUvwnhKjzZNLe8ZHiapSPVdcA1RUine4UCI7VmQRkVsuw=s240-c-k-c0x00ffffff-no-rj';
-  title = 'videoNamevideoNamevideoNamevideoNamevideoNamevideoName';
-  viewCount = 1234;
-  publishedDate = 'videoPublishedDate';
+  // thumbnail = 'https://yt3.ggpht.com/ytc/AAUvwnhKjzZNLe8ZHiapSPVdcA1RUine4UCI7VmQRkVsuw=s240-c-k-c0x00ffffff-no-rj';
+  // title = 'videoNamevideoNamevideoNamevideoNamevideoNamevideoName';
+  // viewCount = 1234;
+  // publishedDate = 'videoPublishedDate';
 
   double cThumbnailWidth = width / 16;
   double libraryWidth = width / 12;

@@ -18,69 +18,41 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  List<VideosResponse> myList;
-  // List<String> addList = <String>['Add1','Add2','Add3','Add4','Add5'];
-
   RefreshController _refreshController =
   RefreshController(initialRefresh: false);
 
-  void _setup() async {
-
-
-    FutureBuilder(
-      future: server.getReq('RGsIiuf-6Zg'),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-        // myList.add(snapshot.data);
-        setState(() {
-          myList.add(snapshot.data);
-        });
-        return snapshot.data;
-      },
-    );
-
-    // setState(() {});
-  }
+  Future<List<VideosResponse>> videosResponse;
+  List<VideosResponse> myList = new List<VideosResponse>();
 
   void _onRefresh() async{
-    // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use refreshFailed()
 
-    setState(() {});
+    myList = new List<VideosResponse>();
+    videosResponse = server.getRandbyCategoryId('1', 10);
+    
+    videosResponse.then((value) => setState(() {myList.addAll(value);}));
 
     _refreshController.refreshCompleted();
   }
 
   void _onLoading() async{
-    // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use loadFailed(),if no data return,use LoadNodata()
-    // myList.addAll(addList);
 
-    await FutureBuilder(
-      future: server.getReq('RGsIiuf-6Zg'),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-        myList.add(snapshot.data);
-        setState(() {});
-        return null;
-      },
-    );
+    videosResponse = server.getRandbyCategoryId('1', 10);
+    videosResponse.then((value) => myList.addAll(value));
 
     if(mounted)
-      setState(() {
+      setState(() {});
 
-      });
     _refreshController.loadComplete();
+  }
+
+  Widget _videosCart(int listNum, double width) {
+    return videoCard(myList[listNum], width);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    videosResponse = server.getRandbyCategoryId('1', 10);
   }
 
   @override
@@ -89,10 +61,11 @@ class _HomePageState extends State<HomePage> {
     double width = MediaQuery.of(context).size.width;
 
     log('start');
-    _setup();
 
     // 썸네일, 제목, 채널, 시간, 채널썸네일, 보관함여부
-
+    // if () {
+    //   return CircularProgressIndicator();
+    // }
     return Scaffold(
       // body: _buildSuggestions(),
       body: SmartRefresher(
@@ -133,23 +106,29 @@ class _HomePageState extends State<HomePage> {
         onRefresh: _onRefresh,
         onLoading: _onLoading,
         child: ListView.builder(
-            // itemCount: myList?.length+1,
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              log(index.toString());
-              // if(myList.length == index) {
-              //   return RaisedButton(
-              //       onPressed: () {
-              //         myList.add('value');
-              //         setState(() {});
-              //       }
-              //   );
-              // }
-              if (myList.length != 0){
-                return videoCard(myList[index], width);
-              }
-              return Text(myList[index].videoName);
+          itemCount: myList?.length + 10,
+          // ignore: missing_return
+          itemBuilder: (context, index) {
+            log(myList.length.toString() + ' / ' + index.toString());
+            if (index == 0) {
+              return FutureBuilder<List<VideosResponse>>(
+                future: videosResponse,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    myList.addAll(snapshot.data);
+                    return _videosCart(index, width);
+                  } else if (snapshot.hasError) {
+                    log('futurebuilder_list<v> error');
+                    return Text("${snapshot.error}");
+                  }
+                  return CircularProgressIndicator();
+                },
+              );
             }
+            if (myList.length > index) {
+              return _videosCart(index, width);
+            }
+          }
         ),
       )
     );
