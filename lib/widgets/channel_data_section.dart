@@ -28,7 +28,7 @@ class ChannelDataSection extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    channelThumbnailCircle(channelThumbnail),
+                    channelThumbnailCircle(channelThumbnail, MediaQuery.of(context).size.width),
                     //채널 정보
                     textChannel(channelName, subscribers),
                   ],
