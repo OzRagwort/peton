@@ -60,14 +60,8 @@ class _HomePageState extends State<HomePage> {
 
     double width = MediaQuery.of(context).size.width;
 
-    log('start');
-
     // 썸네일, 제목, 채널, 시간, 채널썸네일, 보관함여부
-    // if () {
-    //   return CircularProgressIndicator();
-    // }
     return Scaffold(
-      // body: _buildSuggestions(),
       body: SmartRefresher(
         enablePullDown: true,
         enablePullUp: true,
@@ -121,7 +115,9 @@ class _HomePageState extends State<HomePage> {
                     log('futurebuilder_list<v> error');
                     return Text("${snapshot.error}");
                   }
-                  return CircularProgressIndicator();
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
                 },
               );
             }
