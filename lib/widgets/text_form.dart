@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:peton/enums/text_size.dart';
 
 /// videoPlayer 채목
 Widget textTitle(String value) {
@@ -11,7 +12,7 @@ Widget textTitle(String value) {
     maxLines: 2,
     style: TextStyle(
       color: Colors.black,
-      fontSize: 17,
+      fontSize: TextSize.titleTextSize,
       // fontWeight: FontWeight.bold
     ),
   );
@@ -27,7 +28,7 @@ Widget textViewcountAndTime(int viewCount, String videoPublishedDate) {
         text: '$c' + "회 · " + t,
         style: TextStyle(
           color: Colors.black.withOpacity(0.4),
-          fontSize: 12,
+          fontSize: TextSize.subTextSize,
         )
     ),
   );
@@ -45,7 +46,7 @@ Widget textChannel(String value, int subscriber) {
               text: value,
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 17,
+                fontSize: TextSize.channelNameSize,
               )
           ),
         ),
@@ -57,7 +58,7 @@ Widget textChannel(String value, int subscriber) {
               text: subscriber.toString(),
               style: TextStyle(
                 color: Colors.black.withOpacity(0.6),
-                fontSize: 12,
+                fontSize: TextSize.channelSubscriberSize,
               )
           ),
         ),
@@ -67,11 +68,11 @@ Widget textChannel(String value, int subscriber) {
 }
 
 /// 채널 썸네일 원형
-Widget channelThumbnailCircle(String thumbnail, double cThumbnailWidth) => Stack(
+Widget channelThumbnailCircle(String thumbnail) => Stack(
   alignment: const Alignment(1, 1),
   children: [
     CircleAvatar(
-      radius: cThumbnailWidth,
+      radius: TextSize.channelThumbnailSize,
       backgroundImage:
       NetworkImage(thumbnail),
       backgroundColor: Colors.transparent,
@@ -80,15 +81,7 @@ Widget channelThumbnailCircle(String thumbnail, double cThumbnailWidth) => Stack
 );
 
 /// Home.listView.Card.메타데이터
-Widget homeCardMetadata(String thumbnail, String title, int viewCount, String publishedDate, double width)  {
-
-  // thumbnail = 'https://yt3.ggpht.com/ytc/AAUvwnhKjzZNLe8ZHiapSPVdcA1RUine4UCI7VmQRkVsuw=s240-c-k-c0x00ffffff-no-rj';
-  // title = 'videoNamevideoNamevideoNamevideoNamevideoNamevideoName';
-  // viewCount = 1234;
-  // publishedDate = 'videoPublishedDate';
-
-  double cThumbnailWidth = width / 16;
-  double libraryWidth = width / 12;
+Widget homepageCardMetadata(String thumbnail, String title, int viewCount, String publishedDate, double width)  {
 
   return Row(
     crossAxisAlignment: CrossAxisAlignment.center,
@@ -100,7 +93,7 @@ Widget homeCardMetadata(String thumbnail, String title, int viewCount, String pu
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               /// 채널
-              channelThumbnailCircle(thumbnail, cThumbnailWidth),
+              channelThumbnailCircle(thumbnail),
               const SizedBox(width: 10),
               /// 비디오 메타데이터
               Container(
@@ -123,7 +116,7 @@ Widget homeCardMetadata(String thumbnail, String title, int viewCount, String pu
         )
       ),
       IconButton(
-        iconSize: libraryWidth.toDouble(),
+        iconSize: TextSize.libraryIcon,
         icon: const Icon(Icons.library_add_outlined),
         onPressed: null,
       ),

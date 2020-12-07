@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:peton/videowatch_page.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:peton/Server.dart';
 
@@ -46,7 +47,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _videosCart(int listNum, double width) {
-    return videoCard(myList[listNum], width);
+    return GestureDetector(
+      onTap: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => VideowatchPage(videoId: myList[listNum].videoId)),
+        )
+      },
+      child: videoCard(myList[listNum], width),
+    );
   }
 
   @override
@@ -116,7 +125,10 @@ class _HomePageState extends State<HomePage> {
                     return Text("${snapshot.error}");
                   }
                   return Center(
-                    child: CircularProgressIndicator(),
+                    child: Image.asset(
+                      "lib/assets/spinner.gif",
+                      fit: BoxFit.fill,
+                    ),
                   );
                 },
               );

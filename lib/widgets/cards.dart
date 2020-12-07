@@ -7,12 +7,13 @@ import 'package:extended_image/extended_image.dart';
 
 Widget videoCard(VideosResponse videosResponse, double width) =>
     ExtendedImage.network(
-      videosResponse.videoThumbnail,
+      'https://i.ytimg.com/vi/'+videosResponse.videoId+'/hq720.jpg',
       width: width,
       fit: BoxFit.fitWidth,
       cache: true,
-      border: Border.all(color: Colors.red, width: 1.0),
-      borderRadius: BorderRadius.all(Radius.circular(30.0)),
+      filterQuality: FilterQuality.high,
+      // border: Border.all(color: Colors.red, width: 1.0),
+      // borderRadius: BorderRadius.all(Radius.circular(30.0)),
       loadStateChanged: (ExtendedImageState state) {
         switch (state.extendedImageLoadState) {
           case LoadState.loading:
@@ -30,14 +31,30 @@ Widget videoCard(VideosResponse videosResponse, double width) =>
                       image: state.extendedImageInfo?.image,
                       width: width,
                       fit: BoxFit.fitWidth,
+                      filterQuality: FilterQuality.high,
                     ),
-                    homeCardMetadata(videosResponse.channels.channelThumbnail, videosResponse.videoName, videosResponse.viewCount, videosResponse.videoPublishedDate, width),
+                    homepageCardMetadata(videosResponse.channels.channelThumbnail, videosResponse.videoName, videosResponse.viewCount, videosResponse.videoPublishedDate, width),
                   ],
                 ),
               ),
             );
             break;
           case LoadState.failed:
+            return Card(
+              child: Container(
+                child: Column(
+                  children: [
+                    Image.network(
+                      'https://i.ytimg.com/vi/'+videosResponse.videoId+'/mqdefault.jpg',
+                      width: width,
+                      fit: BoxFit.fitWidth,
+                      filterQuality: FilterQuality.high,
+                    ),
+                    homepageCardMetadata(videosResponse.channels.channelThumbnail, videosResponse.videoName, videosResponse.viewCount, videosResponse.videoPublishedDate, width),
+                  ],
+                ),
+              ),
+            );
             break;
         }
         return null;

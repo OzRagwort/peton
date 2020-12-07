@@ -52,6 +52,7 @@ class _FavoritePageState extends State<FavoritePage> {
                             snapshot.data.videoThumbnail,
                             width: width-32,
                             fit: BoxFit.fitWidth,
+                            filterQuality: FilterQuality.high,
                           ),
                         ],
                       ),
