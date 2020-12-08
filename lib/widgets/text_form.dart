@@ -2,7 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:peton/enums/text_size.dart';
+import 'package:peton/function/time_function.dart';
+import 'package:peton/model/VideosResponse.dart';
 
 /// videoPlayer 채목
 Widget textTitle(String value) {
@@ -26,6 +29,22 @@ Widget textViewcountAndTime(int viewCount, String videoPublishedDate) {
   return RichText(
     text: TextSpan(
         text: '$c' + "회 · " + t,
+        style: TextStyle(
+          color: Colors.black.withOpacity(0.4),
+          fontSize: TextSize.subTextSize,
+        )
+    ),
+  );
+}
+
+/// homePage.listview 채널 및 업로드 시간
+Widget textChannelNameAndTime(String channelName, String videoPublishedDate) {
+  String c = channelName;
+  String t = videoPublishedDate;
+
+  return RichText(
+    text: TextSpan(
+        text: c + " · " + uploadTimeCheck(videoPublishedDate),
         style: TextStyle(
           color: Colors.black.withOpacity(0.4),
           fontSize: TextSize.subTextSize,
@@ -81,7 +100,7 @@ Widget channelThumbnailCircle(String thumbnail) => Stack(
 );
 
 /// Home.listView.Card.메타데이터
-Widget homepageCardMetadata(String thumbnail, String title, int viewCount, String publishedDate, double width)  {
+Widget homepageCardMetadata(VideosResponse videosResponse, double width)  {
 
   return Row(
     crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,10 +112,11 @@ Widget homepageCardMetadata(String thumbnail, String title, int viewCount, Strin
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               /// 채널
-              channelThumbnailCircle(thumbnail),
+              channelThumbnailCircle(videosResponse.channels.channelThumbnail),
               const SizedBox(width: 10),
               /// 비디오 메타데이터
               Container(
+                /// 수정필요
                 width: (width * (2.8/4))-30,
                 // width: double.infinity,
                 child: Column(
@@ -105,9 +125,9 @@ Widget homepageCardMetadata(String thumbnail, String title, int viewCount, Strin
                   children: [
                     Container(
                       padding: const EdgeInsets.only(bottom: 4),
-                      child: textTitle(title),
+                      child: textTitle(videosResponse.videoName),
                     ),
-                    textViewcountAndTime(viewCount, publishedDate),
+                    textChannelNameAndTime(videosResponse.channels.channelName, videosResponse.videoPublishedDate),
                   ],
                 ),
               ),
