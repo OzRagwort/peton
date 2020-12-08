@@ -7,7 +7,7 @@ import 'package:extended_image/extended_image.dart';
 
 Widget videoCard(VideosResponse videosResponse, double width) =>
     ExtendedImage.network(
-      'https://i.ytimg.com/vi/'+videosResponse.videoId+'/hq720.jpg',
+      'https://i.ytimg.com/vi/'+videosResponse.videoId+'/maxresdefault.jpg',
       width: width,
       fit: BoxFit.fitWidth,
       cache: true,
@@ -28,10 +28,15 @@ Widget videoCard(VideosResponse videosResponse, double width) =>
                 child: Column(
                   children: [
                     ExtendedRawImage(
+                      /// maxresdefault
                       image: state.extendedImageInfo?.image,
                       width: width,
                       fit: BoxFit.fitWidth,
-                      filterQuality: FilterQuality.high,
+                      /// hqdefault => crop
+                      // width: width,
+                      // height: (width*270)/480,
+                      // fit: BoxFit.fitWidth,
+                      // sourceRect: Rect.fromCenter(width: 480, height: 270, center: Offset(240, 180)),
                     ),
                     homepageCardMetadata(videosResponse.channels.channelThumbnail, videosResponse.videoName, videosResponse.viewCount, videosResponse.videoPublishedDate, width),
                   ],
@@ -48,7 +53,6 @@ Widget videoCard(VideosResponse videosResponse, double width) =>
                       'https://i.ytimg.com/vi/'+videosResponse.videoId+'/mqdefault.jpg',
                       width: width,
                       fit: BoxFit.fitWidth,
-                      filterQuality: FilterQuality.high,
                     ),
                     homepageCardMetadata(videosResponse.channels.channelThumbnail, videosResponse.videoName, videosResponse.viewCount, videosResponse.videoPublishedDate, width),
                   ],
@@ -60,46 +64,4 @@ Widget videoCard(VideosResponse videosResponse, double width) =>
         return null;
       },
     );
-
-// Widget videoCard(VideosResponse videosResponse, double width) => Card(
-//   child: Container(
-//     child: ExtendedImage.network(
-//       videosResponse.videoThumbnail,
-//       width: width,
-//       fit: BoxFit.fitWidth,
-//       cache: true,
-//       border: Border.all(color: Colors.red, width: 1.0),
-//       borderRadius: BorderRadius.all(Radius.circular(30.0)),
-//       loadStateChanged: (ExtendedImageState state) {
-//         switch (state.extendedImageLoadState) {
-//           case LoadState.loading:
-//           // return Image.asset(
-//           //   "lib/assets/spinner.gif",
-//           //   fit: BoxFit.fill,
-//           // );
-//           // return null;
-//             return Text('');
-//             break;
-//           case LoadState.completed:
-//             return Column(
-//               children: [
-//                 ExtendedRawImage(
-//                   image: state.extendedImageInfo?.image,
-//                   width: width,
-//                   fit: BoxFit.fitWidth,
-//                 ),
-//                 homeCardMetadata(videosResponse.channels.channelThumbnail, videosResponse.videoName, videosResponse.viewCount, videosResponse.videoPublishedDate, width),
-//               ],
-//             );
-//             break;
-//           case LoadState.failed:
-//             break;
-//         }
-//         return null;
-//       },
-//     ),
-//     // child: homeCardMetadata(videosResponse.channels.channelThumbnail, videosResponse.videoName, videosResponse.viewCount, videosResponse.videoPublishedDate, width),
-//
-//   ),
-// );
 
