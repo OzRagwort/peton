@@ -4,8 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:peton/enums/text_size.dart';
+import 'package:peton/function/channelSubscriberCountCheck.dart';
 import 'package:peton/function/time_function.dart';
-import 'package:peton/function/viewCountCheck.dart';
+import 'package:peton/function/ViewCountCheck.dart';
 import 'package:peton/model/VideosResponse.dart';
 
 /// videoPlayer 채목
@@ -29,7 +30,7 @@ Widget textViewcountAndTime(int viewCount, String videoPublishedDate) {
 
   return RichText(
     text: TextSpan(
-        text: viewCountCheck(viewCount) + "회 · " + uploadTimeCheck(videoPublishedDate),
+        text: ViewCountCheck(viewCount) + "회 · " + UploadTimeCheck(videoPublishedDate),
         style: TextStyle(
           color: Colors.black.withOpacity(0.4),
           fontSize: TextSize.subTextSize,
@@ -45,7 +46,7 @@ Widget textChannelNameAndTime(String channelName, String videoPublishedDate) {
 
   return RichText(
     text: TextSpan(
-        text: c + " · " + uploadTimeCheck(videoPublishedDate),
+        text: c + " · " + UploadTimeCheck(videoPublishedDate),
         style: TextStyle(
           color: Colors.black.withOpacity(0.4),
           fontSize: TextSize.subTextSize,
@@ -75,7 +76,7 @@ Widget textChannel(String value, int subscriber) {
         padding: const EdgeInsets.only(left: 16),
         child: RichText(
           text: TextSpan(
-              text: subscriber.toString(),
+              text: ChannelSubscriberSountCheck(subscriber),
               style: TextStyle(
                 color: Colors.black.withOpacity(0.6),
                 fontSize: TextSize.channelSubscriberSize,
