@@ -86,3 +86,14 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: Noto Serif KR
+      fonts:
+        - asset: fonts/NotoSerifKR-Black.otf
+        - asset: fonts/NotoSerifKR-Bold.otf
+        - asset: fonts/NotoSerifKR-ExtraLight.otf
+        - asset: fonts/NotoSerifKR-Light.otf
+        - asset: fonts/NotoSerifKR-Medium.otf
+        - asset: fonts/NotoSerifKR-Regular.otf
+        - asset: fonts/NotoSerifKR-SemiBold.otf
+          weight: 700
