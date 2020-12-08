@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:peton/enums/text_size.dart';
 import 'package:peton/function/time_function.dart';
+import 'package:peton/function/viewCountCheck.dart';
 import 'package:peton/model/VideosResponse.dart';
 
 /// videoPlayer 채목
@@ -28,7 +29,7 @@ Widget textViewcountAndTime(int viewCount, String videoPublishedDate) {
 
   return RichText(
     text: TextSpan(
-        text: '$c' + "회 · " + t,
+        text: viewCountCheck(viewCount) + "회 · " + uploadTimeCheck(videoPublishedDate),
         style: TextStyle(
           color: Colors.black.withOpacity(0.4),
           fontSize: TextSize.subTextSize,

@@ -175,24 +175,7 @@ class Controls extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                space,
-                VideoDataSection(videoName: '', viewCount: 0, videoPublishedDate: '',),
-                divline,
-                ChannelDataSection(channelName: '', channelThumbnail: '', subscribers: 0,),
-                divline,
-                PlayPauseButtonBar(),
-                space,
-                VolumeSlider(),
-                space,
-                PlayerStateSection(),
-              ],
-            ),
-          );
+          return space;
         },
       );
 
