@@ -7,12 +7,12 @@ String UploadTimeCheck(String publishedDate) {
   var utcDateTime = DateTime.now().subtract(DateTime.now().timeZoneOffset);
   var durationTime = utcDateTime.difference(videoDateTime);
   VideoDuration videoDuration = new VideoDuration(
-    durationTime.inDays ~/ 365,
-    (durationTime.inDays % 365) ~/ 30,
-    (durationTime.inDays % 365) - (durationTime.inDays % 365) ~/ 30,
-    durationTime.inHours - durationTime.inDays * Duration.hoursPerDay,
-    durationTime.inMinutes - durationTime.inHours * Duration.minutesPerHour,
-    durationTime.inSeconds - durationTime.inMinutes * Duration.secondsPerMinute
+      durationTime.inDays ~/ 365,
+      (durationTime.inDays % 365) ~/ 30,
+      (durationTime.inDays % 365) - (durationTime.inDays % 365) ~/ 30,
+      durationTime.inHours - durationTime.inDays * Duration.hoursPerDay,
+      durationTime.inMinutes - durationTime.inHours * Duration.minutesPerHour,
+      durationTime.inSeconds - durationTime.inMinutes * Duration.secondsPerMinute
   );
 
   if(videoDuration.beforeYear == 0) {

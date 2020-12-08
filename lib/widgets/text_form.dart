@@ -9,7 +9,7 @@ import 'package:peton/function/time_function.dart';
 import 'package:peton/function/ViewCountCheck.dart';
 import 'package:peton/model/VideosResponse.dart';
 
-/// videoPlayer 채목
+/// homepage title
 Widget textTitle(String value) {
   return Text(
     value,
@@ -18,6 +18,24 @@ Widget textTitle(String value) {
     style: TextStyle(
       color: Colors.black,
       fontSize: TextSize.titleTextSize,
+      fontFamily: 'NotoSerifKR',
+      fontWeight: FontWeight.w300,
+      // fontWeight: FontWeight.bold
+    ),
+  );
+}
+
+/// videoPlayer title
+Widget playerTextTitle(String value) {
+  return Text(
+    value,
+    overflow: TextOverflow.ellipsis,
+    maxLines: 2,
+    style: TextStyle(
+      color: Colors.black,
+      fontSize: TextSize.playerTitleTextSize,
+      fontFamily: 'NotoSerifKR',
+      fontWeight: FontWeight.w400,
       // fontWeight: FontWeight.bold
     ),
   );
@@ -25,15 +43,15 @@ Widget textTitle(String value) {
 
 /// videoPlayer 구독자 및 업로드
 Widget textViewcountAndTime(int viewCount, String videoPublishedDate) {
-  int c = viewCount;
-  String t = videoPublishedDate;
 
   return RichText(
     text: TextSpan(
         text: ViewCountCheck(viewCount) + "회 · " + UploadTimeCheck(videoPublishedDate),
         style: TextStyle(
-          color: Colors.black.withOpacity(0.4),
+          color: Colors.black.withOpacity(0.5),
           fontSize: TextSize.subTextSize,
+          fontFamily: 'NotoSerifKR',
+          fontWeight: FontWeight.w400,
         )
     ),
   );
@@ -41,15 +59,15 @@ Widget textViewcountAndTime(int viewCount, String videoPublishedDate) {
 
 /// homePage.listview 채널 및 업로드 시간
 Widget textChannelNameAndTime(String channelName, String videoPublishedDate) {
-  String c = channelName;
-  String t = videoPublishedDate;
 
   return RichText(
     text: TextSpan(
-        text: c + " · " + UploadTimeCheck(videoPublishedDate),
+        text: channelName + " · " + UploadTimeCheck(videoPublishedDate),
         style: TextStyle(
-          color: Colors.black.withOpacity(0.4),
+          color: Colors.black.withOpacity(0.5),
           fontSize: TextSize.subTextSize,
+          fontFamily: 'NotoSerifKR',
+          fontWeight: FontWeight.w400,
         )
     ),
   );
@@ -68,6 +86,8 @@ Widget textChannel(String value, int subscriber) {
               style: TextStyle(
                 color: Colors.black,
                 fontSize: TextSize.channelNameSize,
+                fontFamily: 'NotoSerifKR',
+                fontWeight: FontWeight.w400,
               )
           ),
         ),
@@ -80,6 +100,8 @@ Widget textChannel(String value, int subscriber) {
               style: TextStyle(
                 color: Colors.black.withOpacity(0.6),
                 fontSize: TextSize.channelSubscriberSize,
+                fontFamily: 'NotoSerifKR',
+                fontWeight: FontWeight.w400,
               )
           ),
         ),

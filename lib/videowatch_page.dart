@@ -145,7 +145,6 @@ class Controls extends StatelessWidget {
   ///
   Controls(this.videoId);
   String videoId;
-  VideosResponse videosResponse;
 
   @override
   Widget build(BuildContext context) {
@@ -164,6 +163,8 @@ class Controls extends StatelessWidget {
                   divline,
                   ChannelDataSection(channelName: snapshot.data.channels.channelName, channelThumbnail: snapshot.data.channels.channelThumbnail, subscribers: snapshot.data.channels.subscribers,),
                   divline,
+                  
+                  space,
                   PlayPauseButtonBar(),
                   space,
                   VolumeSlider(),

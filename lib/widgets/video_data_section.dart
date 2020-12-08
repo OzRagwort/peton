@@ -33,7 +33,7 @@ class VideoDataSection extends StatelessWidget {
                     children: [
                       Container(
                         padding: const EdgeInsets.only(bottom: 4),
-                        child: textTitle(videoName),
+                        child: playerTextTitle(videoName),
                       ),
                       textViewcountAndTime(viewCount, videoPublishedDate),
                     ],
