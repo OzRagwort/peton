@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:peton/main_page.dart';
+import 'package:peton/MainPage.dart';
 
 void main() {
   runApp(MyApp());

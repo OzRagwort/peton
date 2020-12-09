@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:peton/model/VideosResponse.dart';
-import 'package:peton/widgets/text_form.dart';
+import 'package:peton/widgets/TextForm.dart';
 import 'package:extended_image/extended_image.dart';
 
 Widget videoCard(VideosResponse videosResponse, double width) =>

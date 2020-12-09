@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:peton/widgets/text_form.dart';
+import 'package:peton/widgets/TextForm.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-import 'line.dart';
+import 'Line.dart';
 
 ///
 class ChannelDataSection extends StatelessWidget {

@@ -9,14 +9,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/widgets/OpenYoutubeButton.dart';
-import 'package:peton/widgets/line.dart';
+import 'package:peton/widgets/Line.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-import 'widgets/video_data_section.dart';
-import 'widgets/channel_data_section.dart';
-import 'widgets/play_pause_button_bar.dart';
-import 'widgets/player_state_section.dart';
-import 'widgets/volume_slider.dart';
+import 'widgets/VideoDataSection.dart';
+import 'widgets/ChannelDataSection.dart';
+import 'widgets/PlayPauseButtonBar.dart';
+import 'widgets/PlayerStateSection.dart';
+import 'widgets/VolumeSlider.dart';
 
 import 'Server.dart';
 

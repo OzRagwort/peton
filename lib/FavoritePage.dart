@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:peton/model/VideosResponse.dart';
-import 'package:peton/videowatch_page.dart';
+import 'package:peton/VideoplayerPage.dart';
 
 import 'Server.dart';
 

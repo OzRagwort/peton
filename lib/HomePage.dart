@@ -2,13 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:peton/videowatch_page.dart';
+import 'package:peton/VideoplayerPage.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:peton/Server.dart';
 
 import 'model/VideosResponse.dart';
-import 'widgets/line.dart';
-import 'widgets/cards.dart';
+import 'widgets/Line.dart';
+import 'widgets/Cards.dart';
 
 class HomePage extends StatefulWidget {
 

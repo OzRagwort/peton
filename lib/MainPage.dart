@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'home_page.dart';
-import 'favorite_page.dart';
-import 'library_page.dart';
+import 'HomePage.dart';
+import 'FavoritePage.dart';
+import 'LibraryPage.dart';
 
 class MainPage extends StatefulWidget {
   MainPage({Key key, this.title}) : super(key: key);
