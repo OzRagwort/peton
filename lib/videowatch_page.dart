@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:peton/model/VideosResponse.dart';
+import 'package:peton/widgets/OpenYoutubeButton.dart';
 import 'package:peton/widgets/line.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
@@ -163,7 +164,7 @@ class Controls extends StatelessWidget {
                   divline,
                   ChannelDataSection(channelName: snapshot.data.channels.channelName, channelThumbnail: snapshot.data.channels.channelThumbnail, subscribers: snapshot.data.channels.subscribers,),
                   divline,
-                  
+                  OpenYoutubeButton(snapshot.data.videoId),
                   space,
                   PlayPauseButtonBar(),
                   space,
