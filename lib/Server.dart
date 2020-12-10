@@ -39,14 +39,14 @@ class Server {
     }
   }
 
-  Future<void> putReq(String url) async {
+  Future<int> putReq(String url) async {
     Response response;
     Dio dio = new Dio();
 
     response = await dio.put('http://ec2-13-125-6-3.ap-northeast-2.compute.amazonaws.com:8080/api/moaon/v1/videos/' + url);
 
     if (response.statusCode == 200) {
-      return null;
+      return 0;
     } else {
       log('Faliled to load getData');
       throw Exception('Faliled to load getData');

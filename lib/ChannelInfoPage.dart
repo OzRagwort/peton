@@ -28,6 +28,12 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
   _ChannelInfoPageState({this.channel});
 
   Channels channel;
+  String sort = 'desc'; // 최신순
+  int count = 10;
+
+  List<String> _sortList = ['인기 동영상', '최신 순', '오래된 순'];
+  List<DropdownMenuItem<String>> _dropDownMenuItems;
+  String _sortingMethod;
 
   RefreshController _refreshController =
   RefreshController(initialRefresh: false);
@@ -38,7 +44,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
   void _onRefresh() async{
 
     myList = new List<VideosResponse>();
-    videosResponse = server.getbyChannelIdSortDate(channel.channelId, 'asc', 1, 10);
+    videosResponse = server.getbyChannelIdSortDate(channel.channelId, sort, 1, count);
 
     videosResponse.then((value) => setState(() {myList.addAll(value);}));
 
@@ -49,13 +55,30 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
 
     int index = (myList.length ~/ 10) + 1;
 
-    videosResponse = server.getbyChannelIdSortDate(channel.channelId, 'asc', index, 10);
+    videosResponse = server.getbyChannelIdSortDate(channel.channelId, sort, index, count);
     videosResponse.then((value) => myList.addAll(value));
 
     if(mounted)
       setState(() {});
 
     _refreshController.loadComplete();
+  }
+
+  void _sortRefresh(String index) async{
+    if (index == _sortList[0]) {
+      sort = 'popular';
+    } else if (index == _sortList[1]) {
+      sort = 'desc';
+    } else {
+      sort = 'asc';
+    }
+
+    myList = new List<VideosResponse>();
+    videosResponse = server.getbyChannelIdSortDate(channel.channelId, sort, 1, count);
+    videosResponse.then((value) {
+      myList.addAll(value);
+      setState(() {});
+    });
   }
 
   Widget _videosCartSmall(int listNum, double width) {
@@ -70,10 +93,24 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
     );
   }
 
+  List<DropdownMenuItem<String>> getDropDownMenuItems() {
+    List<DropdownMenuItem<String>> items = new List();
+    for(String sortList in _sortList) {
+      items.add(new DropdownMenuItem(
+        value: sortList,
+        child: Text(sortList),
+      ));
+    }
+
+    return items;
+  }
+
   @override
   void initState() {
     super.initState();
-    videosResponse = server.getbyChannelIdSortDate(channel.channelId, 'asc', 1, 10);
+    _dropDownMenuItems = getDropDownMenuItems();
+    _sortingMethod = _dropDownMenuItems[1].value;
+    videosResponse = server.getbyChannelIdSortDate(channel.channelId, sort, 1, count);
   }
 
   @override
@@ -81,8 +118,12 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
     int _selectedTabIndex = 0;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('titleChannel'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(0),
+        child: AppBar(
+          title: Text(''),
+          backgroundColor: Colors.white,
+        ),
       ),
 
 
@@ -112,6 +153,35 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
                 Icon(
                   Icons.star,
                   size: 35,
+                ),
+              ],
+            ),
+          ),
+
+          Container(
+            padding: const EdgeInsets.only(left: 10),
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                Icon(Icons.sort, size: 25,),
+                spaceLeft,
+                DropdownButton<String>(
+                  icon: Icon(Icons.keyboard_arrow_down),
+                  value: _sortingMethod,
+                  iconSize: 24,
+                  elevation: 16,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 17.0,
+                    fontFamily: 'NotoSerifKR',
+                    fontWeight: FontWeight.w400,
+                  ),
+                  underline: Container(height: 0),
+                  items: _dropDownMenuItems,
+                  onChanged: (String newValue) {
+                    _sortingMethod = newValue;
+                    _sortRefresh(newValue);
+                  },
                 ),
               ],
             ),
@@ -159,7 +229,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
                   itemCount: myList?.length + 10,
                   // ignore: missing_return
                   itemBuilder: (context, index) {
-                    log(myList.length.toString() + ' / ' + index.toString());
+                    // log(myList.length.toString() + ' / ' + index.toString());
                     if (index == 0 && myList.length == 0) {
                       return FutureBuilder<List<VideosResponse>>(
                         future: videosResponse,
@@ -190,111 +260,6 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
 
         ],
       ),
-
-
-      // /// 채널의 영상 listview
-      // SmartRefresher(
-      //   enablePullDown: true,
-      //   enablePullUp: true,
-      //   header: MaterialClassicHeader(),
-      //   footer: CustomFooter(
-      //     loadStyle: LoadStyle.ShowWhenLoading,
-      //     builder: (BuildContext context,LoadStatus mode){
-      //       Widget body ;
-      //       /// 로드 완료 후
-      //       if(mode==LoadStatus.idle){
-      //         body =  Text("pull up load");
-      //       }
-      //       /// ?
-      //       else if(mode==LoadStatus.loading){
-      //         body =  CupertinoActivityIndicator();
-      //       }
-      //       /// ?
-      //       else if(mode == LoadStatus.failed){
-      //         body = Text("Load Failed!Click retry!");
-      //       }
-      //       /// 로드하려고 풀업했을 때 나타는 것
-      //       else if(mode == LoadStatus.canLoading){
-      //         body = Text("Load more");
-      //       }
-      //       /// ?
-      //       else{
-      //         body = Text("No more Data");
-      //       }
-      //       return Container(
-      //         height: 55.0,
-      //         child: Center(child:body),
-      //       );
-      //     },
-      //   ),
-      //   controller: _refreshController,
-      //   onRefresh: _onRefresh,
-      //   onLoading: _onLoading,
-      //   child: Column(
-      //     children: [
-      //       Container(
-      //         padding: const EdgeInsets.all(16),
-      //         child: Row(
-      //           crossAxisAlignment: CrossAxisAlignment.center,
-      //           children: <Widget>[
-      //             channelThumbnailCircle(channel.channelThumbnail, MediaQuery.of(context).size.width / 8),
-      //             verticalDivline,
-      //             Expanded(
-      //               child: Column(
-      //                 crossAxisAlignment: CrossAxisAlignment.start,
-      //                 children: <Widget>[
-      //                   // Expanded(
-      //                   //   child: Text('title'),
-      //                   // ),
-      //                   textTitle(channel.channelName, 20.0),
-      //                   space,
-      //                   textTitle(ChannelSubscriberSountCheck(channel.subscribers), 15.0),
-      //                 ],
-      //               ),
-      //             ),
-      //             Icon(
-      //               Icons.star,
-      //               size: 35,
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //       Expanded(
-      //         child: ListView.builder(
-      //             itemCount: myList?.length + 10,
-      //             // ignore: missing_return
-      //             itemBuilder: (context, index) {
-      //               log(myList.length.toString() + ' / ' + index.toString());
-      //               if (index == 0 && myList.length == 0) {
-      //                 return FutureBuilder<List<VideosResponse>>(
-      //                   future: videosResponse,
-      //                   builder: (context, snapshot) {
-      //                     if (snapshot.hasData) {
-      //                       myList.addAll(snapshot.data);
-      //                       return _videosCartSmall(index, MediaQuery.of(context).size.width);
-      //                     } else if (snapshot.hasError) {
-      //                       log('futurebuilder_list<v> error');
-      //                       return Text("${snapshot.error}");
-      //                     }
-      //                     return Center(
-      //                       child: Image.asset(
-      //                         "lib/assets/spinner.gif",
-      //                         fit: BoxFit.fill,
-      //                       ),
-      //                     );
-      //                   },
-      //                 );
-      //               }
-      //               if (myList.length > index) {
-      //                 return _videosCartSmall(index, MediaQuery.of(context).size.width);
-      //               }
-      //             }
-      //         ),
-      //       ),
-      //
-      //     ],
-      //   ),
-      // ),
 
 
 
