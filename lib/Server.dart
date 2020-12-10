@@ -57,5 +57,30 @@ class Server {
     await putReq(url);
     return getReq(url);
   }
+
+  Future<List<VideosResponse>> getbyChannelIdSortDate(String channelId, String sort, int page, int count) async {
+    Response response;
+    Dio dio = new Dio();
+
+    count = 10;
+
+    response = await dio.get('http://ec2-13-125-6-3.ap-northeast-2.compute.amazonaws.com:8080/api/moaon/v1/videos?channel=' + channelId +
+        '&timeSort=' + sort +
+        '&page=' + page.toString() +
+        '&maxResult=' + count.toString()
+    );
+
+    List<VideosResponse> getList = [];
+
+    if (response.statusCode == 200) {
+      for(int i = 0 ; i < count ; i++) {
+        getList.add(VideosResponse.fromJson(response.data[i]));
+      }
+      return getList;
+    } else {
+      throw Exception('Faliled to load getData');
+    }
+  }
+
 }
 

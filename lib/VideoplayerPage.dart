@@ -162,7 +162,7 @@ class Controls extends StatelessWidget {
                   space,
                   VideoDataSection(videoName: snapshot.data.videoName, viewCount: snapshot.data.viewCount, videoPublishedDate: snapshot.data.videoPublishedDate,),
                   divline,
-                  ChannelDataSection(channelName: snapshot.data.channels.channelName, channelThumbnail: snapshot.data.channels.channelThumbnail, subscribers: snapshot.data.channels.subscribers,),
+                  ChannelDataSection(videosResponse: snapshot.data,),
                   divline,
                   OpenYoutubeButton(snapshot.data.videoId),
                   space,

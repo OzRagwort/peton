@@ -1,5 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:peton/ChannelInfoPage.dart';
+import 'package:peton/enums/TextSize.dart';
+import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/widgets/TextForm.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
@@ -7,11 +10,9 @@ import 'Line.dart';
 
 ///
 class ChannelDataSection extends StatelessWidget {
-  ChannelDataSection({this.channelThumbnail, this.channelName, this.subscribers});
+  ChannelDataSection({this.videosResponse});
 
-  String channelThumbnail;
-  String channelName;
-  int subscribers;
+  VideosResponse videosResponse;
 
   bool _subscribe = false;
 
@@ -25,13 +26,22 @@ class ChannelDataSection extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    channelThumbnailCircle(channelThumbnail),
-                    //채널 정보
-                    textChannel(channelName, subscribers),
-                  ],
+                child: GestureDetector(
+                  onTap: () => {
+                    context.ytController.pause(),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChannelInfoPage(channel: videosResponse.channels)),
+                    ),
+                  },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      channelThumbnailCircle(videosResponse.channels.channelThumbnail, TextSize.channelThumbnailSize),
+                      //채널 정보
+                      textChannel(videosResponse.channels.channelName, videosResponse.channels.subscribers),
+                    ],
+                  ),
                 ),
               ),
               IconButton(

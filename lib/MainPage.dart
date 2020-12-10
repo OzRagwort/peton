@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'HomePage.dart';
@@ -5,20 +7,28 @@ import 'FavoritePage.dart';
 import 'LibraryPage.dart';
 
 class MainPage extends StatefulWidget {
-  MainPage({Key key, this.title}) : super(key: key);
+  MainPage({Key key, this.title, this.index}) : super(key: key);
 
   final String title;
+  final int index;
 
   @override
-  _MainPageState createState() => _MainPageState(title: 'PetON');
+  _MainPageState createState() => _MainPageState(title: 'PetON', index: index);
 
 }
 
 class _MainPageState extends State<MainPage>{
-  _MainPageState({Key key, this.title});
+  _MainPageState({Key key, this.title, this.index});
   final String title;
+  final int index;
 
-  int _selectedTabIndex = 0;
+  int _selectedTabIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedTabIndex = index;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +62,7 @@ class _MainPageState extends State<MainPage>{
       ),
     );
   }
-  // 1-2. 탭 화면 (List, Grid Widget 반환)
+
   Widget _buildPage(index){
     if(index == 0)
       return HomePage();

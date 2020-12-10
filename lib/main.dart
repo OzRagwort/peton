@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MainPage(title: 'PetON'),
+      home: MainPage(title: 'PetON', index: 0,),
     );
   }
 }

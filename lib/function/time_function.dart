@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:peton/model/VideoDuration.dart';
 
 String UploadTimeCheck(String publishedDate) {
+  if (publishedDate == null)
+    return '시간 전';
   var videoDateTime = DateTime.parse(publishedDate);
   var utcDateTime = DateTime.now().subtract(DateTime.now().timeZoneOffset);
   var durationTime = utcDateTime.difference(videoDateTime);

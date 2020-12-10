@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:peton/enums/TextSize.dart';
 import 'package:peton/widgets/TextForm.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
@@ -33,7 +34,7 @@ class VideoDataSection extends StatelessWidget {
                     children: [
                       Container(
                         padding: const EdgeInsets.only(bottom: 4),
-                        child: playerTextTitle(videoName),
+                        child: textTitle(videoName, TextSize.playerTitleTextSize),
                       ),
                       textViewcountAndTime(viewCount, videoPublishedDate),
                     ],

@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
           itemCount: myList?.length + 10,
           // ignore: missing_return
           itemBuilder: (context, index) {
-            log(myList.length.toString() + ' / ' + index.toString());
+            // log(myList.length.toString() + ' / ' + index.toString());
             if (index == 0 && myList.length == 0) {
               return FutureBuilder<List<VideosResponse>>(
                 future: videosResponse,
