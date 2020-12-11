@@ -135,7 +135,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                channelThumbnailCircle(channel.channelThumbnail, MediaQuery.of(context).size.width / 8),
+                channelThumbnailCircle(channel.channelThumbnail, MediaQuery.of(context).size.width / 10),
                 verticalDivline,
                 Expanded(
                   child: Column(
