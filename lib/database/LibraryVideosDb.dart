@@ -26,9 +26,9 @@ class LibraryVideosDb {
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'peton_db.db');
+    String path = join(documentsDirectory.path, 'peton_library_videos_db.db');
 
-    log('init' + path);
+    log('init : ' + path);
 
     return await openDatabase(
         path,
