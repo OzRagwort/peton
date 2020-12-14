@@ -34,10 +34,7 @@ class VideoDataSection extends StatelessWidget {
                     ],
                   ),
                 ),
-                LibraryListenableBuilder(
-                  future: LibraryVideosDb().getLibraryVideo(videosResponse.videoId),
-                  videosResponse: videosResponse,
-                ),
+                LibraryListenableBuilder(videosResponse: videosResponse,),
               ],
             ),
           ],

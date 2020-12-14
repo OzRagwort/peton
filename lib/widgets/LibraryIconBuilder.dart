@@ -6,18 +6,13 @@ import 'package:peton/enums/TextSize.dart';
 import 'package:peton/model/LibraryVideos.dart';
 import 'package:peton/model/VideosResponse.dart';
 
-typedef LibraryWidgetBuilder<T> = Widget Function(BuildContext context, T value, Widget child);
-
 class LibraryListenableBuilder<T> extends StatefulWidget {
 
   const LibraryListenableBuilder({
     Key key,
     this.child,
-    this.future,
     this.videosResponse,
   }) : super(key: key);
-
-  final Future future;
 
   final VideosResponse videosResponse;
 
@@ -34,8 +29,8 @@ class _LibraryListenableBuilderState extends State<LibraryListenableBuilder> {
   @override
   void initState() {
     super.initState();
-    future = widget.future;
     videosResponse = widget.videosResponse;
+    future = LibraryVideosDb().getLibraryVideo(videosResponse.videoId);
   }
 
   @override

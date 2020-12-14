@@ -144,46 +144,7 @@ Widget homepageCardMetadata(VideosResponse videosResponse, double width)  {
           ),
         )
       ),
-      LibraryListenableBuilder(
-        future: LibraryVideosDb().getLibraryVideo(videosResponse.videoId),
-        videosResponse: videosResponse,
-      ),
-
-      // FutureBuilder<LibraryVideos>(
-      //   future: LibraryVideosDb().getLibraryVideo(videosResponse.videoId),
-      //   builder: (context, snapshot) {
-      //     if (snapshot.hasData) {
-      //       return IconButton(
-      //         iconSize: TextSize.libraryIcon,
-      //         icon: const Icon(Icons.library_add_check),
-      //         onPressed: () {
-      //           LibraryVideosDb().deleteLibraryVideo(videosResponse.videoId);
-      //         },
-      //       );
-      //     } else if (snapshot.hasError) {
-      //       return Text("${snapshot.error}");
-      //     } else if (snapshot.data == null) {
-      //       return IconButton(
-      //         iconSize: TextSize.libraryIcon,
-      //         icon: const Icon(Icons.library_add_outlined),
-      //         onPressed: () {
-      //           LibraryVideosDb().insertLibraryVideo(LibraryVideos.fromVideosResponse(videosResponse));
-      //         },
-      //       );
-      //     }
-      //     return CircularProgressIndicator();
-      //   },
-      // )
-      // IconButton(
-      //   iconSize: TextSize.libraryIcon,
-      //   // icon: const Icon(Icons.library_add_outlined),
-      //   // icon: const Icon(Icons.library_add_check),
-      //   icon: const Icon(),
-      //   onPressed: () {
-      //     LibraryVideosDb().insertLibraryVideo(LibraryVideos.fromVideosResponse(videosResponse));
-      //     LibraryVideosDb().getLibraryVideo(videosResponse.videoId);
-      //   },
-      // ),
+      LibraryListenableBuilder(videosResponse: videosResponse,),
     ],
   );
 }
