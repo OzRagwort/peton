@@ -125,7 +125,16 @@ class _MyHomePageState extends State<MyHomePage> {
             return ListView(
               children: [
                 player,
-                Controls(videoId),
+                YoutubeValueBuilder(
+                  builder: (context, value) {
+                    if (value.playerState != PlayerState.unknown) {
+                      return Controls(videoId);
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                ),
               ],
             );
           },
