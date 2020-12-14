@@ -1,23 +1,17 @@
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:peton/database/LibraryVideosDb.dart';
 import 'package:peton/enums/TextSize.dart';
+import 'package:peton/model/VideosResponse.dart';
+import 'package:peton/widgets/LibraryListenableBuilder.dart';
 import 'package:peton/widgets/TextForm.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-import '../Server.dart';
-import 'Line.dart';
-
 ///
 class VideoDataSection extends StatelessWidget {
-  VideoDataSection({this.videoName, this.viewCount, this.videoPublishedDate});
+  VideoDataSection({this.videosResponse});
 
-  String videoName;
-  int viewCount;
-  String videoPublishedDate;
-
-  bool _subscribe = false;
+  VideosResponse videosResponse;
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +28,15 @@ class VideoDataSection extends StatelessWidget {
                     children: [
                       Container(
                         padding: const EdgeInsets.only(bottom: 4),
-                        child: textTitle(videoName, TextSize.playerTitleTextSize),
+                        child: textTitle(videosResponse.videoName, TextSize.playerTitleTextSize),
                       ),
-                      textViewcountAndTime(viewCount, videoPublishedDate),
+                      textViewcountAndTime(videosResponse.viewCount, videosResponse.videoPublishedDate),
                     ],
                   ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.library_add),
-                  onPressed: null,
+                LibraryListenableBuilder(
+                  future: LibraryVideosDb().getLibraryVideo(videosResponse.videoId),
+                  videosResponse: videosResponse,
                 ),
               ],
             ),

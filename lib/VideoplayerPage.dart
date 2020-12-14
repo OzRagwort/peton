@@ -160,7 +160,7 @@ class Controls extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   space,
-                  VideoDataSection(videoName: snapshot.data.videoName, viewCount: snapshot.data.viewCount, videoPublishedDate: snapshot.data.videoPublishedDate,),
+                  VideoDataSection(videosResponse: snapshot.data,),
                   divline,
                   ChannelDataSection(videosResponse: snapshot.data,),
                   divline,

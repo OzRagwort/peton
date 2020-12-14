@@ -1,13 +1,14 @@
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:peton/database/LibraryVideosDb.dart';
 import 'package:peton/enums/TextSize.dart';
 import 'package:peton/function/channelSubscriberCountCheck.dart';
 import 'package:peton/function/time_function.dart';
 import 'package:peton/function/ViewCountCheck.dart';
 import 'package:peton/model/VideosResponse.dart';
+
+import 'LibraryListenableBuilder.dart';
 
 /// homepage title
 Widget textTitle(String value, size) {
@@ -143,11 +144,46 @@ Widget homepageCardMetadata(VideosResponse videosResponse, double width)  {
           ),
         )
       ),
-      IconButton(
-        iconSize: TextSize.libraryIcon,
-        icon: const Icon(Icons.library_add_outlined),
-        onPressed: null,
+      LibraryListenableBuilder(
+        future: LibraryVideosDb().getLibraryVideo(videosResponse.videoId),
+        videosResponse: videosResponse,
       ),
+
+      // FutureBuilder<LibraryVideos>(
+      //   future: LibraryVideosDb().getLibraryVideo(videosResponse.videoId),
+      //   builder: (context, snapshot) {
+      //     if (snapshot.hasData) {
+      //       return IconButton(
+      //         iconSize: TextSize.libraryIcon,
+      //         icon: const Icon(Icons.library_add_check),
+      //         onPressed: () {
+      //           LibraryVideosDb().deleteLibraryVideo(videosResponse.videoId);
+      //         },
+      //       );
+      //     } else if (snapshot.hasError) {
+      //       return Text("${snapshot.error}");
+      //     } else if (snapshot.data == null) {
+      //       return IconButton(
+      //         iconSize: TextSize.libraryIcon,
+      //         icon: const Icon(Icons.library_add_outlined),
+      //         onPressed: () {
+      //           LibraryVideosDb().insertLibraryVideo(LibraryVideos.fromVideosResponse(videosResponse));
+      //         },
+      //       );
+      //     }
+      //     return CircularProgressIndicator();
+      //   },
+      // )
+      // IconButton(
+      //   iconSize: TextSize.libraryIcon,
+      //   // icon: const Icon(Icons.library_add_outlined),
+      //   // icon: const Icon(Icons.library_add_check),
+      //   icon: const Icon(),
+      //   onPressed: () {
+      //     LibraryVideosDb().insertLibraryVideo(LibraryVideos.fromVideosResponse(videosResponse));
+      //     LibraryVideosDb().getLibraryVideo(videosResponse.videoId);
+      //   },
+      // ),
     ],
   );
 }

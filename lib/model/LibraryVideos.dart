@@ -56,4 +56,17 @@ class LibraryVideos {
     );
   }
 
+  factory LibraryVideos.fromVideosResponse(VideosResponse videosResponse) {
+    return LibraryVideos(
+      channelId: videosResponse.channels.channelId,
+      channelName: videosResponse.channels.channelName,
+      channelThumbnail: videosResponse.channels.channelThumbnail,
+      videoId: videosResponse.videoId,
+      videoName: videosResponse.videoName,
+      videoThumbnail: videosResponse.videoThumbnail,
+      videoPublishedDate: videosResponse.videoPublishedDate,
+      videoEmbeddable: videosResponse.videoEmbeddable,
+    );
+  }
+
 }

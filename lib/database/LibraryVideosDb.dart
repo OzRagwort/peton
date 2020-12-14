@@ -66,7 +66,7 @@ class LibraryVideosDb {
   Future<LibraryVideos> getLibraryVideo(String videoId) async {
     final db = await database;
 
-    var res = await db.rawQuery('SELETE * FROM $TableName WHERE videoId = ?', [videoId]);
+    var res = await db.rawQuery('SELECT * FROM $TableName WHERE videoId = ?', [videoId]);
     
     return res.isNotEmpty ? LibraryVideos(
       channelId : res.first['channelId'],
@@ -76,8 +76,8 @@ class LibraryVideosDb {
       videoName : res.first['videoName'],
       videoThumbnail : res.first['videoThumbnail'],
       videoPublishedDate : res.first['videoPublishedDate'],
-      videoEmbeddable : res.first['videoEmbeddable'],
-    ) : Null;
+      videoEmbeddable : res.first['videoEmbeddable']==1?true:false,
+    ) : null;
   }
 
   //Read All
