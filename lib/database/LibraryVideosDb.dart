@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:peton/model/LibraryVideos.dart';
 import 'package:sqflite/sqflite.dart';
 
-final String TableName = 'LibraryVideos';
+final String TableName = 'library_videos';
 
 class LibraryVideosDb {
 
@@ -26,9 +26,9 @@ class LibraryVideosDb {
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'library_videos_db.db');
+    String path = join(documentsDirectory.path, 'peton_db.db');
 
-    log('init');
+    log('init' + path);
 
     return await openDatabase(
         path,
