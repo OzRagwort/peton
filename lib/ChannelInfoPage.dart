@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:peton/MainPage.dart';
 import 'package:peton/model/Channels.dart';
 import 'package:peton/widgets/Cards.dart';
+import 'package:peton/widgets/FavoriteIconBuilder.dart';
 import 'package:peton/widgets/Line.dart';
 import 'package:peton/widgets/TextForm.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -130,6 +131,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
       body:
       Column(
         children: [
+          /// 상단 채널 정보
           Container(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -150,14 +152,12 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
                     ],
                   ),
                 ),
-                Icon(
-                  Icons.star,
-                  size: 35,
-                ),
+                FavoriteIconBuilder(channels: channel,),
               ],
             ),
           ),
 
+          /// 정렬 박스
           Container(
             padding: const EdgeInsets.only(left: 10),
             alignment: Alignment.centerLeft,
@@ -187,6 +187,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
             ),
           ),
 
+          /// 리스트 뷰
           Expanded(
             child: SmartRefresher(
               enablePullDown: true,
