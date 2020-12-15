@@ -36,7 +36,7 @@ class ChannelDataSection extends StatelessWidget {
                     children: [
                       channelThumbnailCircle(videosResponse.channels.channelThumbnail, TextSize.channelThumbnailSize),
                       //채널 정보
-                      textChannel(videosResponse.channels.channelName, videosResponse.channels.subscribers),
+                      textChannel(videosResponse.channels.channelName, videosResponse.channels.subscribers, MediaQuery.of(context).size.width),
                     ],
                   ),
                 ),

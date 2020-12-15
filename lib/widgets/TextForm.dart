@@ -58,24 +58,42 @@ Widget textChannelNameAndTime(String channelName, String videoPublishedDate) {
 }
 
 /// videoPlayer 채널 텍스트
-Widget textChannel(String value, int subscriber) {
+Widget textChannel(String value, int subscriber, double width) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Container(
-        padding: const EdgeInsets.only(left: 16),
-        child: RichText(
-          text: TextSpan(
-              text: value,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: TextSize.channelNameSize,
-                fontFamily: 'NotoSerifKR',
-                fontWeight: FontWeight.w400,
-              )
+      ConstrainedBox(
+        // 기기 폭 길이 - 채널 썸네일 - 즐겨찾기 아이콘 - 패딩들
+        constraints: BoxConstraints(maxWidth: width - TextSize.channelThumbnailSize*2 - TextSize.libraryIcon*2 - 30),
+        child: Container(
+          padding: const EdgeInsets.only(left: 16),
+          child: RichText(
+            text: TextSpan(
+                text: value,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: TextSize.channelNameSize,
+                  fontFamily: 'NotoSerifKR',
+                  fontWeight: FontWeight.w400,
+                )
+            ),
           ),
         ),
       ),
+      // Container(
+      //   padding: const EdgeInsets.only(left: 16),
+      //   child: Text(
+      //     value,
+      //     overflow: TextOverflow.ellipsis,
+      //     maxLines: 1,
+      //     style: TextStyle(
+      //       color: Colors.black,
+      //       fontSize: TextSize.channelNameSize,
+      //       fontFamily: 'NotoSerifKR',
+      //       fontWeight: FontWeight.w400,
+      //     ),
+      //   ),
+      // ),
       Container(
         padding: const EdgeInsets.only(left: 16),
         child: RichText(
