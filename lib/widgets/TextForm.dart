@@ -1,7 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:peton/database/LibraryVideosDb.dart';
 import 'package:peton/enums/TextSize.dart';
 import 'package:peton/function/channelSubscriberCountCheck.dart';
 import 'package:peton/function/time_function.dart';
@@ -81,7 +80,7 @@ Widget textChannel(String value, int subscriber) {
         padding: const EdgeInsets.only(left: 16),
         child: RichText(
           text: TextSpan(
-              text: ChannelSubscriberSountCheck(subscriber),
+              text: ChannelSubscriberCountCheck(subscriber),
               style: TextStyle(
                 color: Colors.black.withOpacity(0.6),
                 fontSize: TextSize.channelSubscriberSize,

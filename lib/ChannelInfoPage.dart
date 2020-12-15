@@ -148,7 +148,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
                       // ),
                       textTitle(channel.channelName, 20.0),
                       space,
-                      textTitle(ChannelSubscriberSountCheck(channel.subscribers), 15.0),
+                      textTitle(ChannelSubscriberCountCheck(channel.subscribers), 15.0),
                     ],
                   ),
                 ),

@@ -1,5 +1,5 @@
 
-String ChannelSubscriberSountCheck(int subscriberCount) {
+String ChannelSubscriberCountCheck(int subscriberCount) {
   String value = '구독자 ';
 
   // 억 이상
