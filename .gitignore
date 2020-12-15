@@ -31,8 +31,7 @@
 .pub-cache/
 .pub/
 /build/
-/lib/test/
-/lib/youtube_player_iframe/
+/lib/serverInfo/
 
 # Web related
 lib/generated_plugin_registrant.dart

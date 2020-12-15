@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:peton/serverInfo/ServerInfo.dart';
 
 import 'model/VideosResponse.dart';
 
@@ -12,7 +13,7 @@ class Server {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.get('http://ec2-13-125-6-3.ap-northeast-2.compute.amazonaws.com:8080/api/moaon/v1/videos?id=' + url);
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?id=' + url);
 
     if (response.statusCode == 200) {
       return VideosResponse.fromJson(response.data[0]);
@@ -25,7 +26,7 @@ class Server {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.get('http://ec2-13-125-6-3.ap-northeast-2.compute.amazonaws.com:8080/api/moaon/v1/videos/rand?category=' + categoryId + '&count=' + count.toString());
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos/rand?category=' + categoryId + '&count=' + count.toString());
 
     List<VideosResponse> getList = [];
 
@@ -43,7 +44,7 @@ class Server {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.put('http://ec2-13-125-6-3.ap-northeast-2.compute.amazonaws.com:8080/api/moaon/v1/videos/' + url);
+    response = await dio.put(ServerInfo.serverURL + '/api/moaon/v1/videos/' + url);
 
     if (response.statusCode == 200) {
       return 0;
@@ -64,7 +65,7 @@ class Server {
 
     count = 10;
 
-    response = await dio.get('http://ec2-13-125-6-3.ap-northeast-2.compute.amazonaws.com:8080/api/moaon/v1/videos?channel=' + channelId +
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?channel=' + channelId +
         '&timeSort=' + sort +
         '&page=' + page.toString() +
         '&maxResult=' + count.toString()
