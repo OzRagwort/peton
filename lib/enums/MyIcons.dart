@@ -22,7 +22,7 @@ class MyIcons {
 
   static const Icon searchIcon = Icon(CupertinoIcons.search);
 
-  static const Icon settingIcon = Icon(Icons.settings);
+  static const Icon settingIcon = Icon(CupertinoIcons.person);
 
   static const Icon sortIcon = Icon(Icons.sort);
 
