@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:peton/widgets/ScrollAppBar.dart';
 
 import 'HomePage.dart';
 import 'FavoritePage.dart';
@@ -25,19 +24,8 @@ class _MainPageState extends State<MainPage>{
   final String title;
   final int index;
 
-  /// hide appbar
-  ScrollAppBar scrollAppBarController;
-  ScrollController _scrollViewController;
-  bool _showAppbar = true;
-  bool isScrollingDown = false;
-
   /// bottom navi
   int _selectedTabIndex;
-
-  void _scrollAppBarSetting() {
-    _scrollViewController = new ScrollController ();
-    scrollAppBarController = new ScrollAppBar(_scrollViewController, _showAppbar, isScrollingDown);
-  }
 
   @override
   void initState() {
@@ -49,8 +37,6 @@ class _MainPageState extends State<MainPage>{
   void dispose() {
     super.dispose();
     log('Main Dispose');
-    _scrollViewController.dispose();
-    scrollAppBarController.scrollViewController.dispose();
   }
 
   @override
@@ -95,13 +81,12 @@ class _MainPageState extends State<MainPage>{
   }
 
   Widget _buildPage(index){
-    _scrollAppBarSetting();
     if(index == 0) {
-      return HomePage(scrollAppBarController: scrollAppBarController,);
+      return HomePage();
     } else if(index == 1) {
-      return FavoritePage(scrollAppBarController: scrollAppBarController,);
+      return FavoritePage();
     } else {
-      return LibraryPage(scrollAppBarController: scrollAppBarController,);
+      return LibraryPage();
     }
   }
 }

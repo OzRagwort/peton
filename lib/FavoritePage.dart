@@ -2,16 +2,16 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:peton/database/FavoriteChannelsDb.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/VideoplayerPage.dart';
+import 'package:peton/widgets/AnimatedAppBar.dart';
 import 'package:peton/widgets/Cards.dart';
 import 'package:peton/widgets/Line.dart';
-import 'package:peton/widgets/ScrollAppBar.dart';
+import 'package:peton/widgets/MyAppBar.dart';
 import 'package:peton/widgets/TextForm.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -19,9 +19,6 @@ import 'Server.dart';
 import 'model/Channels.dart';
 
 class FavoritePage extends StatefulWidget {
-  FavoritePage({Key key, this.scrollAppBarController}) : super(key: key);
-
-  final ScrollAppBar scrollAppBarController;
 
   @override
   _FavoritePageState createState() => _FavoritePageState();
@@ -32,7 +29,6 @@ class _FavoritePageState extends State<FavoritePage> {
   bool isDisposed = false;
 
   /// hide appbar
-  ScrollAppBar scrollAppBarController;
   ScrollController _scrollController;
 
   /// 구독 채널들 저장 변수
@@ -150,26 +146,6 @@ class _FavoritePageState extends State<FavoritePage> {
     return items;
   }
 
-  void scrollControllerAddListener() {
-    _scrollController.addListener (() {
-      if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-        if (!scrollAppBarController.isScrollingDown) {
-          scrollAppBarController.isScrollingDown = true;
-          scrollAppBarController.showAppbar = false;
-          setState (() {});
-        }
-      }
-
-      if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
-        if (scrollAppBarController.isScrollingDown) {
-          scrollAppBarController.isScrollingDown = false;
-          scrollAppBarController.showAppbar = true;
-          setState (() {});
-        }
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -178,215 +154,194 @@ class _FavoritePageState extends State<FavoritePage> {
     videosResponse = server.getbyChannelIdSortDate(_listToString(listChannels), sort, 1, count);
 
     /// appbar setting
-    scrollAppBarController = widget.scrollAppBarController;
-    _scrollController = scrollAppBarController.scrollViewController;
-    scrollControllerAddListener();
+    _scrollController = new ScrollController();
   }
 
   @override
   void dispose() {
     super.dispose();
     _scrollController.dispose();
-    log('Favorite Dispose');
   }
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-        body: Column(
-          children: [
-            AnimatedContainer(
-              height: scrollAppBarController.showAppbar ? 48.0 : 0.0,
-              duration: Duration(milliseconds: 100),
-              child: AppBar(
-                backgroundColor: Colors.white,
-                title: Center(
-                  child: Text(
-                    'title',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                actions: <Widget>[
-                  //add buttons here
-                ],
-              ),
-            ),
-            Expanded(
-              child: FutureBuilder<List<Channels>>(
-                future: FavoriteChannelsDb().getAllChannels(),
-                builder: (context, snapshot) {
-                  if(snapshot.hasData) {
-                    listChannels = snapshot.data;
+        body: AnimatedAppBar(
+          scrollController: _scrollController,
+          child: myAppbar(),
+          body: Expanded(
+            child: FutureBuilder<List<Channels>>(
+              future: FavoriteChannelsDb().getAllChannels(),
+              builder: (context, snapshot) {
+                if(snapshot.hasData) {
+                  listChannels = snapshot.data;
 
-                    return Column(
-                      children: [
+                  return Column(
+                    children: [
 
-                        /// 좋아요 채널 리스트
-                        // FavoriteChannelsListBuilder(),
-                        Container(
-                          // margin: EdgeInsets.symmetric(vertical: 20.0),
-                          height: 125,
-                          alignment: Alignment.topLeft,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.all(10),
-                            itemCount: listChannels.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    if (_channelClickCheck == index) {
-                                      _offClickChannel(index);
-                                    } else {
-                                      _onClickChannel(index);
-                                    }
-                                  },
-                                  child: Opacity(
-                                    opacity: (_channelClickCheck == null) || (_channelClickCheck == index) ? 1.0 : 0.6,
-                                    child: Container(
-                                      color: _channelClickCheck == index ? Colors.lightBlueAccent.withOpacity(0.3) : Color(0x00000000),
-                                      child: Column(
-                                        children: [
-                                          channelThumbnailCircle(listChannels[index].channelThumbnail, 35),
-                                          space,
-                                          ConstrainedBox(
-                                            constraints: BoxConstraints(maxWidth: 70),
-                                            child: Container(
-                                              child: Text(
-                                                listChannels[index].channelName,
-                                                style: TextStyle(fontSize: 12),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
+                      /// 좋아요 채널 리스트
+                      // FavoriteChannelsListBuilder(),
+                      Container(
+                        // margin: EdgeInsets.symmetric(vertical: 20.0),
+                        height: 125,
+                        alignment: Alignment.topLeft,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.all(10),
+                          itemCount: listChannels.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(5),
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (_channelClickCheck == index) {
+                                    _offClickChannel(index);
+                                  } else {
+                                    _onClickChannel(index);
+                                  }
+                                },
+                                child: Opacity(
+                                  opacity: (_channelClickCheck == null) || (_channelClickCheck == index) ? 1.0 : 0.6,
+                                  child: Container(
+                                    color: _channelClickCheck == index ? Colors.lightBlueAccent.withOpacity(0.3) : Color(0x00000000),
+                                    child: Column(
+                                      children: [
+                                        channelThumbnailCircle(listChannels[index].channelThumbnail, 35),
+                                        space,
+                                        ConstrainedBox(
+                                          constraints: BoxConstraints(maxWidth: 70),
+                                          child: Container(
+                                            child: Text(
+                                              listChannels[index].channelName,
+                                              style: TextStyle(fontSize: 12),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+
+                      /// 정렬 박스
+                      Container(
+                        padding: const EdgeInsets.only(left: 10),
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            Icon(Icons.sort, size: 25,),
+                            spaceLeft,
+                            DropdownButton<String>(
+                              icon: Icon(Icons.keyboard_arrow_down),
+                              value: _sortingMethod,
+                              iconSize: 24,
+                              elevation: 16,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 17.0,
+                                fontFamily: 'NotoSerifKR',
+                                fontWeight: FontWeight.w400,
+                              ),
+                              underline: Container(height: 0),
+                              items: _dropDownMenuItems,
+                              onChanged: (String newValue) {
+                                _sortingMethod = newValue;
+                                _sortRefresh(newValue);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      /// 리스트 뷰
+                      Expanded(
+                        child: SmartRefresher(
+                          enablePullDown: true,
+                          enablePullUp: true,
+                          header: MaterialClassicHeader(),
+                          footer: CustomFooter(
+                            loadStyle: LoadStyle.ShowWhenLoading,
+                            builder: (BuildContext context, LoadStatus mode){
+                              Widget body ;
+                              /// 로드 완료 후
+                              if(mode==LoadStatus.idle){
+                                body =  Text("pull up load");
+                              }
+                              /// ?
+                              else if(mode==LoadStatus.loading){
+                                body =  CupertinoActivityIndicator();
+                              }
+                              /// ?
+                              else if(mode == LoadStatus.failed){
+                                body = Text("Load Failed!Click retry!");
+                              }
+                              /// 로드하려고 풀업했을 때 나타는 것
+                              else if(mode == LoadStatus.canLoading){
+                                body = Text("Load more");
+                              }
+                              /// ?
+                              else{
+                                body = Text("No more Data");
+                              }
+                              return Container(
+                                height: 55.0,
+                                child: Center(child:body),
                               );
                             },
                           ),
-                        ),
-
-                        /// 정렬 박스
-                        Container(
-                          padding: const EdgeInsets.only(left: 10),
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            children: [
-                              Icon(Icons.sort, size: 25,),
-                              spaceLeft,
-                              DropdownButton<String>(
-                                icon: Icon(Icons.keyboard_arrow_down),
-                                value: _sortingMethod,
-                                iconSize: 24,
-                                elevation: 16,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 17.0,
-                                  fontFamily: 'NotoSerifKR',
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                underline: Container(height: 0),
-                                items: _dropDownMenuItems,
-                                onChanged: (String newValue) {
-                                  _sortingMethod = newValue;
-                                  _sortRefresh(newValue);
-                                },
-                              ),
-                            ],
+                          controller: _refreshController,
+                          onRefresh: _onRefresh,
+                          onLoading: _onLoading,
+                          child: ListView.builder(
+                              controller: _scrollController,
+                              itemCount: listVideos.length + 10,
+                              // ignore: missing_return
+                              itemBuilder: (context, index) {
+                                // log(listVideos.length.toString() + ' / ' + index.toString());
+                                if (index == 0 && listVideos.length == 0) {
+                                  videosResponse = server.getbyChannelIdSortDate(_listToString(listChannels), sort, 1, count);
+                                  return FutureBuilder<List<VideosResponse>>(
+                                    future: videosResponse,
+                                    // future: server.getbyChannelIdSortDate(_listToString(), sort, 1, count),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        listVideos.addAll(snapshot.data);
+                                        return _videosCart(index, MediaQuery.of(context).size.width);
+                                      } else if (snapshot.hasError) {
+                                        return Text("${snapshot.error}");
+                                      }
+                                      return Center(
+                                        child: Image.asset(
+                                          "lib/assets/spinner.gif",
+                                          fit: BoxFit.fill,
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+                                if (listVideos.length > index) {
+                                  return _videosCart(index, MediaQuery.of(context).size.width);
+                                }
+                              }
                           ),
                         ),
+                      ),
 
-                        /// 리스트 뷰
-                        Expanded(
-                          child: SmartRefresher(
-                            enablePullDown: true,
-                            enablePullUp: true,
-                            header: MaterialClassicHeader(),
-                            footer: CustomFooter(
-                              loadStyle: LoadStyle.ShowWhenLoading,
-                              builder: (BuildContext context, LoadStatus mode){
-                                Widget body ;
-                                /// 로드 완료 후
-                                if(mode==LoadStatus.idle){
-                                  body =  Text("pull up load");
-                                }
-                                /// ?
-                                else if(mode==LoadStatus.loading){
-                                  body =  CupertinoActivityIndicator();
-                                }
-                                /// ?
-                                else if(mode == LoadStatus.failed){
-                                  body = Text("Load Failed!Click retry!");
-                                }
-                                /// 로드하려고 풀업했을 때 나타는 것
-                                else if(mode == LoadStatus.canLoading){
-                                  body = Text("Load more");
-                                }
-                                /// ?
-                                else{
-                                  body = Text("No more Data");
-                                }
-                                return Container(
-                                  height: 55.0,
-                                  child: Center(child:body),
-                                );
-                              },
-                            ),
-                            controller: _refreshController,
-                            onRefresh: _onRefresh,
-                            onLoading: _onLoading,
-                            child: ListView.builder(
-                                controller: _scrollController,
-                                itemCount: listVideos.length + 10,
-                                // ignore: missing_return
-                                itemBuilder: (context, index) {
-                                  // log(listVideos.length.toString() + ' / ' + index.toString());
-                                  if (index == 0 && listVideos.length == 0) {
-                                    videosResponse = server.getbyChannelIdSortDate(_listToString(listChannels), sort, 1, count);
-                                    return FutureBuilder<List<VideosResponse>>(
-                                      future: videosResponse,
-                                      // future: server.getbyChannelIdSortDate(_listToString(), sort, 1, count),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasData) {
-                                          listVideos.addAll(snapshot.data);
-                                          return _videosCart(index, MediaQuery.of(context).size.width);
-                                        } else if (snapshot.hasError) {
-                                          return Text("${snapshot.error}");
-                                        }
-                                        return Center(
-                                          child: Image.asset(
-                                            "lib/assets/spinner.gif",
-                                            fit: BoxFit.fill,
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  }
-                                  if (listVideos.length > index) {
-                                    return _videosCart(index, MediaQuery.of(context).size.width);
-                                  }
-                                }
-                            ),
-                          ),
-                        ),
-
-                      ],
-                    );
-                  } else {
-                    return Center(child: CircularProgressIndicator(),);
-                  }
-                },
-              ),
+                    ],
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator(),);
+                }
+              },
             ),
-          ],
+          ),
         ),
     );
 
