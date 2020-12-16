@@ -11,6 +11,7 @@ import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/widgets/Cards.dart';
 import 'package:peton/widgets/Line.dart';
+import 'package:peton/widgets/ScrollAppBar.dart';
 import 'package:peton/widgets/TextForm.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -18,7 +19,9 @@ import 'Server.dart';
 import 'model/Channels.dart';
 
 class FavoritePage extends StatefulWidget {
-  FavoritePage({Key key}) : super(key : key);
+  FavoritePage({Key key, this.scrollAppBarController}) : super(key: key);
+
+  final ScrollAppBar scrollAppBarController;
 
   @override
   _FavoritePageState createState() => _FavoritePageState();
@@ -26,10 +29,11 @@ class FavoritePage extends StatefulWidget {
 
 class _FavoritePageState extends State<FavoritePage> {
 
+  bool isDisposed = false;
+
   /// hide appbar
+  ScrollAppBar scrollAppBarController;
   ScrollController _scrollController;
-  bool showAppbar = true;
-  bool isScrollingDown = false;
 
   /// 구독 채널들 저장 변수
   List<Channels> listChannels = new List<Channels>();
@@ -146,6 +150,26 @@ class _FavoritePageState extends State<FavoritePage> {
     return items;
   }
 
+  void scrollControllerAddListener() {
+    _scrollController.addListener (() {
+      if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+        if (!scrollAppBarController.isScrollingDown) {
+          scrollAppBarController.isScrollingDown = true;
+          scrollAppBarController.showAppbar = false;
+          setState (() {});
+        }
+      }
+
+      if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
+        if (scrollAppBarController.isScrollingDown) {
+          scrollAppBarController.isScrollingDown = false;
+          scrollAppBarController.showAppbar = true;
+          setState (() {});
+        }
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -154,30 +178,16 @@ class _FavoritePageState extends State<FavoritePage> {
     videosResponse = server.getbyChannelIdSortDate(_listToString(listChannels), sort, 1, count);
 
     /// appbar setting
-    _scrollController = new ScrollController();
-    _scrollController.addListener (() {
-      if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-        if (!isScrollingDown) {
-          isScrollingDown = true;
-          showAppbar = false;
-          setState (() {});
-        }
-      }
-
-      if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
-        if (isScrollingDown) {
-          isScrollingDown = false;
-          showAppbar = true;
-          setState (() {});
-        }
-      }
-    });
+    scrollAppBarController = widget.scrollAppBarController;
+    _scrollController = scrollAppBarController.scrollViewController;
+    scrollControllerAddListener();
   }
 
   @override
   void dispose() {
     super.dispose();
     _scrollController.dispose();
+    log('Favorite Dispose');
   }
 
   @override
@@ -187,7 +197,7 @@ class _FavoritePageState extends State<FavoritePage> {
         body: Column(
           children: [
             AnimatedContainer(
-              height: showAppbar ? 48.0 : 0.0,
+              height: scrollAppBarController.showAppbar ? 48.0 : 0.0,
               duration: Duration(milliseconds: 100),
               child: AppBar(
                 backgroundColor: Colors.white,
@@ -335,7 +345,7 @@ class _FavoritePageState extends State<FavoritePage> {
                             onLoading: _onLoading,
                             child: ListView.builder(
                                 controller: _scrollController,
-                                itemCount: listVideos?.length + 10,
+                                itemCount: listVideos.length + 10,
                                 // ignore: missing_return
                                 itemBuilder: (context, index) {
                                   // log(listVideos.length.toString() + ' / ' + index.toString());

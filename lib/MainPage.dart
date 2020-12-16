@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:peton/widgets/ScrollAppBar.dart';
 
 import 'HomePage.dart';
 import 'FavoritePage.dart';
@@ -19,11 +21,12 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage>{
-  _MainPageState({Key key, this.title, this.index});
+  _MainPageState({this.title, this.index});
   final String title;
   final int index;
 
   /// hide appbar
+  ScrollAppBar scrollAppBarController;
   ScrollController _scrollViewController;
   bool _showAppbar = true;
   bool isScrollingDown = false;
@@ -31,36 +34,23 @@ class _MainPageState extends State<MainPage>{
   /// bottom navi
   int _selectedTabIndex;
 
+  void _scrollAppBarSetting() {
+    _scrollViewController = new ScrollController ();
+    scrollAppBarController = new ScrollAppBar(_scrollViewController, _showAppbar, isScrollingDown);
+  }
+
   @override
   void initState() {
     super.initState();
     _selectedTabIndex = index;
-
-    _scrollViewController = new ScrollController ();
-    _scrollViewController.addListener (() {
-      if (_scrollViewController.position.userScrollDirection == ScrollDirection.reverse) {
-        if (! isScrollingDown) {
-          isScrollingDown = true;
-          _showAppbar = false;
-          setState (() {});
-        }
-      }
-
-      if (_scrollViewController.position .userScrollDirection == ScrollDirection.forward) {
-        if (isScrollingDown) {
-          isScrollingDown = false;
-          _showAppbar = true;
-          setState (() {});
-        }
-      }
-    });
   }
 
   @override
   void dispose() {
     super.dispose();
-    _scrollViewController.dispose ();
-    _scrollViewController.removeListener (() {});
+    log('Main Dispose');
+    _scrollViewController.dispose();
+    scrollAppBarController.scrollViewController.dispose();
   }
 
   @override
@@ -105,11 +95,13 @@ class _MainPageState extends State<MainPage>{
   }
 
   Widget _buildPage(index){
-    if(index == 0)
-      return HomePage();
-    else if(index == 1)
-      return FavoritePage();
-    else
-      return LibraryPage();
+    _scrollAppBarSetting();
+    if(index == 0) {
+      return HomePage(scrollAppBarController: scrollAppBarController,);
+    } else if(index == 1) {
+      return FavoritePage(scrollAppBarController: scrollAppBarController,);
+    } else {
+      return LibraryPage(scrollAppBarController: scrollAppBarController,);
+    }
   }
 }

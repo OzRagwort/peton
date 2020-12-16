@@ -9,10 +9,12 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:peton/Server.dart';
 
 import 'model/VideosResponse.dart';
-import 'widgets/Line.dart';
 import 'widgets/Cards.dart';
 
 class HomePage extends StatefulWidget {
+  HomePage({Key key, this.scrollAppBarController}) : super(key: key);
+
+  final ScrollAppBar scrollAppBarController;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -21,10 +23,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  bool isDisposed = false;
+
   /// hide appbar
+  ScrollAppBar scrollAppBarController;
   ScrollController _scrollController;
-  bool showAppbar = true;
-  bool isScrollingDown = false;
 
   RefreshController _refreshController =
   RefreshController(initialRefresh: false);
@@ -65,36 +68,44 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    videosResponse = server.getRandbyCategoryId('1', 10);
-
-    /// appbar setting
-    _scrollController = new ScrollController();
+  void scrollControllerAddListener() {
     _scrollController.addListener (() {
       if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-        if (!isScrollingDown) {
-          isScrollingDown = true;
-          showAppbar = false;
-          setState (() {});
+        if (!scrollAppBarController.isScrollingDown) {
+          scrollAppBarController.isScrollingDown = true;
+          scrollAppBarController.showAppbar = false;
+          if(mounted)
+            setState(() {});
         }
       }
 
       if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
-        if (isScrollingDown) {
-          isScrollingDown = false;
-          showAppbar = true;
-          setState (() {});
+        if (scrollAppBarController.isScrollingDown) {
+          scrollAppBarController.isScrollingDown = false;
+          scrollAppBarController.showAppbar = true;
+          if(mounted)
+            setState(() {});
         }
       }
     });
   }
 
   @override
+  void initState() {
+    super.initState();
+    videosResponse = server.getRandbyCategoryId('1', 10);
+
+    /// appbar setting
+    scrollAppBarController = widget.scrollAppBarController;
+    _scrollController = scrollAppBarController.scrollViewController;
+    scrollControllerAddListener();
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _scrollController.dispose();
+    log('Home Dispose');
   }
 
   @override
@@ -107,7 +118,7 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           AnimatedContainer(
-            height: showAppbar ? 48.0 : 0.0,
+            height: scrollAppBarController.showAppbar ? 48.0 : 0.0,
             duration: Duration(milliseconds: 100),
             child: AppBar(
               backgroundColor: Colors.white,
@@ -164,7 +175,7 @@ class _HomePageState extends State<HomePage> {
               onLoading: _onLoading,
               child: ListView.builder(
                   controller: _scrollController,
-                  itemCount: myList?.length + 10,
+                  itemCount: myList.length + 10,
                   // ignore: missing_return
                   itemBuilder: (context, index) {
                     // log(myList.length.toString() + ' / ' + index.toString());

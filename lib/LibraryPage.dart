@@ -1,16 +1,21 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/database/LibraryVideosDb.dart';
 import 'package:peton/model/LibraryVideos.dart';
 import 'package:peton/widgets/Cards.dart';
+import 'package:peton/widgets/ScrollAppBar.dart';
 
 import 'model/VideosResponse.dart';
 
 class LibraryPage extends StatefulWidget {
+  LibraryPage({Key key, this.scrollAppBarController}) : super(key: key);
+
+  final ScrollAppBar scrollAppBarController;
+
   @override
   _LibraryPageState createState() => _LibraryPageState();
 }
@@ -18,9 +23,8 @@ class LibraryPage extends StatefulWidget {
 class _LibraryPageState extends State<LibraryPage> {
 
   /// hide appbar
+  ScrollAppBar scrollAppBarController;
   ScrollController _scrollController;
-  bool showAppbar = true;
-  bool isScrollingDown = false;
 
   LibraryVideos libraryVideos;
 
@@ -43,25 +47,20 @@ class _LibraryPageState extends State<LibraryPage> {
 
   }
 
-  @override
-  void initState() {
-    super.initState();
-
-    /// appbar setting
-    _scrollController = new ScrollController();
+  void scrollControllerAddListener() {
     _scrollController.addListener (() {
       if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-        if (!isScrollingDown) {
-          isScrollingDown = true;
-          showAppbar = false;
+        if (!scrollAppBarController.isScrollingDown) {
+          scrollAppBarController.isScrollingDown = true;
+          scrollAppBarController.showAppbar = false;
           setState (() {});
         }
       }
 
       if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
-        if (isScrollingDown) {
-          isScrollingDown = false;
-          showAppbar = true;
+        if (scrollAppBarController.isScrollingDown) {
+          scrollAppBarController.isScrollingDown = false;
+          scrollAppBarController.showAppbar = true;
           setState (() {});
         }
       }
@@ -69,9 +68,20 @@ class _LibraryPageState extends State<LibraryPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    /// appbar setting
+    scrollAppBarController = widget.scrollAppBarController;
+    _scrollController = scrollAppBarController.scrollViewController;
+    scrollControllerAddListener();
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _scrollController.dispose();
+    log('Library Dispose');
   }
 
   @override
@@ -80,7 +90,7 @@ class _LibraryPageState extends State<LibraryPage> {
       body: Column(
         children: [
           AnimatedContainer(
-            height: showAppbar ? 48.0 : 0.0,
+            height: scrollAppBarController.showAppbar ? 48.0 : 0.0,
             duration: Duration(milliseconds: 100),
             child: AppBar(
               backgroundColor: Colors.white,
