@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/widgets/TextForm.dart';
@@ -17,9 +18,10 @@ Widget videoCard(VideosResponse videosResponse, double width) =>
       loadStateChanged: (ExtendedImageState state) {
         switch (state.extendedImageLoadState) {
           case LoadState.loading:
-            return Image.asset(
-              "lib/assets/spinner.gif",
-              fit: BoxFit.fill,
+            return SizedBox(
+              width: width,
+              height: width*9/16 + 85,
+              child: CupertinoActivityIndicator(radius: 15,),
             );
             break;
           case LoadState.completed:
@@ -78,9 +80,10 @@ Widget videoCardSmall(VideosResponse videosResponse, double width) =>
       loadStateChanged: (ExtendedImageState state) {
         switch (state.extendedImageLoadState) {
           case LoadState.loading:
-            return Image.asset(
-              "lib/assets/spinner.gif",
-              fit: BoxFit.fill,
+            return SizedBox(
+              width: width,
+              height: width*9/16 + 85,
+              child: CupertinoActivityIndicator(radius: 15,),
             );
             break;
           case LoadState.completed:

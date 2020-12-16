@@ -79,7 +79,7 @@ class _LibraryPageState extends State<LibraryPage> {
                   },
                 );
               } else {
-                return Center(child: CircularProgressIndicator(),);
+                return Center(child: CupertinoActivityIndicator(),);
               }
             },
           ),

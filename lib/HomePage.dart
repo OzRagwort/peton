@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/rendering.dart';
 import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/widgets/AnimatedAppBar.dart';
 import 'package:peton/widgets/MyAppBar.dart';
@@ -146,10 +145,7 @@ class _HomePageState extends State<HomePage> {
                           return Text("${snapshot.error}");
                         }
                         return Center(
-                          child: Image.asset(
-                            "lib/assets/spinner.gif",
-                            fit: BoxFit.fill,
-                          ),
+                          child: CupertinoActivityIndicator(),
                         );
                       },
                     );

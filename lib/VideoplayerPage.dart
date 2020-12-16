@@ -101,7 +101,6 @@ class _MyHomePageState extends State<MyHomePage> {
     const player = YoutubePlayerIFrame();
 
     return YoutubePlayerControllerProvider(
-      // Passing controller to widgets below.
       controller: _controller,
       child: Scaffold(
         body: LayoutBuilder(
@@ -130,9 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     if (value.playerState != PlayerState.unknown) {
                       return Controls(videoId);
                     }
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return LinearProgressIndicator();
                   },
                 ),
               ],

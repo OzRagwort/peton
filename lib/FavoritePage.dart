@@ -319,10 +319,7 @@ class _FavoritePageState extends State<FavoritePage> {
                                         return Text("${snapshot.error}");
                                       }
                                       return Center(
-                                        child: Image.asset(
-                                          "lib/assets/spinner.gif",
-                                          fit: BoxFit.fill,
-                                        ),
+                                        child: Text(''),
                                       );
                                     },
                                   );
@@ -338,7 +335,7 @@ class _FavoritePageState extends State<FavoritePage> {
                     ],
                   );
                 } else {
-                  return Center(child: CircularProgressIndicator(),);
+                  return Center(child: CupertinoActivityIndicator(),);
                 }
               },
             ),
