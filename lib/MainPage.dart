@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:peton/enums/MyIcons.dart';
 
 import 'HomePage.dart';
 import 'FavoritePage.dart';
@@ -56,15 +57,15 @@ class _MainPageState extends State<MainPage>{
           iconSize: 21,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.view_list),
+              icon: MyIcons.homePageIcon,
               title: Text('Home', style: TextStyle(fontSize: 12),),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.star),
+              icon: MyIcons.favoritePageIcon,
               title: Text('Favorite', style: TextStyle(fontSize: 12),),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.library_add_check),
+              icon: MyIcons.libraryPageIcon,
               title: Text('Library', style: TextStyle(fontSize: 10),),
             ),
           ],

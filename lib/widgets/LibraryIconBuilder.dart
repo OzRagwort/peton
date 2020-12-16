@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peton/database/LibraryVideosDb.dart';
+import 'package:peton/enums/MyIcons.dart';
 import 'package:peton/enums/TextSize.dart';
 import 'package:peton/model/LibraryVideos.dart';
 import 'package:peton/model/VideosResponse.dart';
@@ -46,7 +47,7 @@ class _LibraryListenableBuilderState extends State<LibraryListenableBuilder> {
         if (snapshot.hasData) {
           return IconButton(
             iconSize: TextSize.libraryIcon,
-            icon: const Icon(Icons.library_add_check),
+            icon: MyIcons.libraryOnIcon,
             onPressed: () {
               LibraryVideosDb().deleteLibraryVideo(videosResponse.videoId);
               setState(() {});
@@ -57,7 +58,7 @@ class _LibraryListenableBuilderState extends State<LibraryListenableBuilder> {
         } else if (snapshot.data == null) {
           return IconButton(
             iconSize: TextSize.libraryIcon,
-            icon: const Icon(Icons.library_add_outlined),
+            icon: MyIcons.libraryOffIcon,
             onPressed: () {
               LibraryVideosDb().insertLibraryVideo(LibraryVideos.fromVideosResponse(videosResponse));
               setState(() {});

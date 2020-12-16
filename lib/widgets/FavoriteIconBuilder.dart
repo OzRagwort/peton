@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peton/database/FavoriteChannelsDb.dart';
+import 'package:peton/enums/MyIcons.dart';
 import 'package:peton/enums/TextSize.dart';
 import 'package:peton/model/Channels.dart';
 
@@ -40,7 +41,8 @@ class _FavoriteIconBuilderState extends State<FavoriteIconBuilder> {
         if (snapshot.hasData) {
           return IconButton(
             iconSize: TextSize.libraryIcon,
-            icon: const Icon(Icons.star, color: Colors.amber,),
+            icon: MyIcons.favoriteOnIcon,
+            color: Colors.amber,
             onPressed: () {
               FavoriteChannelsDb().deleteChannel(channels.channelId);
               setState(() {});
@@ -51,7 +53,7 @@ class _FavoriteIconBuilderState extends State<FavoriteIconBuilder> {
         } else if (snapshot.data == null) {
           return IconButton(
             iconSize: TextSize.libraryIcon,
-            icon: const Icon(Icons.star_border),
+            icon: MyIcons.favoriteOffIcon,
             onPressed: () {
               FavoriteChannelsDb().insertChannel(channels);
               setState(() {});

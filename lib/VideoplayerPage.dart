@@ -20,8 +20,8 @@ import 'widgets/VolumeSlider.dart';
 
 import 'Server.dart';
 
-class VideowatchPage extends StatelessWidget {
-  VideowatchPage({Key key, this.videoId}) : super(key: key);
+class VideoPlayerPage extends StatelessWidget {
+  VideoPlayerPage({Key key, this.videoId}) : super(key: key);
 
   String videoId;
 

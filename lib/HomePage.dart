@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
       onTap: () => {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => VideowatchPage(videoId: myList[listNum].videoId)),
+          MaterialPageRoute(builder: (context) => VideoPlayerPage(videoId: myList[listNum].videoId)),
         )
       },
       child: videoCard(myList[listNum], width),

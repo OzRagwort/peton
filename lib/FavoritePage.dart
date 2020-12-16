@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:peton/database/FavoriteChannelsDb.dart';
+import 'package:peton/enums/MyIcons.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/widgets/AnimatedAppBar.dart';
@@ -127,7 +128,7 @@ class _FavoritePageState extends State<FavoritePage> {
       onTap: () => {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => VideowatchPage(videoId: listVideos[listNum].videoId)),
+          MaterialPageRoute(builder: (context) => VideoPlayerPage(videoId: listVideos[listNum].videoId)),
         )
       },
       child: videoCard(listVideos[listNum], width),
@@ -236,10 +237,10 @@ class _FavoritePageState extends State<FavoritePage> {
                         alignment: Alignment.centerLeft,
                         child: Row(
                           children: [
-                            Icon(Icons.sort, size: 25,),
+                            MyIcons.sortIcon,
                             spaceLeft,
                             DropdownButton<String>(
-                              icon: Icon(Icons.keyboard_arrow_down),
+                              icon: MyIcons.sortDownIcon,
                               value: _sortingMethod,
                               iconSize: 24,
                               elevation: 16,

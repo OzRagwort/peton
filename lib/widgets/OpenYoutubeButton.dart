@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:peton/enums/MyIcons.dart';
 import 'package:peton/function/LaunchYoutube.dart';
 
 class OpenYoutubeButton extends StatelessWidget {
@@ -11,10 +12,7 @@ class OpenYoutubeButton extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => LaunchYoutube.openYoutube(videoId),
-      child: Image.asset(
-        'lib/assets/youtube_logo.png',
-        width: 100,
-      ),
+      child: MyIcons.youtubeIcon,
     );
 
   }
