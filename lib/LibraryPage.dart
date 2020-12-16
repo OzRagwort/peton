@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/database/LibraryVideosDb.dart';
 import 'package:peton/model/LibraryVideos.dart';
@@ -15,6 +16,11 @@ class LibraryPage extends StatefulWidget {
 }
 
 class _LibraryPageState extends State<LibraryPage> {
+
+  /// hide appbar
+  ScrollController _scrollController;
+  bool showAppbar = true;
+  bool isScrollingDown = false;
 
   LibraryVideos libraryVideos;
 
@@ -38,41 +44,80 @@ class _LibraryPageState extends State<LibraryPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    /// appbar setting
+    _scrollController = new ScrollController();
+    _scrollController.addListener (() {
+      if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+        if (!isScrollingDown) {
+          isScrollingDown = true;
+          showAppbar = false;
+          setState (() {});
+        }
+      }
+
+      if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
+        if (isScrollingDown) {
+          isScrollingDown = false;
+          showAppbar = true;
+          setState (() {});
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<LibraryVideos>>(
-        future: LibraryVideosDb().getAllLibraryVideos(),
-        // builder: (BuildContext context, AsyncSnapshot<List<LibraryVideos>> snapshot) {
-        builder: (context, snapshot) {
-
-          if(snapshot.hasData) {
-
-            return ListView.builder(
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-
-                LibraryVideos item = snapshot.data[index];
-
-                VideosResponse videosResponse = item.toVideosResponse();
-
-                return videoCardSmall(videosResponse, MediaQuery.of(context).size.width);
-
-                // return Dismissible(
-                //   key: UniqueKey(),
-                //   onDismissed: (direction) {
-                //     LibraryVideosDb().deleteLibraryVideo(item.videoId);
-                //     setState(() {});
-                //   },
-                //   child: Center(child: Text(item.videoName)),
-                // );
+      body: Column(
+        children: [
+          AnimatedContainer(
+            height: showAppbar ? 48.0 : 0.0,
+            duration: Duration(milliseconds: 100),
+            child: AppBar(
+              backgroundColor: Colors.white,
+              title: Center(
+                child: Text(
+                  'title',
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              actions: <Widget>[
+                //add buttons here
+              ],
+            ),
+          ),
+          Expanded(
+            child: FutureBuilder<List<LibraryVideos>>(
+              future: LibraryVideosDb().getAllLibraryVideos(),
+              builder: (context, snapshot) {
+                if(snapshot.hasData) {
+                  return ListView.builder(
+                    controller: _scrollController,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      LibraryVideos item = snapshot.data[index];
+                      VideosResponse videosResponse = item.toVideosResponse();
+                      return videoCardSmall(videosResponse, MediaQuery.of(context).size.width);
+                    },
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator(),);
+                }
               },
-            );
-          }
-          else
-          {
-            return Center(child: CircularProgressIndicator(),);
-          }
-        },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
