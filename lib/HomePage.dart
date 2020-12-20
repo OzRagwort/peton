@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: AnimatedAppBar(
         scrollController: _scrollController,
-        child: myAppbar(),
+        child: MyAppBar(),
         body: Expanded(
           child: SmartRefresher(
             enablePullDown: true,

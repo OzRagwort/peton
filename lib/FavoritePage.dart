@@ -170,7 +170,7 @@ class _FavoritePageState extends State<FavoritePage> {
     return Scaffold(
         body: AnimatedAppBar(
           scrollController: _scrollController,
-          child: myAppbar(),
+          child: MyAppBar(),
           body: Expanded(
             child: FutureBuilder<List<Channels>>(
               future: FavoriteChannelsDb().getAllChannels(),

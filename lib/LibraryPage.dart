@@ -63,7 +63,7 @@ class _LibraryPageState extends State<LibraryPage> {
     return Scaffold(
       body: AnimatedAppBar(
         scrollController: _scrollController,
-        child: myAppbar(),
+        child: MyAppBar(),
         body: Expanded(
           child: FutureBuilder<List<LibraryVideos>>(
             future: LibraryVideosDb().getAllLibraryVideos(),
