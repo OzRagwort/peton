@@ -29,7 +29,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
   _ChannelInfoPageState({this.channel});
 
   Channels channel;
-  String sort = 'desc'; // 최신순
+  String sort = 'desc'; // 최신순 desc:최신, asc:오래된순, popular:인기순
   int count = 10;
 
   List<String> _sortList = ['인기 동영상', '최신 순', '오래된 순'];
@@ -45,7 +45,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
   void _onRefresh() async{
 
     myList = new List<VideosResponse>();
-    videosResponse = server.getbyChannelIdSortDate(channel.channelId, sort, 1, count);
+    videosResponse = server.getbyChannelIdSort(channel.channelId, sort, 1, count);
 
     videosResponse.then((value) => setState(() {myList.addAll(value);}));
 
@@ -56,7 +56,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
 
     int index = (myList.length ~/ 10) + 1;
 
-    videosResponse = server.getbyChannelIdSortDate(channel.channelId, sort, index, count);
+    videosResponse = server.getbyChannelIdSort(channel.channelId, sort, index, count);
     videosResponse.then((value) => myList.addAll(value));
 
     if(mounted)
@@ -75,7 +75,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
     }
 
     myList = new List<VideosResponse>();
-    videosResponse = server.getbyChannelIdSortDate(channel.channelId, sort, 1, count);
+    videosResponse = server.getbyChannelIdSort(channel.channelId, sort, 1, count);
     videosResponse.then((value) {
       myList.addAll(value);
       setState(() {});
@@ -111,7 +111,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
     super.initState();
     _dropDownMenuItems = getDropDownMenuItems();
     _sortingMethod = _dropDownMenuItems[1].value;
-    videosResponse = server.getbyChannelIdSortDate(channel.channelId, sort, 1, count);
+    videosResponse = server.getbyChannelIdSort(channel.channelId, sort, 1, count);
   }
 
   @override

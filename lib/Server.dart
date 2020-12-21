@@ -59,14 +59,14 @@ class Server {
     return getReq(url);
   }
 
-  Future<List<VideosResponse>> getbyChannelIdSortDate(String channelId, String sort, int page, int count) async {
+  Future<List<VideosResponse>> getbyChannelIdSort(String channelId, String sort, int page, int count) async {
     Response response;
     Dio dio = new Dio();
 
     count = 10;
 
     response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?channel=' + channelId +
-        '&timeSort=' + sort +
+        '&sort=' + sort +
         '&page=' + page.toString() +
         '&maxResult=' + count.toString()
     );
