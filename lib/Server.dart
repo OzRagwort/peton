@@ -83,5 +83,28 @@ class Server {
     }
   }
 
+  Future<List<VideosResponse>> getSearchVideos(String keyword, int page, int count) async {
+    Response response;
+    Dio dio = new Dio();
+
+    count = 10;
+
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?search=' + keyword +
+        '&page=' + page.toString() +
+        '&maxResult=' + count.toString()
+    );
+
+    List<VideosResponse> getList = [];
+
+    if (response.statusCode == 200) {
+      for(int i = 0 ; i < count ; i++) {
+        getList.add(VideosResponse.fromJson(response.data[i]));
+      }
+      return getList;
+    } else {
+      throw Exception('Faliled to load getData');
+    }
+  }
+
 }
 
