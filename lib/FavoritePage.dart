@@ -9,7 +9,7 @@ import 'package:peton/database/FavoriteChannelsDb.dart';
 import 'package:peton/enums/MyIcons.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/VideoplayerPage.dart';
-import 'package:peton/widgets/AnimatedAppBar.dart';
+import 'package:peton/widgets/MyAnimatedAppBar.dart';
 import 'package:peton/widgets/Cards.dart';
 import 'package:peton/widgets/Line.dart';
 import 'package:peton/widgets/MyAppBar.dart';
@@ -168,7 +168,7 @@ class _FavoritePageState extends State<FavoritePage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-        body: AnimatedAppBar(
+        body: MyAnimatedAppBar(
           scrollController: _scrollController,
           child: MyAppBar(),
           body: Expanded(

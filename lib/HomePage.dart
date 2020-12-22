@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:peton/VideoplayerPage.dart';
-import 'package:peton/widgets/AnimatedAppBar.dart';
+import 'package:peton/widgets/MyAnimatedAppBar.dart';
 import 'package:peton/widgets/MyAppBar.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:peton/Server.dart';
@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
 
     // 썸네일, 제목, 채널, 시간, 채널썸네일, 보관함여부
     return Scaffold(
-      body: AnimatedAppBar(
+      body: MyAnimatedAppBar(
         scrollController: _scrollController,
         child: MyAppBar(),
         body: Expanded(

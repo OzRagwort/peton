@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/database/LibraryVideosDb.dart';
 import 'package:peton/model/LibraryVideos.dart';
-import 'package:peton/widgets/AnimatedAppBar.dart';
+import 'package:peton/widgets/MyAnimatedAppBar.dart';
 import 'package:peton/widgets/Cards.dart';
 import 'package:peton/widgets/MyAppBar.dart';
 
@@ -61,7 +61,7 @@ class _LibraryPageState extends State<LibraryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedAppBar(
+      body: MyAnimatedAppBar(
         scrollController: _scrollController,
         child: MyAppBar(),
         body: Expanded(

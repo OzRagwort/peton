@@ -6,8 +6,8 @@ import 'package:flutter/rendering.dart';
 /// https://api.flutter.dev/flutter/widgets/AnimatedContainer-class.html
 /// 참고해서 개선해나갈 예정
 
-class AnimatedAppBar extends StatefulWidget {
-  AnimatedAppBar({
+class MyAnimatedAppBar extends StatefulWidget {
+  MyAnimatedAppBar({
     Key key,
     @required this.scrollController,
     this.child,
@@ -19,10 +19,10 @@ class AnimatedAppBar extends StatefulWidget {
   final Widget body;
 
   @override
-  _AnimatedAppBarState createState() => _AnimatedAppBarState();
+  _MyAnimatedAppBarState createState() => _MyAnimatedAppBarState();
 }
 
-class _AnimatedAppBarState extends State<AnimatedAppBar> {
+class _MyAnimatedAppBarState extends State<MyAnimatedAppBar> {
 
   ScrollController scrollController;
   bool showAppbar;
@@ -69,7 +69,7 @@ class _AnimatedAppBarState extends State<AnimatedAppBar> {
         AnimatedContainer(
           height: showAppbar ? 48.0 : 0.0,
           duration: Duration(milliseconds: 300),
-          curve: Curves.easeOutQuart,
+          curve: Curves.fastOutSlowIn,
           child: widget.child,
         ),
         widget.body,
