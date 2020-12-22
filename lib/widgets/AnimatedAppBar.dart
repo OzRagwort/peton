@@ -27,24 +27,28 @@ class _AnimatedAppBarState extends State<AnimatedAppBar> {
   ScrollController scrollController;
   bool showAppbar;
   bool isScrollingDown;
+  double scrollOffset;
 
   void scrollControllerAddListener() {
     scrollController.addListener (() {
-      if (scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-        if (!isScrollingDown) {
-          isScrollingDown = true;
-          showAppbar = false;
-          setState(() {});
+      if ((scrollOffset - scrollController.offset).abs() > 3) {
+        if (scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+          if (!isScrollingDown) {
+            isScrollingDown = true;
+            showAppbar = false;
+            setState(() {});
+          }
         }
-      }
 
-      if (scrollController.position.userScrollDirection == ScrollDirection.forward) {
-        if (isScrollingDown) {
-          isScrollingDown = false;
-          showAppbar = true;
-          setState(() {});
+        if (scrollController.position.userScrollDirection == ScrollDirection.forward) {
+          if (isScrollingDown) {
+            isScrollingDown = false;
+            showAppbar = true;
+            setState(() {});
+          }
         }
       }
+      scrollOffset = scrollController.offset;
     });
   }
 
@@ -55,6 +59,7 @@ class _AnimatedAppBarState extends State<AnimatedAppBar> {
     isScrollingDown = false;
     scrollController = widget.scrollController;
     scrollControllerAddListener();
+    scrollOffset = 0;
   }
 
   @override
@@ -64,7 +69,7 @@ class _AnimatedAppBarState extends State<AnimatedAppBar> {
         AnimatedContainer(
           height: showAppbar ? 48.0 : 0.0,
           duration: Duration(milliseconds: 300),
-          curve: Curves.fastOutSlowIn,
+          curve: Curves.easeOutQuart,
           child: widget.child,
         ),
         widget.body,
