@@ -16,31 +16,31 @@ class MyAppBar extends StatelessWidget {
           color: Colors.black,
         ),
       ),
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 10),
-        child: GestureDetector(
-          onTap: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SettingPage()),
-            )
-          },
+      leading: GestureDetector(
+        onTap: () => {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SettingPage()),
+          )
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(left: 10),
           child: Icon(
             MyIcons.settingIcon.icon,
             color: Colors.black,
           ),
-        )
+        ),
       ),
       actions: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: GestureDetector(
-            onTap: () => {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SearchPage()),
-              )
-            },
+        GestureDetector(
+          onTap: () => {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SearchPage()),
+            )
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(right: 10),
             child: Icon(
               MyIcons.searchIcon.icon,
               color: Colors.black,
