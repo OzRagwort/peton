@@ -89,6 +89,8 @@ class _LibraryPageState extends State<LibraryPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           FloatingActionButton(
+            // heroTag: 'libDelBtn',
+            heroTag: null,
             child: Icon(Icons.delete),
             onPressed: () {
               //모두 삭제 버튼
@@ -99,6 +101,8 @@ class _LibraryPageState extends State<LibraryPage> {
           ),
           SizedBox(height: 8.0),
           FloatingActionButton(
+            // heroTag: 'libRefBtn',
+            heroTag: null,
             child: Icon(Icons.refresh),
             onPressed: () {
               //새로고침
@@ -108,6 +112,8 @@ class _LibraryPageState extends State<LibraryPage> {
           ),
           SizedBox(height: 8.0),
           FloatingActionButton(
+            // heroTag: 'libAddBtn',
+            heroTag: null,
             child: Icon(Icons.add),
             onPressed: () {
               //추가 버튼
