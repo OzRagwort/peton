@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:peton/SearchPage.dart';
+import 'package:peton/SettingPage.dart';
 import 'package:peton/enums/MyIcons.dart';
 
 class MyAppBar extends StatelessWidget {
@@ -17,10 +18,18 @@ class MyAppBar extends StatelessWidget {
       ),
       leading: Padding(
         padding: const EdgeInsets.only(left: 10),
-        child: Icon(
-          MyIcons.settingIcon.icon,
-          color: Colors.black,
-        ),
+        child: GestureDetector(
+          onTap: () => {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SettingPage()),
+            )
+          },
+          child: Icon(
+            MyIcons.settingIcon.icon,
+            color: Colors.black,
+          ),
+        )
       ),
       actions: <Widget>[
         Padding(
