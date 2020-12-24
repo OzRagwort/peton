@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -11,22 +12,26 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   List<String> _themetList = ['Light', 'Dark', 'System'];
   List<DropdownMenuItem<String>> _themeDropDownMenuItems;
 
-  List<DropdownMenuItem<String>> getDropDownMenuItems() {
+  List<String> _startPageList = ['Home', 'Favorite', 'Library'];
+  List<DropdownMenuItem<String>> _startPageDropDownMenuItems;
+
+  List<DropdownMenuItem<String>> getDropDownMenuItems(List<String> lists) {
     List<DropdownMenuItem<String>> items = new List();
-    for(String sortList in _themetList) {
+    for(String list in lists) {
       items.add(new DropdownMenuItem(
-        value: sortList,
-        child: Text(sortList),
+        value: list,
+        child: Text(list),
       ));
     }
     return items;
   }
 
-  void _themeRefresh(String index) async{
+  void _themeRefresh(String index) async {
     if (index == _themetList[0]) {
       AdaptiveTheme.of(context).setLight();
     } else if (index == _themetList[1]) {
@@ -37,10 +42,40 @@ class _SettingPageState extends State<SettingPage> {
     setState(() {});
   }
 
+  Future<String> _startPageSetting() async {
+    final SharedPreferences prefs = await _prefs;
+    int startPage = (prefs.getInt('start_page') ?? 0);
+    log('startpage : '+startPage.toString());
+    if (startPage == 0)
+      return 'Home';
+    else if (startPage == 1)
+      return 'Favorite';
+    else
+      return 'Library';
+  }
+
+  void _startPageRefresh(String index) async {
+    final SharedPreferences prefs = await _prefs;
+    if (index == _startPageList[0]) {
+      prefs.setInt('start_page', 0);
+    } else if (index == _startPageList[1]) {
+      prefs.setInt('start_page', 1);
+    } else {
+      prefs.setInt('start_page', 2);
+    }
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
-    _themeDropDownMenuItems = getDropDownMenuItems();
+    _themeDropDownMenuItems = getDropDownMenuItems(_themetList);
+    _startPageDropDownMenuItems = getDropDownMenuItems(_startPageList);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -77,6 +112,41 @@ class _SettingPageState extends State<SettingPage> {
                           items: _themeDropDownMenuItems,
                           onChanged: (String newValue) {
                             _themeRefresh(newValue);
+                          },
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
+                      return Text('');
+                    }
+                ),
+              ],
+            ),
+
+            /// 시작 페이지
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'start page',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+                FutureBuilder<String>(
+                    future: _startPageSetting(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        log(snapshot.data);
+                        return DropdownButton<String>(
+                          icon: Icon(Icons.keyboard_arrow_down),
+                          value: snapshot.data,
+                          iconSize: 24,
+                          elevation: 16,
+                          underline: Container(height: 0),
+                          items: _startPageDropDownMenuItems,
+                          onChanged: (String newValue) {
+                            log('//'+newValue);
+                            _startPageRefresh(newValue);
                           },
                         );
                       } else if (snapshot.hasError) {
