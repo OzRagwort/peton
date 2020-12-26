@@ -3,9 +3,11 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:peton/NetworkErrorPage.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/database/LibraryVideosDb.dart';
 import 'package:peton/model/LibraryVideos.dart';
+import 'package:peton/widgets/CheckNetwork.dart';
 import 'package:peton/widgets/MyAnimatedAppBar.dart';
 import 'package:peton/widgets/Cards.dart';
 import 'package:peton/widgets/MyAppBar.dart';
@@ -60,70 +62,73 @@ class _LibraryPageState extends State<LibraryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: MyAnimatedAppBar(
-        scrollController: _scrollController,
-        child: MyAppBar(),
-        body: Expanded(
-          child: FutureBuilder<List<LibraryVideos>>(
-            future: LibraryVideosDb().getAllLibraryVideos(),
-            builder: (context, snapshot) {
-              if(snapshot.hasData) {
-                return ListView.builder(
-                  controller: _scrollController,
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    LibraryVideos item = snapshot.data[index];
-                    VideosResponse videosResponse = item.toVideosResponse();
-                    return videoCardSmall(videosResponse, MediaQuery.of(context).size.width);
-                  },
-                );
-              } else {
-                return Center(child: CupertinoActivityIndicator(),);
-              }
-            },
+    return CheckNetwork(
+      body: Scaffold(
+        body: MyAnimatedAppBar(
+          scrollController: _scrollController,
+          child: MyAppBar(),
+          body: Expanded(
+            child: FutureBuilder<List<LibraryVideos>>(
+              future: LibraryVideosDb().getAllLibraryVideos(),
+              builder: (context, snapshot) {
+                if(snapshot.hasData) {
+                  return ListView.builder(
+                    controller: _scrollController,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      LibraryVideos item = snapshot.data[index];
+                      VideosResponse videosResponse = item.toVideosResponse();
+                      return videoCardSmall(videosResponse, MediaQuery.of(context).size.width);
+                    },
+                  );
+                } else {
+                  return Center(child: CupertinoActivityIndicator(),);
+                }
+              },
+            ),
           ),
         ),
+        floatingActionButton: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FloatingActionButton(
+              // heroTag: 'libDelBtn',
+              heroTag: null,
+              child: Icon(Icons.delete),
+              onPressed: () {
+                //모두 삭제 버튼
+                log('deleteAll');
+                LibraryVideosDb().deleteAllLibraryVideos();
+                setState(() {});
+              },
+            ),
+            SizedBox(height: 8.0),
+            FloatingActionButton(
+              // heroTag: 'libRefBtn',
+              heroTag: null,
+              child: Icon(Icons.refresh),
+              onPressed: () {
+                //새로고침
+                log('refresh');
+                setState(() {});
+              },
+            ),
+            SizedBox(height: 8.0),
+            FloatingActionButton(
+              // heroTag: 'libAddBtn',
+              heroTag: null,
+              child: Icon(Icons.add),
+              onPressed: () {
+                //추가 버튼
+                log('insert');
+                insertLib();
+                // setState(() {});
+              },
+            ),
+          ],
+        ),
       ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FloatingActionButton(
-            // heroTag: 'libDelBtn',
-            heroTag: null,
-            child: Icon(Icons.delete),
-            onPressed: () {
-              //모두 삭제 버튼
-              log('deleteAll');
-              LibraryVideosDb().deleteAllLibraryVideos();
-              setState(() {});
-            },
-          ),
-          SizedBox(height: 8.0),
-          FloatingActionButton(
-            // heroTag: 'libRefBtn',
-            heroTag: null,
-            child: Icon(Icons.refresh),
-            onPressed: () {
-              //새로고침
-              log('refresh');
-              setState(() {});
-            },
-          ),
-          SizedBox(height: 8.0),
-          FloatingActionButton(
-            // heroTag: 'libAddBtn',
-            heroTag: null,
-            child: Icon(Icons.add),
-            onPressed: () {
-              //추가 버튼
-              log('insert');
-              insertLib();
-              // setState(() {});
-            },
-          ),
-        ],
-      ),
+      error: NetworkErrorPage(),
     );
   }
 }

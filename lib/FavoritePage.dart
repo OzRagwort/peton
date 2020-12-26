@@ -5,10 +5,12 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:peton/NetworkErrorPage.dart';
 import 'package:peton/database/FavoriteChannelsDb.dart';
 import 'package:peton/enums/MyIcons.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/VideoplayerPage.dart';
+import 'package:peton/widgets/CheckNetwork.dart';
 import 'package:peton/widgets/MyAnimatedAppBar.dart';
 import 'package:peton/widgets/Cards.dart';
 import 'package:peton/widgets/Line.dart';
@@ -167,7 +169,8 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    return CheckNetwork(
+      body: Scaffold(
         body: MyAnimatedAppBar(
           scrollController: _scrollController,
           child: MyAppBar(),
@@ -341,6 +344,8 @@ class _FavoritePageState extends State<FavoritePage> {
             ),
           ),
         ),
+      ),
+      error: NetworkErrorPage(),
     );
 
   }
