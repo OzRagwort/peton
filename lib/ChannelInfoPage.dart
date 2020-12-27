@@ -125,7 +125,6 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
           preferredSize: Size.fromHeight(0),
           child: AppBar(
             title: Text(''),
-            backgroundColor: Colors.white,
           ),
         ),
 
@@ -172,12 +171,6 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
                     value: _sortingMethod,
                     iconSize: 24,
                     elevation: 16,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 17.0,
-                      fontFamily: 'NotoSerifKR',
-                      fontWeight: FontWeight.w400,
-                    ),
                     underline: Container(height: 0),
                     items: _dropDownMenuItems,
                     onChanged: (String newValue) {

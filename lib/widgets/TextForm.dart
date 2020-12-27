@@ -16,7 +16,6 @@ Widget textTitle(String value, size) {
     overflow: TextOverflow.ellipsis,
     maxLines: 2,
     style: TextStyle(
-      color: Colors.black,
       fontSize: size,
       fontFamily: 'NotoSerifKR',
       fontWeight: FontWeight.w400,
@@ -28,11 +27,11 @@ Widget textTitle(String value, size) {
 /// videoPlayer 조회수 및 업로드
 Widget textViewcountAndTime(int viewCount, String videoPublishedDate) {
 
-  return RichText(
-    text: TextSpan(
-        text: ViewCountCheck(viewCount) + "회 · " + UploadTimeCheck(videoPublishedDate),
+  return Opacity(
+    opacity: 0.8,
+    child: Text(
+        ViewCountCheck(viewCount) + "회 · " + UploadTimeCheck(videoPublishedDate),
         style: TextStyle(
-          color: Colors.black.withOpacity(0.5),
           fontSize: TextSize.subTextSize,
           fontFamily: 'NotoSerifKR',
           fontWeight: FontWeight.w400,
@@ -44,15 +43,15 @@ Widget textViewcountAndTime(int viewCount, String videoPublishedDate) {
 /// homePage.listview 채널 구독자 및 업로드 시간
 Widget textChannelNameAndTime(String channelName, String videoPublishedDate) {
 
-  return RichText(
-    text: TextSpan(
-        text: channelName + " · " + UploadTimeCheck(videoPublishedDate),
-        style: TextStyle(
-          color: Colors.black.withOpacity(0.5),
-          fontSize: TextSize.subTextSize,
-          fontFamily: 'NotoSerifKR',
-          fontWeight: FontWeight.w400,
-        )
+  return Opacity(
+    opacity: 0.7,
+    child: Text(
+      channelName + " · " + UploadTimeCheck(videoPublishedDate),
+      style: TextStyle(
+        fontSize: TextSize.subTextSize,
+        fontFamily: 'NotoSerifKR',
+        fontWeight: FontWeight.w400,
+      )
     ),
   );
 }
@@ -67,44 +66,28 @@ Widget textChannel(String value, int subscriber, double width) {
         constraints: BoxConstraints(maxWidth: width - TextSize.channelThumbnailSize*2 - TextSize.libraryIcon*2 - 30),
         child: Container(
           padding: const EdgeInsets.only(left: 16),
-          child: RichText(
-            text: TextSpan(
-                text: value,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: TextSize.channelNameSize,
-                  fontFamily: 'NotoSerifKR',
-                  fontWeight: FontWeight.w400,
-                )
-            ),
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: TextSize.channelNameSize,
+              fontFamily: 'NotoSerifKR',
+              fontWeight: FontWeight.w400,
+            )
           ),
         ),
       ),
-      // Container(
-      //   padding: const EdgeInsets.only(left: 16),
-      //   child: Text(
-      //     value,
-      //     overflow: TextOverflow.ellipsis,
-      //     maxLines: 1,
-      //     style: TextStyle(
-      //       color: Colors.black,
-      //       fontSize: TextSize.channelNameSize,
-      //       fontFamily: 'NotoSerifKR',
-      //       fontWeight: FontWeight.w400,
-      //     ),
-      //   ),
-      // ),
+
       Container(
         padding: const EdgeInsets.only(left: 16),
-        child: RichText(
-          text: TextSpan(
-              text: ChannelSubscriberCountCheck(subscriber),
-              style: TextStyle(
-                color: Colors.black.withOpacity(0.6),
-                fontSize: TextSize.channelSubscriberSize,
-                fontFamily: 'NotoSerifKR',
-                fontWeight: FontWeight.w400,
-              )
+        child: Opacity(
+          opacity: 0.6,
+          child: Text(
+            ChannelSubscriberCountCheck(subscriber),
+            style: TextStyle(
+              fontSize: TextSize.channelSubscriberSize,
+              fontFamily: 'NotoSerifKR',
+              fontWeight: FontWeight.w400,
+            )
           ),
         ),
       )

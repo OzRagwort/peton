@@ -23,13 +23,19 @@ class MyApp extends StatelessWidget {
     return AdaptiveTheme(
       light: ThemeData(
         brightness: Brightness.light,
-        primarySwatch: Colors.blue,
-        accentColor: Colors.blueAccent,
+        appBarTheme: AppBarTheme(
+          centerTitle: true,
+          color: Colors.white,
+          iconTheme: IconThemeData(color: Colors.black),
+          textTheme: TextTheme(title: TextStyle(color: Colors.black, fontSize: 18)),
+        ),
+        primaryColor: Colors.black,
+        accentColor: Colors.orangeAccent,
       ),
       dark: ThemeData(
         brightness: Brightness.dark,
-        primarySwatch: Colors.blue,
-        accentColor: Colors.blueAccent,
+        // primarySwatch: Colors.white,
+        accentColor: Colors.white,
       ),
       initial: savedThemeMode ?? AdaptiveThemeMode.light,
       builder: (theme, darkTheme) => MaterialApp(

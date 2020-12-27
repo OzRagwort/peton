@@ -247,12 +247,6 @@ class _FavoritePageState extends State<FavoritePage> {
                               value: _sortingMethod,
                               iconSize: 24,
                               elevation: 16,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 17.0,
-                                fontFamily: 'NotoSerifKR',
-                                fontWeight: FontWeight.w400,
-                              ),
                               underline: Container(height: 0),
                               items: _dropDownMenuItems,
                               onChanged: (String newValue) {

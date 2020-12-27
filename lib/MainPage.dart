@@ -47,7 +47,6 @@ class _MainPageState extends State<MainPage>{
         preferredSize: Size.fromHeight(0),
         child: AppBar(
           title: Text(''),
-          backgroundColor: Colors.white,
         ),
       ),
       body: _buildPage(_selectedTabIndex),

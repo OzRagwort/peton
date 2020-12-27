@@ -8,13 +8,9 @@ class MyAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
       centerTitle: true,
       title: Text(
         'title',
-        style: TextStyle(
-          color: Colors.black,
-        ),
       ),
       leading: GestureDetector(
         onTap: () => {
@@ -27,7 +23,6 @@ class MyAppBar extends StatelessWidget {
           padding: const EdgeInsets.only(left: 10),
           child: Icon(
             MyIcons.settingIcon.icon,
-            color: Colors.black,
           ),
         ),
       ),
@@ -43,7 +38,6 @@ class MyAppBar extends StatelessWidget {
             padding: const EdgeInsets.only(right: 10),
             child: Icon(
               MyIcons.searchIcon.icon,
-              color: Colors.black,
             ),
           ),
         ),
