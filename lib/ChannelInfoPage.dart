@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peton/MainPage.dart';
 import 'package:peton/NetworkErrorPage.dart';
+import 'package:peton/enums/MyIcons.dart';
 import 'package:peton/model/Channels.dart';
 import 'package:peton/widgets/Cards.dart';
 import 'package:peton/widgets/CheckNetwork.dart';
@@ -263,31 +264,35 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
 
 
 
-        bottomNavigationBar: BottomNavigationBar(
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.view_list),
-              title: Text('Home'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.star),
-              title: Text('Favorite'),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.library_add),
-              title: Text('Library'),
-            ),
-          ],
-          currentIndex: _selectedTabIndex,
-          onTap: (index) {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => MainPage(title: 'PetON', index: index,),
+        bottomNavigationBar: SizedBox(
+          height: 50,
+          child: BottomNavigationBar(
+            iconSize: 21,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: _selectedTabIndex == 0 ? MyIcons.homePageIconFill : MyIcons.homePageIcon,
+                title: Text('Home', style: TextStyle(fontSize: 12),),
               ),
-                  (route) => false,
-            );
-          },
+              BottomNavigationBarItem(
+                icon: _selectedTabIndex == 1 ? MyIcons.favoritePageIconFill : MyIcons.favoritePageIcon,
+                title: Text('Favorite', style: TextStyle(fontSize: 12),),
+              ),
+              BottomNavigationBarItem(
+                icon: _selectedTabIndex == 2 ? MyIcons.libraryPageIconFill : MyIcons.libraryPageIcon,
+                title: Text('Library', style: TextStyle(fontSize: 12),),
+              ),
+            ],
+            currentIndex: _selectedTabIndex,
+            onTap: (index) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => MainPage(title: 'PetON', index: index,),
+                ),
+                    (route) => false,
+              );
+            },
+          ),
         ),
       ),
       error: NetworkErrorPage(),

@@ -66,14 +66,13 @@ class _MainPageState extends State<MainPage>{
             ),
             BottomNavigationBarItem(
               icon: _selectedTabIndex == 2 ? MyIcons.libraryPageIconFill : MyIcons.libraryPageIcon,
-              title: Text('Library', style: TextStyle(fontSize: 10),),
+              title: Text('Library', style: TextStyle(fontSize: 12),),
             ),
           ],
           currentIndex: _selectedTabIndex,
           onTap: (index) {
             setState(() {
               _selectedTabIndex = index;
-              print("$_selectedTabIndex Tab Clicked");
             });
           },
         ),
