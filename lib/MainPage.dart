@@ -57,15 +57,15 @@ class _MainPageState extends State<MainPage>{
           iconSize: 21,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: MyIcons.homePageIcon,
+              icon: _selectedTabIndex == 0 ? MyIcons.homePageIconFill : MyIcons.homePageIcon,
               title: Text('Home', style: TextStyle(fontSize: 12),),
             ),
             BottomNavigationBarItem(
-              icon: MyIcons.favoritePageIcon,
+              icon: _selectedTabIndex == 1 ? MyIcons.favoritePageIconFill : MyIcons.favoritePageIcon,
               title: Text('Favorite', style: TextStyle(fontSize: 12),),
             ),
             BottomNavigationBarItem(
-              icon: MyIcons.libraryPageIcon,
+              icon: _selectedTabIndex == 2 ? MyIcons.libraryPageIconFill : MyIcons.libraryPageIcon,
               title: Text('Library', style: TextStyle(fontSize: 10),),
             ),
           ],

@@ -6,9 +6,15 @@ class MyIcons {
 
   static const Icon homePageIcon = Icon(CupertinoIcons.music_house);
 
-  static const Icon favoritePageIcon = Icon(CupertinoIcons.star_fill);
+  static const Icon homePageIconFill = Icon(CupertinoIcons.music_house_fill);
+
+  static const Icon favoritePageIcon = Icon(CupertinoIcons.star);
+
+  static const Icon favoritePageIconFill = Icon(CupertinoIcons.star_fill);
 
   static const Icon libraryPageIcon = Icon(Icons.video_library_outlined);
+
+  static const Icon libraryPageIconFill = Icon(Icons.video_library);
 
   static const Icon favoriteOnIcon = Icon(CupertinoIcons.star_fill);
 
