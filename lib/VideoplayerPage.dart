@@ -20,41 +20,25 @@ import 'widgets/VolumeSlider.dart';
 
 import 'Server.dart';
 
-class VideoPlayerPage extends StatelessWidget {
+class VideoPlayerPage extends StatefulWidget {
   VideoPlayerPage({Key key, this.videoId}) : super(key: key);
 
-  String videoId;
+  final String videoId;
 
   @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      body: Center(
-        child: MyHomePage(videoId),
-      ),
-    );
-  }
-
+  _VideoPlayerPageState createState() => _VideoPlayerPageState();
 }
 
-/// Homepage
-class MyHomePage extends StatefulWidget {
+class _VideoPlayerPageState extends State<VideoPlayerPage> {
+  VideosResponse _videosResponse;
   String videoId;
-  MyHomePage(this.videoId);
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState(videoId);
-}
-
-///state
-class _MyHomePageState extends State<MyHomePage> {
-  String videoId;
-  _MyHomePageState(this.videoId);
 
   YoutubePlayerController _controller;
   @override
   void initState() {
     super.initState();
+    videoId = widget.videoId;
+
     _controller = YoutubePlayerController(
       initialVideoId: videoId,
       params: const YoutubePlayerParams(
@@ -103,38 +87,18 @@ class _MyHomePageState extends State<MyHomePage> {
     return YoutubePlayerControllerProvider(
       controller: _controller,
       child: Scaffold(
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            if (kIsWeb && constraints.maxWidth > 800) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  player,
-                  Controls(videoId),
-                  // const Expanded(child: player),
-                  // const SizedBox(
-                  //   width: 500,
-                  //   child: SingleChildScrollView(
-                  //     child: Controls(videosResponse),
-                  //   ),
-                  // ),
-                ],
-              );
-            }
-            return ListView(
-              children: [
-                player,
-                YoutubeValueBuilder(
-                  builder: (context, value) {
-                    if (value.playerState != PlayerState.unknown) {
-                      return Controls(videoId);
-                    }
-                    return LinearProgressIndicator();
-                  },
-                ),
-              ],
-            );
-          },
+        body: ListView(
+          children: [
+            player,
+            YoutubeValueBuilder(
+              builder: (context, value) {
+                if (value.playerState != PlayerState.unknown) {
+                  return _videosResponse == null ? _getData() : _section();
+                }
+                return LinearProgressIndicator();
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -145,50 +109,44 @@ class _MyHomePageState extends State<MyHomePage> {
     _controller.close();
     super.dispose();
   }
-}
 
-///
-class Controls extends StatelessWidget {
-  ///
-  Controls(this.videoId);
-  String videoId;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _getData() {
     return
       FutureBuilder<VideosResponse>(
         future: server.updateAndCall(videoId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  space,
-                  VideoDataSection(videosResponse: snapshot.data,),
-                  divline,
-                  ChannelDataSection(videosResponse: snapshot.data,),
-                  divline,
-                  OpenYoutubeButton(snapshot.data.videoId),
-                  space,
-                  PlayPauseButtonBar(),
-                  space,
-                  VolumeSlider(),
-                  space,
-                  PlayerStateSection(),
-                ],
-              ),
-            );
+            _videosResponse = snapshot.data;
+            return _section();
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
           }
           return space;
         },
       );
+  }
 
+  Widget _section() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          space,
+          VideoDataSection(videosResponse: _videosResponse,),
+          divline,
+          ChannelDataSection(videosResponse: _videosResponse,),
+          divline,
+          OpenYoutubeButton(_videosResponse.videoId),
+          space,
+          PlayPauseButtonBar(),
+          space,
+          VolumeSlider(),
+          space,
+          PlayerStateSection(),
+        ],
+      ),
+    );
   }
 
 }
-
-
