@@ -2,7 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peton/MainPage.dart';
-import 'package:peton/NetworkErrorPage.dart';
 import 'package:peton/enums/MyIcons.dart';
 import 'package:peton/model/Channels.dart';
 import 'package:peton/widgets/Cards.dart';
@@ -119,18 +118,18 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
   Widget build(BuildContext context) {
     int _selectedTabIndex = 0;
 
-    return CheckNetwork(
-      body: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(0),
-          child: AppBar(
-            title: Text(''),
-          ),
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(0),
+        child: AppBar(
+          title: Text(''),
         ),
+      ),
 
 
-        body:
-        Column(
+      body: CheckNetwork(
+        slidingUp: true,
+        body: Column(
           children: [
             /// 상단 채널 정보
             Container(
@@ -254,41 +253,45 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
 
           ],
         ),
+      ),
 
 
 
-        bottomNavigationBar: SizedBox(
-          height: 50,
-          child: BottomNavigationBar(
-            iconSize: 21,
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: _selectedTabIndex == 0 ? MyIcons.homePageIconFill : MyIcons.homePageIcon,
-                title: Text('Home', style: TextStyle(fontSize: 12),),
+      bottomNavigationBar: SizedBox(
+        height: 50,
+        child: BottomNavigationBar(
+          iconSize: 21,
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: _selectedTabIndex == 0 ? MyIcons.homePageIconFill : MyIcons.homePageIcon,
+              title: Text('Home', style: TextStyle(fontSize: 12),),
+            ),
+            BottomNavigationBarItem(
+              icon: _selectedTabIndex == 1 ? MyIcons.favoritePageIconFill : MyIcons.favoritePageIcon,
+              title: Text('Favorite', style: TextStyle(fontSize: 12),),
+            ),
+            BottomNavigationBarItem(
+              icon: _selectedTabIndex == 2 ? MyIcons.libraryPageIconFill : MyIcons.libraryPageIcon,
+              title: Text('Library', style: TextStyle(fontSize: 12),),
+            ),
+          ],
+          currentIndex: _selectedTabIndex,
+          onTap: (index) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => MainPage(title: 'PetON', index: index,),
               ),
-              BottomNavigationBarItem(
-                icon: _selectedTabIndex == 1 ? MyIcons.favoritePageIconFill : MyIcons.favoritePageIcon,
-                title: Text('Favorite', style: TextStyle(fontSize: 12),),
-              ),
-              BottomNavigationBarItem(
-                icon: _selectedTabIndex == 2 ? MyIcons.libraryPageIconFill : MyIcons.libraryPageIcon,
-                title: Text('Library', style: TextStyle(fontSize: 12),),
-              ),
-            ],
-            currentIndex: _selectedTabIndex,
-            onTap: (index) {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => MainPage(title: 'PetON', index: index,),
-                ),
-                    (route) => false,
-              );
-            },
-          ),
+                  (route) => false,
+            );
+          },
         ),
       ),
-      error: NetworkErrorPage(),
     );
+    //   (
+    //   body:
+    //   ,
+    //   error: NetworkErrorPage(),
+    // );
   }
 }

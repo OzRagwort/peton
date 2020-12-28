@@ -5,6 +5,7 @@ import 'package:peton/Server.dart';
 import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/widgets/Cards.dart';
+import 'package:peton/widgets/CheckNetwork.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class SearchPage extends StatefulWidget {
@@ -90,47 +91,49 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ],
       ),
-      body: SmartRefresher(
-        enablePullDown: false,
-        enablePullUp: true,
-        header: MaterialClassicHeader(),
-        footer: CustomFooter(
-          loadStyle: LoadStyle.ShowWhenLoading,
-          builder: (BuildContext context,LoadStatus mode){
-            Widget body ;
-            /// 로드 완료 후
-            if(mode==LoadStatus.idle){
-              body =  Text("pull up load");
-            }
-            /// ?
-            else if(mode==LoadStatus.loading){
-              body =  CupertinoActivityIndicator();
-            }
-            /// ?
-            else if(mode == LoadStatus.failed){
-              body = Text("Load Failed!Click retry!");
-            }
-            /// 로드하려고 풀업했을 때 나타는 것
-            else if(mode == LoadStatus.canLoading){
-              body = Text("Load more");
-            }
-            /// ?
-            else{
-              body = Text("No more Data");
-            }
-            return Container(
-              height: 55.0,
-              child: Center(child:body),
-            );
-          },
-        ),
-        controller: _refreshController,
-        onLoading: _onLoading,
-        child: ListView.builder(
-            itemCount: listVideos.length,
-            itemBuilder: (context, index) {
-              return _videosCart(index, MediaQuery.of(context).size.width);
-            }
+      body: CheckNetwork(
+        body: SmartRefresher(
+          enablePullDown: false,
+          enablePullUp: true,
+          header: MaterialClassicHeader(),
+          footer: CustomFooter(
+            loadStyle: LoadStyle.ShowWhenLoading,
+            builder: (BuildContext context,LoadStatus mode){
+              Widget body ;
+              /// 로드 완료 후
+              if(mode==LoadStatus.idle){
+                body =  Text("pull up load");
+              }
+              /// ?
+              else if(mode==LoadStatus.loading){
+                body =  CupertinoActivityIndicator();
+              }
+              /// ?
+              else if(mode == LoadStatus.failed){
+                body = Text("Load Failed!Click retry!");
+              }
+              /// 로드하려고 풀업했을 때 나타는 것
+              else if(mode == LoadStatus.canLoading){
+                body = Text("Load more");
+              }
+              /// ?
+              else{
+                body = Text("No more Data");
+              }
+              return Container(
+                height: 55.0,
+                child: Center(child:body),
+              );
+            },
+          ),
+          controller: _refreshController,
+          onLoading: _onLoading,
+          child: ListView.builder(
+              itemCount: listVideos.length,
+              itemBuilder: (context, index) {
+                return _videosCart(index, MediaQuery.of(context).size.width);
+              }
+          ),
         ),
       ),
     );

@@ -1,20 +1,22 @@
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:peton/widgets/Line.dart';
 
 class CheckNetwork extends StatefulWidget {
   CheckNetwork({
     Key key,
     @required this.body,
-    @required this.error,
+    this.slidingUp: false,
   }) : super(key: key);
 
   final Widget body;
-  final Widget error;
+  final bool slidingUp;
 
   @override
   _CheckNetworkState createState() => _CheckNetworkState();
@@ -22,9 +24,11 @@ class CheckNetwork extends StatefulWidget {
 
 class _CheckNetworkState extends State<CheckNetwork> {
 
-  String _connectionStatus = 'Unknown';
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  bool _connbool = true;
+
+  bool _slidingUp;
 
   Future<void> initConnectivity() async {
     ConnectivityResult result;
@@ -34,6 +38,8 @@ class _CheckNetworkState extends State<CheckNetwork> {
     } on PlatformException catch (e) {
       print(e.toString());
     }
+
+    _connbool = result == ConnectivityResult.wifi || result == ConnectivityResult.mobile ? true : false;
 
     if (!mounted) {
       return Future.value(null);
@@ -46,18 +52,62 @@ class _CheckNetworkState extends State<CheckNetwork> {
     switch (result) {
       case ConnectivityResult.wifi:
       case ConnectivityResult.mobile:
-      case ConnectivityResult.none:
-        setState(() => _connectionStatus = result.toString());
+      setState(() {
+        _connbool = true;
+      });
         break;
+      case ConnectivityResult.none:
       default:
-        setState(() => _connectionStatus = 'Failed to get connectivity.');
+        setState(() {
+          _connbool = false;
+        });
         break;
     }
+  }
+
+  Widget _refreshButton() {
+    return FlatButton(
+      minWidth: MediaQuery.of(context).size.width,
+      onPressed: () {
+        setState(() {});
+      },
+      child: Text(
+        'Refresh',
+        style: TextStyle(fontSize: 14),
+      )
+    );
+  }
+
+  Widget _message() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(child: CircularProgressIndicator(),),
+        space,
+        space,
+        Text('인터넷 연결을 확인해주세요.', style: TextStyle(fontSize: 18),),
+        _refreshButton(),
+      ],
+    );
+  }
+
+  Widget _messageRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      // crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(child: CircularProgressIndicator(),),
+        spaceLeft,
+        Text('인터넷 연결을 확인해주세요.', style: TextStyle(fontSize: 14),),
+      ],
+    );
   }
 
   @override
   void initState() {
     super.initState();
+
+    _slidingUp = widget.slidingUp ?? false;
 
     initConnectivity();
     _connectivitySubscription =
@@ -66,25 +116,37 @@ class _CheckNetworkState extends State<CheckNetwork> {
 
   @override
   void dispose() {
+    log('dispose');
     _connectivitySubscription.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_connectionStatus == 'ConnectivityResult.wifi' || _connectionStatus == 'ConnectivityResult.mobile') {
-      return widget.body;
-    } else if (_connectionStatus == 'Failed to get connectivity.') {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+    if (_slidingUp) {
+      return Scaffold(
+        body: Column(
           children: [
-            CupertinoActivityIndicator(),
+            AnimatedContainer(
+              height: _connbool ? 0.0 : 64.0,
+              duration: Duration(milliseconds: 100),
+              curve: Curves.easeOutExpo,
+              child: _messageRow(),
+            ),
+            Expanded(
+              child: widget.body,
+            ),
           ],
         ),
       );
     } else {
-      return widget.error;
+      return Column(
+        children: [
+          Expanded(
+            child: _connbool ? widget.body : _message(),
+          ),
+        ],
+      );
     }
 
   }

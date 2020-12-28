@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:peton/model/VideosResponse.dart';
+import 'package:peton/widgets/CheckNetwork.dart';
 import 'package:peton/widgets/OpenYoutubeButton.dart';
 import 'package:peton/widgets/Line.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
@@ -87,18 +88,28 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     return YoutubePlayerControllerProvider(
       controller: _controller,
       child: Scaffold(
-        body: ListView(
-          children: [
-            player,
-            YoutubeValueBuilder(
-              builder: (context, value) {
-                if (value.playerState != PlayerState.unknown) {
-                  return _videosResponse == null ? _getData() : _section();
-                }
-                return LinearProgressIndicator();
-              },
-            ),
-          ],
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(0),
+          child: AppBar(
+            title: Text(''),
+          ),
+        ),
+
+        body: CheckNetwork(
+          slidingUp: true,
+          body: ListView(
+            children: [
+              player,
+              YoutubeValueBuilder(
+                builder: (context, value) {
+                  if (value.playerState != PlayerState.unknown) {
+                    return _videosResponse == null ? _getData() : _section();
+                  }
+                  return LinearProgressIndicator();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

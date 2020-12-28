@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:peton/NetworkErrorPage.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/database/LibraryVideosDb.dart';
 import 'package:peton/model/LibraryVideos.dart';
@@ -62,13 +61,13 @@ class _LibraryPageState extends State<LibraryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return CheckNetwork(
-      body: Scaffold(
-        body: MyAnimatedAppBar(
-          scrollController: _scrollController,
-          child: MyAppBar(),
-          body: Expanded(
-            child: FutureBuilder<List<LibraryVideos>>(
+    return Scaffold(
+      body: MyAnimatedAppBar(
+        scrollController: _scrollController,
+        child: MyAppBar(),
+        body: Expanded(
+          child: CheckNetwork(
+            body: FutureBuilder<List<LibraryVideos>>(
               future: LibraryVideosDb().getAllLibraryVideos(),
               builder: (context, snapshot) {
                 if(snapshot.hasData) {
@@ -82,53 +81,54 @@ class _LibraryPageState extends State<LibraryPage> {
                     },
                   );
                 } else {
-                  return Center(child: CupertinoActivityIndicator(),);
+                  return Center(
+                    child: CupertinoActivityIndicator(),
+                  );
                 }
               },
             ),
           ),
         ),
-        floatingActionButton: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            FloatingActionButton(
-              // heroTag: 'libDelBtn',
-              heroTag: null,
-              child: Icon(Icons.delete),
-              onPressed: () {
-                //모두 삭제 버튼
-                log('deleteAll');
-                LibraryVideosDb().deleteAllLibraryVideos();
-                setState(() {});
-              },
-            ),
-            SizedBox(height: 8.0),
-            FloatingActionButton(
-              // heroTag: 'libRefBtn',
-              heroTag: null,
-              child: Icon(Icons.refresh),
-              onPressed: () {
-                //새로고침
-                log('refresh');
-                setState(() {});
-              },
-            ),
-            SizedBox(height: 8.0),
-            FloatingActionButton(
-              // heroTag: 'libAddBtn',
-              heroTag: null,
-              child: Icon(Icons.add),
-              onPressed: () {
-                //추가 버튼
-                log('insert');
-                insertLib();
-                // setState(() {});
-              },
-            ),
-          ],
-        ),
       ),
-      error: NetworkErrorPage(),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            // heroTag: 'libDelBtn',
+            heroTag: null,
+            child: Icon(Icons.delete),
+            onPressed: () {
+              //모두 삭제 버튼
+              log('deleteAll');
+              LibraryVideosDb().deleteAllLibraryVideos();
+              setState(() {});
+            },
+          ),
+          SizedBox(height: 8.0),
+          FloatingActionButton(
+            // heroTag: 'libRefBtn',
+            heroTag: null,
+            child: Icon(Icons.refresh),
+            onPressed: () {
+              //새로고침
+              log('refresh');
+              setState(() {});
+            },
+          ),
+          SizedBox(height: 8.0),
+          FloatingActionButton(
+            // heroTag: 'libAddBtn',
+            heroTag: null,
+            child: Icon(Icons.add),
+            onPressed: () {
+              //추가 버튼
+              log('insert');
+              insertLib();
+              // setState(() {});
+            },
+          ),
+        ],
+      ),
     );
   }
 }

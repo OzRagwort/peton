@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:peton/NetworkErrorPage.dart';
 import 'package:peton/database/FavoriteChannelsDb.dart';
 import 'package:peton/enums/MyIcons.dart';
 import 'package:peton/model/VideosResponse.dart';
@@ -329,13 +328,13 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
 
-    return CheckNetwork(
-      body: Scaffold(
-        body: MyAnimatedAppBar(
-          scrollController: _scrollController,
-          child: MyAppBar(),
-          body: Expanded(
-            child: FutureBuilder<List<Channels>>(
+    return Scaffold(
+      body: MyAnimatedAppBar(
+        scrollController: _scrollController,
+        child: MyAppBar(),
+        body: Expanded(
+          child: CheckNetwork(
+            body: FutureBuilder<List<Channels>>(
               future: FavoriteChannelsDb().getAllChannels(),
               builder: (context, snapshot) {
                 if(snapshot.hasData) {
@@ -350,7 +349,6 @@ class _FavoritePageState extends State<FavoritePage> {
           ),
         ),
       ),
-      error: NetworkErrorPage(),
     );
 
   }

@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:peton/NetworkErrorPage.dart';
 import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/widgets/CheckNetwork.dart';
 import 'package:peton/widgets/MyAnimatedAppBar.dart';
@@ -87,82 +85,80 @@ class _HomePageState extends State<HomePage> {
 
     double width = MediaQuery.of(context).size.width;
 
-    return CheckNetwork(
-        body: Scaffold(
-          body: MyAnimatedAppBar(
-            scrollController: _scrollController,
-            child: MyAppBar(),
-            body: Expanded(
-              child: SmartRefresher(
-                enablePullDown: true,
-                enablePullUp: true,
-                header: MaterialClassicHeader(),
-                footer: CustomFooter(
-                  loadStyle: LoadStyle.ShowWhenLoading,
-                  builder: (BuildContext context,LoadStatus mode){
-                    Widget body ;
-                    /// 로드 완료 후
-                    if(mode==LoadStatus.idle){
-                      body =  Text("pull up load");
+    return Scaffold(
+      body: MyAnimatedAppBar(
+        scrollController: _scrollController,
+        child: MyAppBar(),
+        body: Expanded(
+          child: CheckNetwork(
+            body: SmartRefresher(
+              enablePullDown: true,
+              enablePullUp: true,
+              header: MaterialClassicHeader(),
+              footer: CustomFooter(
+                loadStyle: LoadStyle.ShowWhenLoading,
+                builder: (BuildContext context,LoadStatus mode){
+                  Widget body ;
+                  /// 로드 완료 후
+                  if(mode==LoadStatus.idle){
+                    body =  Text("pull up load");
+                  }
+                  /// ?
+                  else if(mode==LoadStatus.loading){
+                    body =  CupertinoActivityIndicator();
+                  }
+                  /// ?
+                  else if(mode == LoadStatus.failed){
+                    body = Text("Load Failed!Click retry!");
+                  }
+                  /// 로드하려고 풀업했을 때 나타는 것
+                  else if(mode == LoadStatus.canLoading){
+                    body = Text("Load more");
+                  }
+                  /// ?
+                  else{
+                    body = Text("No more Data");
+                  }
+                  return Container(
+                    height: 55.0,
+                    child: Center(child:body),
+                  );
+                },
+              ),
+              controller: _refreshController,
+              onRefresh: _onRefresh,
+              onLoading: _onLoading,
+              child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: myList.length + 10,
+                  // ignore: missing_return
+                  itemBuilder: (context, index) {
+                    if (index == 0 && myList.length == 0) {
+                      return FutureBuilder<List<VideosResponse>>(
+                        future: videosResponse,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            myList.addAll(snapshot.data);
+                            return _videosCart(index, width);
+                          } else if (snapshot.hasError) {
+                            _onRefresh();
+                            // return Text("${snapshot.error}");
+                          }
+                          return Center(
+                            child: CupertinoActivityIndicator(),
+                          );
+                        },
+                      );
                     }
-                    /// ?
-                    else if(mode==LoadStatus.loading){
-                      body =  CupertinoActivityIndicator();
+                    if (myList.length > index) {
+                      return _videosCart(index, width);
                     }
-                    /// ?
-                    else if(mode == LoadStatus.failed){
-                      body = Text("Load Failed!Click retry!");
-                    }
-                    /// 로드하려고 풀업했을 때 나타는 것
-                    else if(mode == LoadStatus.canLoading){
-                      body = Text("Load more");
-                    }
-                    /// ?
-                    else{
-                      body = Text("No more Data");
-                    }
-                    return Container(
-                      height: 55.0,
-                      child: Center(child:body),
-                    );
-                  },
-                ),
-                controller: _refreshController,
-                onRefresh: _onRefresh,
-                onLoading: _onLoading,
-                child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: myList.length + 10,
-                    // ignore: missing_return
-                    itemBuilder: (context, index) {
-                      // log(myList.length.toString() + ' / ' + index.toString());
-                      if (index == 0 && myList.length == 0) {
-                        return FutureBuilder<List<VideosResponse>>(
-                          future: videosResponse,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              myList.addAll(snapshot.data);
-                              return _videosCart(index, width);
-                            } else if (snapshot.hasError) {
-                              log('futurebuilder_list<v> error');
-                              return Text("${snapshot.error}");
-                            }
-                            return Center(
-                              child: CupertinoActivityIndicator(),
-                            );
-                          },
-                        );
-                      }
-                      if (myList.length > index) {
-                        return _videosCart(index, width);
-                      }
-                    }
-                ),
+                  }
               ),
             ),
           ),
         ),
-        error: NetworkErrorPage(),
+      ),
     );
 
   }
