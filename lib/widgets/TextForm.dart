@@ -148,3 +148,32 @@ Widget homepageCardMetadata(VideosResponse videosResponse, double width)  {
     ],
   );
 }
+
+/// smallCard 메타데이터
+Widget smallCardMetadata(VideosResponse videosResponse, double width)  {
+
+  return Container(
+    padding: EdgeInsets.all(10),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        /// 비디오 메타데이터
+        Container(
+          width: width * (2 / 3) - 28,
+          // width: double.infinity,
+          child: Column(
+            // mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: textTitle(videosResponse.videoName, TextSize.titleTextSize),
+              ),
+              textChannelNameAndTime(videosResponse.channels.channelName, videosResponse.videoPublishedDate),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
