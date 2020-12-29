@@ -67,16 +67,13 @@ Widget videoCard(VideosResponse videosResponse, double width) =>
       },
     );
 
-/// 수정 피룡
 Widget videoCardSmall(VideosResponse videosResponse, double width) =>
     ExtendedImage.network(
-      'https://i.ytimg.com/vi/'+videosResponse.videoId+'/maxresdefault.jpg',
+      'https://i.ytimg.com/vi/'+videosResponse.videoId+'/mqdefault.jpg',
       width: width,
       fit: BoxFit.fitWidth,
       cache: true,
       filterQuality: FilterQuality.high,
-      // border: Border.all(color: Colors.red, width: 1.0),
-      // borderRadius: BorderRadius.all(Radius.circular(30.0)),
       loadStateChanged: (ExtendedImageState state) {
         switch (state.extendedImageLoadState) {
           case LoadState.loading:
@@ -89,40 +86,24 @@ Widget videoCardSmall(VideosResponse videosResponse, double width) =>
           case LoadState.completed:
             return Card(
               child: Container(
-                child: Column(
+                child: Row(
                   children: [
                     ExtendedRawImage(
-                      /// maxresdefault
+                      /// mqdefault
                       image: state.extendedImageInfo?.image,
-                      width: width,
+                      width: width / 3,
                       fit: BoxFit.fitWidth,
-                      /// hqdefault => crop
-                      // width: width,
-                      // height: (width*270)/480,
-                      // fit: BoxFit.fitWidth,
-                      // sourceRect: Rect.fromCenter(width: 480, height: 270, center: Offset(240, 180)),
                     ),
-                    homepageCardMetadata(videosResponse, width),
+                    Expanded(
+                      child: smallCardMetadata(videosResponse, width),
+                    ),
                   ],
                 ),
               ),
             );
             break;
           case LoadState.failed:
-            return Card(
-              child: Container(
-                child: Column(
-                  children: [
-                    Image.network(
-                      'https://i.ytimg.com/vi/'+videosResponse.videoId+'/mqdefault.jpg',
-                      width: width,
-                      fit: BoxFit.fitWidth,
-                    ),
-                    homepageCardMetadata(videosResponse, width),
-                  ],
-                ),
-              ),
-            );
+            return Text('error');
             break;
         }
         return null;
