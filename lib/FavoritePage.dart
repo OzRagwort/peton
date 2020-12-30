@@ -28,7 +28,8 @@ class FavoritePage extends StatefulWidget {
 
 class _FavoritePageState extends State<FavoritePage> {
 
-  bool isDisposed = false;
+  bool isScrollingDown = false;
+  double scrollOffset = 0;
 
   /// hide appbar
   ScrollController _scrollController;
@@ -149,57 +150,61 @@ class _FavoritePageState extends State<FavoritePage> {
   }
 
   Widget _favoriteChannelList() {
-    return Container(
-      // margin: EdgeInsets.symmetric(vertical: 20.0),
-      height: 125,
-      alignment: Alignment.topLeft,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.all(10),
-        itemCount: listChannels.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Padding(
-            padding: const EdgeInsets.all(5),
-            child: GestureDetector(
-              onTap: () {
-                if (_channelClickCheck == index) {
-                  _offClickChannel(index);
-                } else {
-                  _onClickChannel(index);
-                }
-              },
-              child: Opacity(
-                opacity: (_channelClickCheck == null) || (_channelClickCheck == index) ? 1.0 : 0.6,
-                child: Container(
-                  color: _channelClickCheck == index ? Colors.lightBlueAccent.withOpacity(0.3) : Color(0x00000000),
-                  child: Column(
-                    children: [
-                      channelThumbnailCircle(listChannels[index].channelThumbnail, 35),
-                      space,
-                      ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: 70),
-                        child: Container(
-                          child: Text(
-                            listChannels[index].channelName,
-                            style: TextStyle(fontSize: 12),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+    return AnimatedContainer(
+      height: isScrollingDown ? 90 : 125,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeOutExpo,
+      child: Container(
+        alignment: Alignment.topLeft,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.all(10),
+          itemCount: listChannels.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Padding(
+              padding: const EdgeInsets.all(5),
+              child: GestureDetector(
+                onTap: () {
+                  if (_channelClickCheck == index) {
+                    _offClickChannel(index);
+                  } else {
+                    _onClickChannel(index);
+                  }
+                },
+                child: Opacity(
+                  opacity: (_channelClickCheck == null) || (_channelClickCheck == index) ? 1.0 : 0.6,
+                  child: Container(
+                    color: _channelClickCheck == index ? Colors.lightBlueAccent.withOpacity(0.3) : Color(0x00000000),
+                    child: Column(
+                      children: [
+                        channelThumbnailCircle(listChannels[index].channelThumbnail, isScrollingDown ? 17.5 : 35),
+                        space,
+                        ConstrainedBox(
+                          constraints: isScrollingDown ? BoxConstraints(maxWidth: 35) : BoxConstraints(maxWidth: 70),
+                          child: Container(
+                            child: Text(
+                              listChannels[index].channelName,
+                              style: TextStyle(fontSize: 12),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
 
   Widget _sortDropdown() {
     return Container(
+      height: isScrollingDown ? 0 : 36,
       padding: const EdgeInsets.only(left: 10),
       alignment: Alignment.centerLeft,
       child: Row(
@@ -317,6 +322,24 @@ class _FavoritePageState extends State<FavoritePage> {
 
     /// appbar setting
     _scrollController = new ScrollController();
+    _scrollController.addListener (() {
+      if ((scrollOffset - _scrollController.offset).abs() > 3) {
+        if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+          if (!isScrollingDown) {
+            isScrollingDown = true;
+            setState(() {});
+          }
+        }
+
+        if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
+          if (isScrollingDown) {
+            isScrollingDown = false;
+            setState(() {});
+          }
+        }
+      }
+      scrollOffset = _scrollController.offset;
+    });
   }
 
   @override
