@@ -4,14 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:peton/Server.dart';
+import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/database/LibraryVideosDb.dart';
 import 'package:peton/model/LibraryVideos.dart';
 import 'package:peton/widgets/CheckNetwork.dart';
 import 'package:peton/widgets/MyAnimatedAppBar.dart';
 import 'package:peton/widgets/Cards.dart';
 import 'package:peton/widgets/MyAppBar.dart';
-
-import 'model/VideosResponse.dart';
 
 class LibraryPage extends StatefulWidget {
 
@@ -24,6 +23,7 @@ class _LibraryPageState extends State<LibraryPage> {
   /// hide appbar
   ScrollController _scrollController;
 
+  List<LibraryVideos> listVideos;
   LibraryVideos libraryVideos;
 
   void insertLib() {
@@ -43,6 +43,18 @@ class _LibraryPageState extends State<LibraryPage> {
       LibraryVideosDb().insertLibraryVideo(libraryVideos);
     }));
 
+  }
+
+  Widget _videosCartSmall(int listNum, double width) {
+    return GestureDetector(
+      onTap: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => VideoPlayerPage(videoId: listVideos[listNum].videoId)),
+        )
+      },
+      child: videoCardSmall(listVideos[listNum].toVideosResponse(), width),
+    );
   }
 
   @override
@@ -71,13 +83,12 @@ class _LibraryPageState extends State<LibraryPage> {
               future: LibraryVideosDb().getAllLibraryVideos(),
               builder: (context, snapshot) {
                 if(snapshot.hasData) {
+                  listVideos = snapshot.data;
                   return ListView.builder(
                     controller: _scrollController,
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
-                      LibraryVideos item = snapshot.data[index];
-                      VideosResponse videosResponse = item.toVideosResponse();
-                      return videoCardSmall(videosResponse, MediaQuery.of(context).size.width);
+                      return _videosCartSmall(index, MediaQuery.of(context).size.width);
                     },
                   );
                 } else {
