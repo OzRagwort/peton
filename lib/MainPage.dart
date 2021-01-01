@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/enums/MyIcons.dart';
 
 import 'HomePage.dart';
@@ -28,9 +30,44 @@ class _MainPageState extends State<MainPage>{
   /// bottom navi
   int _selectedTabIndex;
 
+  void _initDynamicLinks() async {
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData dynamicLink) async {
+          final Uri deepLink = dynamicLink?.link;
+
+          if (deepLink != null) {
+            _handleDynamicLink(deepLink);
+          }
+        },
+        onError: (OnLinkErrorException e) async {
+          print('onLinkError');
+          print(e.message);
+        }
+    );
+
+    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+
+    if (deepLink != null) {
+      _handleDynamicLink(deepLink);
+    }
+  }
+
+  void _handleDynamicLink(Uri deepLink) {
+    switch (deepLink.path) {
+      case "/video":
+        var videoId = deepLink.queryParameters['id'];
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => VideoPlayerPage(videoId: videoId)),
+        );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _initDynamicLinks();
     _selectedTabIndex = index;
   }
 
