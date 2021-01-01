@@ -26,6 +26,8 @@ class MyIcons {
 
   static const Icon youtubeIcon = Icon(CupertinoIcons.play_rectangle_fill);
 
+  static const Icon shareIcon = Icon(Icons.share);
+
   static const Icon searchIcon = Icon(CupertinoIcons.search);
 
   static const Icon settingIcon = Icon(CupertinoIcons.person);

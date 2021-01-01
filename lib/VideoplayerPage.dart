@@ -9,13 +9,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/widgets/CheckNetwork.dart';
-import 'package:peton/widgets/OpenYoutubeButton.dart';
 import 'package:peton/widgets/Line.dart';
+import 'package:peton/widgets/PlayerButtonBar.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 import 'widgets/VideoDataSection.dart';
 import 'widgets/ChannelDataSection.dart';
-import 'widgets/PlayPauseButtonBar.dart';
 import 'widgets/PlayerStateSection.dart';
 import 'widgets/VolumeSlider.dart';
 
@@ -148,9 +147,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
           divline,
           ChannelDataSection(videosResponse: _videosResponse,),
           divline,
-          OpenYoutubeButton(_videosResponse.videoId),
-          space,
-          PlayPauseButtonBar(),
+          PlayerButtonBar(videosResponse: _videosResponse),
           space,
           VolumeSlider(),
           space,
