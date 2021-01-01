@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:peton/enums/TextSize.dart';
 import 'package:peton/model/VideosResponse.dart';
-import 'package:peton/widgets/LibraryIconBuilder.dart';
 import 'package:peton/widgets/TextForm.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
@@ -33,7 +32,6 @@ class VideoDataSection extends StatelessWidget {
                     ],
                   ),
                 ),
-                LibraryListenableBuilder(videosResponse: videosResponse,),
               ],
             ),
           ],
