@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:peton/model/Channels.dart';
 import 'package:peton/serverInfo/ServerInfo.dart';
 
 import 'model/VideosResponse.dart';
@@ -99,6 +100,27 @@ class Server {
     if (response.statusCode == 200) {
       for(int i = 0 ; i < count ; i++) {
         getList.add(VideosResponse.fromJson(response.data[i]));
+      }
+      return getList;
+    } else {
+      throw Exception('Faliled to load getData');
+    }
+  }
+
+  Future<List<Channels>> getRandChannels(int category, int page, int count) async {
+    Response response;
+    Dio dio = new Dio();
+
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/channels/rand?category=' + category.toString() +
+        '&page=' + page.toString() +
+        '&maxResult=' + count.toString()
+    );
+
+    List<Channels> getList = [];
+
+    if (response.statusCode == 200) {
+      for(int i = 0 ; i < count ; i++) {
+        getList.add(Channels.fromJson(response.data[i]));
       }
       return getList;
     } else {
