@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:peton/RandomChannelListPage.dart';
 import 'package:peton/database/FavoriteChannelsDb.dart';
 import 'package:peton/enums/MyIcons.dart';
 import 'package:peton/model/VideosResponse.dart';
@@ -309,8 +310,8 @@ class _FavoritePageState extends State<FavoritePage> {
     );
   }
 
-  Widget _zeroChannel() {
-    return Text('즐겨찾기한 채널 없음');
+  Widget _searchChannel() {
+    return RandomChannelListPage(scrollController: _scrollController);
   }
 
   @override
@@ -362,8 +363,7 @@ class _FavoritePageState extends State<FavoritePage> {
               builder: (context, snapshot) {
                 if(snapshot.hasData) {
                   listChannels = snapshot.data;
-
-                  return listChannels.length == 0 ? _zeroChannel() : _hasChannels();
+                  return listChannels.length == 0 ? _searchChannel() : _hasChannels();
                 } else {
                   return Center(child: CupertinoActivityIndicator(),);
                 }

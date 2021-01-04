@@ -2,7 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:peton/enums/TextSize.dart';
+import 'package:peton/function/channelSubscriberCountCheck.dart';
+import 'package:peton/model/Channels.dart';
 import 'package:peton/model/VideosResponse.dart';
+import 'package:peton/widgets/FavoriteIconBuilder.dart';
+import 'package:peton/widgets/Line.dart';
 import 'package:peton/widgets/TextForm.dart';
 import 'package:extended_image/extended_image.dart';
 
@@ -109,4 +114,33 @@ Widget videoCardSmall(VideosResponse videosResponse, double width) =>
         return null;
       },
     );
+
+Widget channelCardSmall(Channels channels, double width) {
+
+  return Padding(
+    padding: const EdgeInsets.all(10),
+    child: Row(
+      children: [
+        CircleAvatar(
+          radius: width / 10,
+          backgroundImage:
+          NetworkImage(channels.channelThumbnail),
+          backgroundColor: Colors.transparent,
+        ),
+        verticalDivline,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(channels.channelName, style: TextStyle(fontSize: TextSize.channelNameSize),),
+              Text(ChannelSubscriberCountCheck(channels.subscribers)),
+            ],
+          ),
+        ),
+        FavoriteIconBuilder(channels: channels),
+      ],
+    ),
+  );
+
+}
 
