@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:peton/model/Channels.dart';
+import 'package:peton/model/VideosByChannels.dart';
 import 'package:peton/serverInfo/ServerInfo.dart';
 
 import 'model/VideosResponse.dart';
@@ -122,6 +123,19 @@ class Server {
     } else {
       throw Exception('Faliled to load getData');
     }
+  }
+
+  Future<List<VideosByChannels>> getVideosByChannels(int category, int cPage, int cCount, String sort, int vPage, int vCount) async {
+
+    List<VideosByChannels> result = new List<VideosByChannels>();
+    List<Channels> clist = await getRandChannels(category, cPage, cCount);
+
+    for (Channels c in clist) {
+      VideosByChannels videosByChannels = new VideosByChannels(channels: c, listVideosResponse: await getbyChannelIdSort(c.channelId, sort, vPage, vCount));
+      result.add(videosByChannels);
+    }
+
+    return result;
   }
 
 }
