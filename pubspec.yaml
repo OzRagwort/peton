@@ -41,6 +41,9 @@ dependencies:
   connectivity: ^2.0.2
   firebase_dynamic_links: ^0.6.3
   share: ^0.6.5+4
+  firebase_core: ^0.5.3
+  firebase_messaging: ^7.0.3
+  meta: ^1.2.4
 
 #  googleapis: ^0.56.1
 #  youtube_player_flutter: ^7.0.0+6
