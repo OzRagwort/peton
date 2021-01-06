@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -29,6 +30,8 @@ class _MainPageState extends State<MainPage>{
 
   /// bottom navi
   int _selectedTabIndex;
+
+  final FirebaseMessaging _fcm = new FirebaseMessaging();
 
   void _initDynamicLinks() async {
     FirebaseDynamicLinks.instance.onLink(
@@ -64,10 +67,51 @@ class _MainPageState extends State<MainPage>{
     }
   }
 
+  void _fcmConfigure() {
+    _fcm.configure(
+      // 기본 message 구성 {notification: {title: 알림 제목, body: 알림 텍스트}, data: {testKey: testValue}}
+      // 앱 실행중
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+        _showItemDialog(message);
+      },
+      onBackgroundMessage: backgroundMessageHandler,
+      // 앱 완전 종료
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+      },
+      // 백그라운드 실행중
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+      },
+    );
+  }
+
+  void _showItemDialog(Map<String, dynamic> message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: ListTile(
+          title: Text(message["notification"]["title"]),
+          subtitle: Text(message.toString()),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text("OK"),
+            onPressed: () => Navigator.of(context).pop(),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     _initDynamicLinks();
+
+    _fcmConfigure();
+
     _selectedTabIndex = index;
   }
 
@@ -125,4 +169,19 @@ class _MainPageState extends State<MainPage>{
       return LibraryPage();
     }
   }
+
+}
+
+Future<dynamic> backgroundMessageHandler(Map<String, dynamic> message) async {
+  if (message.containsKey('data')) {
+    // Handle data message
+    final dynamic data = message['data'];
+  }
+
+  if (message.containsKey('notification')) {
+    // Handle notification message
+    final dynamic notification = message['notification'];
+  }
+
+  // Or do other work.
 }
