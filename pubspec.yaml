@@ -44,6 +44,9 @@ dependencies:
   firebase_core: ^0.5.3
   firebase_messaging: ^7.0.3
   meta: ^1.2.4
+  flutter_local_notifications: ^3.0.2
+  flutter_local_notifications_platform_interface: ^2.0.0+1
+  platform: ^2.2.1
 
 #  googleapis: ^0.56.1
 #  youtube_player_flutter: ^7.0.0+6
