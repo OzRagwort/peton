@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ozragwort.peton">
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--  flutter_local_notification  -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
    <application
         android:label="peton"
         android:icon="@mipmap/ic_launcher"
@@ -39,6 +43,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+       <!--  flutter_local_notification  -->
+       <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+           <intent-filter>
+               <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+           </intent-filter>
+       </receiver>
+       <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
