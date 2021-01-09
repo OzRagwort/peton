@@ -24,6 +24,19 @@ class Server {
     }
   }
 
+  Future<Channels> getChannel(String channelId) async {
+    Response response;
+    Dio dio = new Dio();
+
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/channels?id=' + channelId);
+
+    if (response.statusCode == 200) {
+      return Channels.fromJson(response.data[0]);
+    } else {
+      throw Exception('Faliled to load channels data');
+    }
+  }
+
   Future<List<VideosResponse>> getRandbyCategoryId(String categoryId, int count) async {
     Response response;
     Dio dio = new Dio();
