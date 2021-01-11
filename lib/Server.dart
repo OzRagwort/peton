@@ -11,11 +11,14 @@ import 'model/VideosResponse.dart';
 Server server = new Server();
 
 class Server {
-  Future<VideosResponse> getReq(String url) async {
+
+  /// videoId -> VideosResponse
+  /// 영상 정보 가져오기
+  Future<VideosResponse> getVideo(String videoId) async {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?id=' + url);
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?id=' + videoId);
 
     if (response.statusCode == 200) {
       return VideosResponse.fromJson(response.data[0]);
@@ -24,6 +27,8 @@ class Server {
     }
   }
 
+  /// channelId -> Channels
+  /// 채널 정보 가져오기
   Future<Channels> getChannel(String channelId) async {
     Response response;
     Dio dio = new Dio();
@@ -37,6 +42,8 @@ class Server {
     }
   }
 
+  /// categoryId -> List<VideosResponse>
+  /// 특정 카테고리의 무작위 영상 정보 가져오기
   Future<List<VideosResponse>> getRandbyCategoryId(String categoryId, int count) async {
     Response response;
     Dio dio = new Dio();
@@ -55,11 +62,12 @@ class Server {
     }
   }
 
-  Future<int> putReq(String url) async {
+  /// videoId -> 영상 최신정보 업데이트
+  Future<int> putReq(String videoId) async {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.put(ServerInfo.serverURL + '/api/moaon/v1/videos/' + url);
+    response = await dio.put(ServerInfo.serverURL + '/api/moaon/v1/videos/' + videoId);
 
     if (response.statusCode == 200) {
       return 0;
@@ -69,11 +77,14 @@ class Server {
     }
   }
 
-  Future<VideosResponse> updateAndCall(String url) async {
-    await putReq(url);
-    return getReq(url);
+  /// videoId -> 영상 최신 정보 가져오기
+  Future<VideosResponse> updateAndCall(String videoId) async {
+    await putReq(videoId);
+    return getVideo(videoId);
   }
 
+  /// channelId -> List<VideosResponse>
+  /// 특정 채널의 정령된 영상 가져오기
   Future<List<VideosResponse>> getbyChannelIdSort(String channelId, String sort, int page, int count) async {
     Response response;
     Dio dio = new Dio();
@@ -96,6 +107,8 @@ class Server {
     }
   }
 
+  /// keyword -> List<VideosResponse>
+  /// 키워드 검색
   Future<List<VideosResponse>> getSearchVideos(String keyword, int page, int count) async {
     Response response;
     Dio dio = new Dio();
@@ -117,6 +130,8 @@ class Server {
     }
   }
 
+  /// category -> List<Channels>
+  /// 특정 카테고리 랜덤 채널 가져오기
   Future<List<Channels>> getRandChannels(int category, int page, int count) async {
     Response response;
     Dio dio = new Dio();
@@ -138,6 +153,8 @@ class Server {
     }
   }
 
+  /// category -> List<VideosByChannels>
+  /// 수정예정
   Future<List<VideosByChannels>> getVideosByChannels(int category, int cPage, int cCount, String sort, int vPage, int vCount) async {
 
     List<VideosByChannels> result = new List<VideosByChannels>();
