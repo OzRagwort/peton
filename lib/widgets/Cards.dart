@@ -11,66 +11,62 @@ import 'package:peton/widgets/Line.dart';
 import 'package:peton/widgets/TextForm.dart';
 import 'package:extended_image/extended_image.dart';
 
-Widget videoCard(VideosResponse videosResponse, double width) =>
-    ExtendedImage.network(
-      'https://i.ytimg.com/vi/'+videosResponse.videoId+'/maxresdefault.jpg',
-      width: width,
-      fit: BoxFit.fitWidth,
-      cache: true,
-      filterQuality: FilterQuality.high,
-      // border: Border.all(color: Colors.red, width: 1.0),
-      // borderRadius: BorderRadius.all(Radius.circular(30.0)),
-      loadStateChanged: (ExtendedImageState state) {
-        switch (state.extendedImageLoadState) {
-          case LoadState.loading:
-            return SizedBox(
-              width: width,
-              height: width*9/16 + 85,
-              child: CupertinoActivityIndicator(radius: 15,),
-            );
-            break;
-          case LoadState.completed:
-            return Card(
-              child: Container(
-                child: Column(
-                  children: [
-                    ExtendedRawImage(
-                      /// maxresdefault
-                      image: state.extendedImageInfo?.image,
-                      width: width,
-                      fit: BoxFit.fitWidth,
-                      /// hqdefault => crop
-                      // width: width,
-                      // height: (width*270)/480,
-                      // fit: BoxFit.fitWidth,
-                      // sourceRect: Rect.fromCenter(width: 480, height: 270, center: Offset(240, 180)),
-                    ),
-                    homepageCardMetadata(videosResponse, width),
-                  ],
-                ),
+Widget _getCard(VideosResponse videosResponse, double width, String imageQuality) {
+  return ExtendedImage.network(
+    'https://i.ytimg.com/vi/' + videosResponse.videoId + '/' + imageQuality,
+    width: width,
+    fit: BoxFit.fitWidth,
+    cache: true,
+    filterQuality: FilterQuality.high,
+    loadStateChanged: (ExtendedImageState state) {
+      switch (state.extendedImageLoadState) {
+        case LoadState.loading:
+          return Card(
+            child: Container(
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: width,
+                    height: width * 9 / 16,
+                    child: CupertinoActivityIndicator(radius: 15,),
+                  ),
+                  homepageCardMetadata(videosResponse, width),
+                ],
               ),
-            );
-            break;
-          case LoadState.failed:
-            return Card(
-              child: Container(
-                child: Column(
-                  children: [
-                    Image.network(
-                      'https://i.ytimg.com/vi/'+videosResponse.videoId+'/mqdefault.jpg',
-                      width: width,
-                      fit: BoxFit.fitWidth,
-                    ),
-                    homepageCardMetadata(videosResponse, width),
-                  ],
-                ),
+            ),
+          );
+          break;
+        case LoadState.completed:
+          return Card(
+            child: Container(
+              child: Column(
+                children: [
+                  ExtendedRawImage(
+                    image: state.extendedImageInfo?.image,
+                    width: width,
+                    fit: BoxFit.fitWidth,
+                  ),
+                  homepageCardMetadata(videosResponse, width),
+                ],
               ),
-            );
-            break;
-        }
-        return null;
-      },
-    );
+            ),
+          );
+          break;
+        case LoadState.failed:
+          if (imageQuality != 'mqdefault.jpg') {
+            return _getCard(videosResponse, width, 'mqdefault.jpg');
+          } else {
+            print('image load error in videoCard');
+          }
+      }
+      return null;
+    },
+  );
+}
+
+Widget videoCard(VideosResponse videosResponse, double width) {
+  return _getCard(videosResponse, width, 'maxresdefault.jpg');
+}
 
 Widget videoCardSmall(VideosResponse videosResponse, double width) =>
     ExtendedImage.network(
@@ -84,8 +80,8 @@ Widget videoCardSmall(VideosResponse videosResponse, double width) =>
           case LoadState.loading:
             return SizedBox(
               width: width,
-              height: width*9/16 + 85,
-              child: CupertinoActivityIndicator(radius: 15,),
+              height: width*3/16,
+              child: CupertinoActivityIndicator(radius: 10,),
             );
             break;
           case LoadState.completed:
@@ -108,7 +104,11 @@ Widget videoCardSmall(VideosResponse videosResponse, double width) =>
             );
             break;
           case LoadState.failed:
-            return Text('error');
+            return SizedBox(
+              width: width,
+              height: width*3/16,
+              child: Text('error'),
+            );
             break;
         }
         return null;
