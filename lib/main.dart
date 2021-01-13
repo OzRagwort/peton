@@ -5,8 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final savedThemeMode = await AdaptiveTheme.getThemeMode();
 
+  // 테마 설정
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+  // 설정값
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final SharedPreferences prefs = await _prefs;
 

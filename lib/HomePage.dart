@@ -142,7 +142,6 @@ class _HomePageState extends State<HomePage> {
                             return _videosCart(index, width);
                           } else if (snapshot.hasError) {
                             _onRefresh();
-                            // return Text("${snapshot.error}");
                           }
                           return Center(
                             child: CupertinoActivityIndicator(),

@@ -20,7 +20,7 @@ class _SearchPageState extends State<SearchPage> {
   Future<List<VideosResponse>> videosResponse;
   List<VideosResponse> listVideos = new List<VideosResponse>();
 
-  String keyword;
+  String keyword = '';
 
   void _onLoading() async{
 
@@ -58,7 +58,6 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    keyword = '';
   }
 
   @override

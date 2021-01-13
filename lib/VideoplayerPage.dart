@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
@@ -66,7 +66,6 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
         DeviceOrientation.landscapeLeft,
         DeviceOrientation.landscapeRight,
       ]);
-      log('Entered Fullscreen');
     };
     _controller.onExitFullscreen = () {
       SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -76,7 +75,6 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
       Future.delayed(const Duration(seconds: 5), () {
         SystemChrome.setPreferredOrientations(DeviceOrientation.values);
       });
-      log('Exited Fullscreen');
     };
   }
 

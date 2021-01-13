@@ -22,11 +22,10 @@ class ChannelInfoPage extends StatefulWidget {
   final channel;
 
   @override
-  _ChannelInfoPageState createState() => _ChannelInfoPageState(channel: channel);
+  _ChannelInfoPageState createState() => _ChannelInfoPageState();
 }
 
 class _ChannelInfoPageState extends State<ChannelInfoPage> {
-  _ChannelInfoPageState({this.channel});
 
   Channels channel;
   String sort = 'desc'; // 최신순 desc:최신, asc:오래된순, popular:인기순
@@ -109,6 +108,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
   @override
   void initState() {
     super.initState();
+    channel = widget.channel;
     _dropDownMenuItems = getDropDownMenuItems();
     _sortingMethod = _dropDownMenuItems[1].value;
     videosResponse = server.getbyChannelIdSort(channel.channelId, sort, 1, count);
@@ -288,10 +288,5 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
         ),
       ),
     );
-    //   (
-    //   body:
-    //   ,
-    //   error: NetworkErrorPage(),
-    // );
   }
 }

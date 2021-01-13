@@ -1,6 +1,4 @@
 
-import 'dart:developer';
-
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,12 +12,13 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  List<String> _themetList = ['Light', 'Dark', 'System'];
+  List<String> _themeList = ['Light', 'Dark', 'System'];
   List<DropdownMenuItem<String>> _themeDropDownMenuItems;
 
   List<String> _startPageList = ['Home', 'Favorite', 'Library'];
   List<DropdownMenuItem<String>> _startPageDropDownMenuItems;
 
+  // DropDown 메뉴 세팅
   List<DropdownMenuItem<String>> getDropDownMenuItems(List<String> lists) {
     List<DropdownMenuItem<String>> items = new List();
     for(String list in lists) {
@@ -31,10 +30,11 @@ class _SettingPageState extends State<SettingPage> {
     return items;
   }
 
+  /// 테마 설정 관련
   void _themeRefresh(String index) async {
-    if (index == _themetList[0]) {
+    if (index == _themeList[0]) {
       AdaptiveTheme.of(context).setLight();
-    } else if (index == _themetList[1]) {
+    } else if (index == _themeList[1]) {
       AdaptiveTheme.of(context).setDark();
     } else {
       AdaptiveTheme.of(context).setSystem();
@@ -42,10 +42,10 @@ class _SettingPageState extends State<SettingPage> {
     setState(() {});
   }
 
+  /// 시작 페이지 설정 관련
   Future<String> _startPageSetting() async {
     final SharedPreferences prefs = await _prefs;
     int startPage = (prefs.getInt('start_page') ?? 0);
-    log('startpage : '+startPage.toString());
     if (startPage == 0)
       return 'Home';
     else if (startPage == 1)
@@ -53,7 +53,6 @@ class _SettingPageState extends State<SettingPage> {
     else
       return 'Library';
   }
-
   void _startPageRefresh(String index) async {
     final SharedPreferences prefs = await _prefs;
     if (index == _startPageList[0]) {
@@ -69,7 +68,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   void initState() {
     super.initState();
-    _themeDropDownMenuItems = getDropDownMenuItems(_themetList);
+    _themeDropDownMenuItems = getDropDownMenuItems(_themeList);
     _startPageDropDownMenuItems = getDropDownMenuItems(_startPageList);
   }
 
@@ -102,7 +101,6 @@ class _SettingPageState extends State<SettingPage> {
                     future: AdaptiveTheme.getThemeMode(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        log(snapshot.data.name);
                         return DropdownButton<String>(
                           icon: Icon(Icons.keyboard_arrow_down),
                           value: snapshot.data.name,
@@ -136,7 +134,6 @@ class _SettingPageState extends State<SettingPage> {
                     future: _startPageSetting(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        log(snapshot.data);
                         return DropdownButton<String>(
                           icon: Icon(Icons.keyboard_arrow_down),
                           value: snapshot.data,
@@ -145,7 +142,6 @@ class _SettingPageState extends State<SettingPage> {
                           underline: Container(height: 0),
                           items: _startPageDropDownMenuItems,
                           onChanged: (String newValue) {
-                            log('//'+newValue);
                             _startPageRefresh(newValue);
                           },
                         );

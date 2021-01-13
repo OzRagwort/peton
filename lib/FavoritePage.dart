@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -109,8 +109,6 @@ class _FavoritePageState extends State<FavoritePage> {
 
   void _onClickChannel(int index) async {
 
-    log('onChilckChannel : ' + index.toString());
-
     _channelClickCheck = index;
     listVideos = new List<VideosResponse>();
     videosResponse = server.getbyChannelIdSort(listChannels[index].channelId, sort, 1, count);
@@ -119,8 +117,6 @@ class _FavoritePageState extends State<FavoritePage> {
   }
 
   void _offClickChannel(int index) async {
-
-    log('offChilckChannel : ' + index.toString());
 
     _channelClickCheck = null;
     _onRefresh();
@@ -269,32 +265,32 @@ class _FavoritePageState extends State<FavoritePage> {
         onRefresh: _onRefresh,
         onLoading: _onLoading,
         child: ListView.builder(
-            controller: _scrollController,
-            itemCount: listVideos.length + 10,
-            // ignore: missing_return
-            itemBuilder: (context, index) {
-              if (index == 0 && listVideos.length == 0) {
-                videosResponse = server.getbyChannelIdSort(_listToString(listChannels), sort, 1, count);
-                return FutureBuilder<List<VideosResponse>>(
-                  future: videosResponse,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      listVideos.addAll(snapshot.data);
-                      return _videosCart(index, MediaQuery.of(context).size.width);
-                    } else if (snapshot.hasError) {
-                      _onRefresh();
-                      // return Text("${snapshot.error}");
-                    }
-                    return Center(
-                      child: CupertinoActivityIndicator(),
-                    );
-                  },
-                );
-              }
-              if (listVideos.length > index) {
-                return _videosCart(index, MediaQuery.of(context).size.width);
-              }
+          controller: _scrollController,
+          itemCount: listVideos.length + 10,
+          // ignore: missing_return
+          itemBuilder: (context, index) {
+            if (index == 0 && listVideos.length == 0) {
+              videosResponse = server.getbyChannelIdSort(_listToString(listChannels), sort, 1, count);
+              return FutureBuilder<List<VideosResponse>>(
+                future: videosResponse,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    listVideos.addAll(snapshot.data);
+                    return _videosCart(index, MediaQuery.of(context).size.width);
+                  } else if (snapshot.hasError) {
+                    _onRefresh();
+                    // return Text("${snapshot.error}");
+                  }
+                  return Center(
+                    child: CupertinoActivityIndicator(),
+                  );
+                },
+              );
             }
+            if (listVideos.length > index) {
+              return _videosCart(index, MediaQuery.of(context).size.width);
+            }
+          }
         ),
       ),
     );
@@ -311,6 +307,15 @@ class _FavoritePageState extends State<FavoritePage> {
   }
 
   Widget _searchChannel() {
+    /// 수정해야함 (종아요한 채널이 없을 때 뭘 출력해줬으면 좋겠음)
+    if (listChannels.length == 0) {
+      return Column(
+        children: [
+          Text('좋아요한 채널이 없음'),
+          Expanded(child: RandomChannelListPage(scrollController: _scrollController))
+        ],
+      );
+    }
     return RandomChannelListPage(scrollController: _scrollController);
   }
 

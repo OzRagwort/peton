@@ -23,14 +23,12 @@ class MainPage extends StatefulWidget {
   final int index;
 
   @override
-  _MainPageState createState() => _MainPageState(title: 'PetON', index: index);
+  _MainPageState createState() => _MainPageState();
 
 }
 
 class _MainPageState extends State<MainPage>{
-  _MainPageState({this.title, this.index});
-  final String title;
-  final int index;
+  String title;
 
   /// bottom navi
   int _selectedTabIndex;
@@ -117,17 +115,21 @@ class _MainPageState extends State<MainPage>{
   @override
   void initState() {
     super.initState();
+
+    // 딥링크 init
     _initDynamicLinks();
 
+    // FCM configure
     _fcmConfigure();
 
-    _selectedTabIndex = index;
+    // 변수 설정
+    title = widget.title;
+    _selectedTabIndex = widget.index;
   }
 
   @override
   void dispose() {
     super.dispose();
-    log('Main Dispose');
   }
 
   @override
