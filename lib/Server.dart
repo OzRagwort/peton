@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:peton/model/Channels.dart';
-import 'package:peton/model/VideosByChannels.dart';
 import 'package:peton/serverInfo/ServerInfo.dart';
 
 import 'model/VideosResponse.dart';
@@ -154,18 +153,25 @@ class Server {
   }
 
   /// category -> List<VideosByChannels>
-  /// 수정예정
-  Future<List<VideosByChannels>> getVideosByChannels(int category, int cPage, int cCount, String sort, int vPage, int vCount) async {
+  /// 지금은 중복으로 채널을 가져오기도 함(수정해야함)
+  Future<Map<Channels, List<VideosResponse>>> getVideosByChannels(int category, int cPage, int cCount, String sort, int vPage, int vCount) async {
 
-    List<VideosByChannels> result = new List<VideosByChannels>();
-    List<Channels> clist = await getRandChannels(category, cPage, cCount);
+    Map map = new Map<Channels, List<VideosResponse>>();
 
-    for (Channels c in clist) {
-      VideosByChannels videosByChannels = new VideosByChannels(channels: c, listVideosResponse: await getbyChannelIdSort(c.channelId, sort, vPage, vCount));
-      result.add(videosByChannels);
+    while (map.length < cCount) {
+      List<Channels> list = await getRandChannels(category, cPage, cCount);
+      for (Channels c in list) {
+        List<VideosResponse> videos = await getbyChannelIdSort(c.channelId, sort, vPage, vCount);
+        if (videos.length != 0) {
+          map[c] = videos;
+        }
+        if (map.length == cCount) {
+          break;
+        }
+      }
     }
 
-    return result;
+    return map;
   }
 
 }

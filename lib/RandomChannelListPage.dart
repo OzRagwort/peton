@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/VideoplayerPage.dart';
-import 'package:peton/model/VideosByChannels.dart';
+import 'package:peton/model/Channels.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/widgets/Cards.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -27,21 +27,25 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
   RefreshController _refreshController =
   RefreshController(initialRefresh: false);
 
-  Future<List<VideosByChannels>> response;
-  List<VideosByChannels> list = new List<VideosByChannels>();
+  Future<Map<Channels, List<VideosResponse>>> response;
+  Map map = new Map<Channels, List<VideosResponse>>();
+  List<Channels> list = new List<Channels>();
 
   int category = 1;
   String sort = 'popular';
   int channelCount = 10;
   int videoCount = 3;
+  int maxResults = 300;
 
   void _onRefresh() async {
 
-    list = new List<VideosByChannels>();
+    map = new Map<Channels, List<VideosResponse>>();
+    list = new List<Channels>();
     response = server.getVideosByChannels(category, 1, channelCount, sort, 1, videoCount);
 
     response.then((value) => setState(() {
-      list.addAll(value);
+      map.addAll(value);
+      list = map.keys.toList();
     }));
 
     _refreshController.refreshCompleted();
@@ -51,7 +55,8 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
 
     response = server.getVideosByChannels(category, 1, channelCount, sort, 1, videoCount);
     response.then((value) => setState(() {
-      list.addAll(value);
+      map.addAll(value);
+      list = map.keys.toList();
     }));
 
     if(mounted)
@@ -74,12 +79,15 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
 
   Widget _channelsCart(int listNum, double width) {
 
+    Channels channels = list[listNum];
+    List<VideosResponse> videosResponse = map[list[listNum]];
+
     return Column(
       children: [
-        channelCardSmall(list[listNum].channels, width),
-        _videosCart(list[listNum].listVideosResponse[0], width - 40),
-        _videosCart(list[listNum].listVideosResponse[1], width - 40),
-        _videosCart(list[listNum].listVideosResponse[2], width - 40),
+        channelCardSmall(channels, width),
+        _videosCart(videosResponse[0], width - 40),
+        _videosCart(videosResponse[1], width - 40),
+        _videosCart(videosResponse[2], width - 40),
       ],
     );
   }
@@ -95,7 +103,7 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
   Widget build(BuildContext context) {
     return SmartRefresher(
       enablePullDown: true,
-      enablePullUp: true,
+      enablePullUp: map.length < maxResults ? true : false,
       header: MaterialClassicHeader(),
       footer: CustomFooter(
         loadStyle: LoadStyle.ShowWhenLoading,
@@ -132,15 +140,16 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
       onLoading: _onLoading,
       child: ListView.builder(
         controller: _scrollController,
-        itemCount: list.length + channelCount,
+        itemCount: map.length + channelCount,
         // ignore: missing_return
         itemBuilder: (context, index) {
-          if (index == 0 && list.length == 0) {
-            return FutureBuilder<List<VideosByChannels>>(
+          if (index == 0 && map.length == 0) {
+            return FutureBuilder<Map<Channels, List<VideosResponse>>>(
               future: response,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  list.addAll(snapshot.data);
+                  map.addAll(snapshot.data);
+                  list = map.keys.toList();
                   return _channelsCart(index, MediaQuery.of(context).size.width);
                 } else if (snapshot.hasError) {
                   print(snapshot.error);
@@ -152,7 +161,7 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
               },
             );
           }
-          if (list.length > index) {
+          if (map.length > index) {
             return _channelsCart(index, MediaQuery.of(context).size.width);
           }
         }
