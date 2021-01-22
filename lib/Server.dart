@@ -48,7 +48,7 @@ class Server {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos/rand?category=' + categoryId + '&count=' + count.toString());
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?randomCategory=' + categoryId + '&count=' + count.toString());
 
     List<VideosResponse> getList = [];
 
@@ -63,11 +63,11 @@ class Server {
   }
 
   /// videoId -> 영상 최신정보 업데이트
-  Future<int> putReq(String videoId) async {
+  Future<int> refreshVideo(String videoId) async {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.put(ServerInfo.serverURL + '/api/moaon/v1/videos/' + videoId);
+    response = await dio.put(ServerInfo.serverURL + '/api/moaon/v1/videos/' + videoId + '/refresh');
 
     if (response.statusCode == 200) {
       return 0;
@@ -78,8 +78,8 @@ class Server {
   }
 
   /// videoId -> 영상 최신 정보 가져오기
-  Future<VideosResponse> updateAndCall(String videoId) async {
-    await putReq(videoId);
+  Future<VideosResponse> refreshGetVideo(String videoId) async {
+    await refreshVideo(videoId);
     return getVideo(videoId);
   }
 
@@ -92,13 +92,13 @@ class Server {
     response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?channel=' + channelId +
         '&sort=' + sort +
         '&page=' + page.toString() +
-        '&maxResult=' + count.toString()
+        '&maxResults=' + count.toString()
     );
 
     List<VideosResponse> getList = [];
 
     if (response.statusCode == 200) {
-      for(int i = 0 ; i < count ; i++) {
+      for(int i = 0 ; i < (count > (response.data as List<dynamic>).length ? (response.data as List<dynamic>).length : count) ; i++) {
         getList.add(VideosResponse.fromJson(response.data[i]));
       }
       return getList;
@@ -115,7 +115,7 @@ class Server {
 
     response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?search=' + keyword +
         '&page=' + page.toString() +
-        '&maxResult=' + count.toString()
+        '&maxResults=' + count.toString()
     );
 
     List<VideosResponse> getList = [];
@@ -136,9 +136,9 @@ class Server {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/channels/rand?category=' + category.toString() +
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/channels?randomCategory=' + category.toString() +
         '&page=' + page.toString() +
-        '&maxResult=' + count.toString()
+        '&maxResults=' + count.toString()
     );
 
     List<Channels> getList = [];

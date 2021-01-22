@@ -121,7 +121,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   Widget _getData() {
     return
       FutureBuilder<VideosResponse>(
-        future: server.updateAndCall(videoId),
+        future: server.refreshGetVideo(videoId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             _videosResponse = snapshot.data;
