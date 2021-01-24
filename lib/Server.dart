@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:peton/model/Channels.dart';
+import 'package:peton/model/VideosTagsPopularityResponse.dart';
 import 'package:peton/serverInfo/ServerInfo.dart';
 
 import 'model/VideosResponse.dart';
@@ -172,6 +173,50 @@ class Server {
     }
 
     return map;
+  }
+
+  /// category -> List<VideosTagsPopularityResponse>
+  /// 카테고리의 인기 태그를 가져옴
+  /// 랜덤하게 또는 더 인기있는 순서대로 등등 어찌할지 수정해야함
+  Future<List<VideosTagsPopularityResponse>> getPopularTags(int category) async {
+    Response response;
+    Dio dio = new Dio();
+
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/popular-tags?category=' + category.toString());
+
+    var lists = response.data as List;
+    List<VideosTagsPopularityResponse> list = lists.map((e) => VideosTagsPopularityResponse.fromJson(e)).toList();
+
+    if (response.statusCode == 200) {
+      return list;
+    } else {
+      throw Exception('Faliled to load getData');
+    }
+  }
+
+  /// category -> List<VideosTagsPopularityResponse>
+  /// 카테고리의 인기 태그를 가져옴
+  /// 랜덤하게 또는 더 인기있는 순서대로 등등 어찌할지 수정해야함
+  Future<List<VideosResponse>> getVideosByTags(String tags, int category, int page, int count) async {
+    Response response;
+    Dio dio = new Dio();
+
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?tags=' + tags.toString() +
+        '&category=' + category.toString() +
+        '&page=' + page.toString() +
+        '&maxResults=' + count.toString()
+    );
+
+    List<VideosResponse> getList = [];
+
+    if (response.statusCode == 200) {
+      for(int i = page ; i < count ; i++) {
+        getList.add(VideosResponse.fromJson(response.data[i]));
+      }
+      return getList;
+    } else {
+      throw Exception('Faliled to load getData');
+    }
   }
 
 }
