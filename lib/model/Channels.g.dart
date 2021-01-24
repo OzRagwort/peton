@@ -14,6 +14,7 @@ Channels _$ChannelsFromJson(Map<String, dynamic> json) {
     channelThumbnail: json['channelThumbnail'] as String,
     uploadsList: json['uploadsList'] as String,
     subscribers: json['subscribers'] as int,
+    bannerExternalUrl: json['bannerExternalUrl'] as String,
   );
 }
 
@@ -24,4 +25,5 @@ Map<String, dynamic> _$ChannelsToJson(Channels instance) => <String, dynamic>{
       'channelThumbnail': instance.channelThumbnail,
       'uploadsList': instance.uploadsList,
       'subscribers': instance.subscribers,
+      'bannerExternalUrl': instance.bannerExternalUrl,
     };

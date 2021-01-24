@@ -11,8 +11,9 @@ class Channels {
   final String channelThumbnail;
   final String uploadsList;
   final int subscribers;
+  final String bannerExternalUrl;
 
-  Channels({this.idx, this.channelId, this.channelName, this.channelThumbnail, this.uploadsList, this.subscribers});
+  Channels({this.idx, this.channelId, this.channelName, this.channelThumbnail, this.uploadsList, this.subscribers, this.bannerExternalUrl});
 
   factory Channels.fromJson(Map<String, dynamic> json) => _$ChannelsFromJson(json);
 
