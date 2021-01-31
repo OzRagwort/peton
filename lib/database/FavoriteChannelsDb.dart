@@ -15,9 +15,15 @@ class FavoriteChannelsDb {
   factory FavoriteChannelsDb() => _db;
 
   static Database _database;
+  int nowVersion = 2;
 
   Future<Database> get database async {
-    if(_database != null) return _database;
+    if(_database != null) {
+      if ((await _database.getVersion()) != nowVersion) {
+        _database = await initDB();
+      }
+      return _database;
+    }
 
     _database = await initDB();
     return _database;
@@ -27,22 +33,28 @@ class FavoriteChannelsDb {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, 'peton_favorite_channels_db.db');
 
-    return await openDatabase(
-        path,
-        version: 1,
-        onCreate: (db, version) async {
-          await db.execute('''
+    var createTableQuery = '''
           CREATE TABLE $TableName(
             idx INTEGER, 
             channelId TEXT, 
             channelName TEXT, 
             channelThumbnail TEXT, 
             uploadsList TEXT, 
-            subscribers INTEGER
-          )
-        ''');
+            subscribers INTEGER, 
+            bannerExternalUrl TEXT
+          );
+        ''';
+    var upgradeTableQuery = "ALTER TABLE $TableName ADD bannerExternalUrl TEXT";
+
+    return await openDatabase(
+        path,
+        version: nowVersion,
+        onCreate: (db, version) async {
+          await db.execute(createTableQuery);
         },
-        onUpgrade: (db, oldVersion, newVersion){}
+        onUpgrade: (db, oldVersion, newVersion) async {
+          await db.execute(upgradeTableQuery);
+        }
     );
   }
 
@@ -64,12 +76,13 @@ class FavoriteChannelsDb {
     var res = await db.rawQuery('SELECT * FROM $TableName WHERE channelId = ?', [channelId]);
 
     return res.isNotEmpty ? Channels(
-      idx: res.first['idx'],
-      channelId : res.first['channelId'],
-      channelName : res.first['channelName'],
-      channelThumbnail : res.first['channelThumbnail'],
-      uploadsList: res.first['uploadsList'],
-      subscribers: res.first['subscribers'],
+        idx: res.first['idx'],
+        channelId : res.first['channelId'],
+        channelName : res.first['channelName'],
+        channelThumbnail : res.first['channelThumbnail'],
+        uploadsList: res.first['uploadsList'],
+        subscribers: res.first['subscribers'],
+        bannerExternalUrl: res.first['bannerExternalUrl']
     ) : null;
   }
 
@@ -80,12 +93,13 @@ class FavoriteChannelsDb {
 
     return List.generate(maps.length, (index) {
       return Channels(
-        idx: maps[index]['idx'],
-        channelId : maps[index]['channelId'],
-        channelName : maps[index]['channelName'],
-        channelThumbnail : maps[index]['channelThumbnail'],
-        uploadsList: maps[index]['uploadsList'],
-        subscribers: maps[index]['subscribers'],
+          idx: maps[index]['idx'],
+          channelId : maps[index]['channelId'],
+          channelName : maps[index]['channelName'],
+          channelThumbnail : maps[index]['channelThumbnail'],
+          uploadsList: maps[index]['uploadsList'],
+          subscribers: maps[index]['subscribers'],
+          bannerExternalUrl: maps[index]['bannerExternalUrl']
       );
     });
   }
