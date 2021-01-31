@@ -1,6 +1,7 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:peton/MainPage.dart';
+import 'package:peton/enums/MyThemeData.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -23,22 +24,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AdaptiveTheme(
-      light: ThemeData(
-        brightness: Brightness.light,
-        appBarTheme: AppBarTheme(
-          centerTitle: true,
-          color: Colors.white,
-          iconTheme: IconThemeData(color: Colors.black),
-          textTheme: TextTheme(title: TextStyle(color: Colors.black, fontSize: 18)),
-        ),
-        primaryColor: Colors.black,
-        accentColor: Colors.orangeAccent,
-      ),
-      dark: ThemeData(
-        brightness: Brightness.dark,
-        // primarySwatch: Colors.white,
-        accentColor: Colors.white,
-      ),
+      light: MyThemeData.lightTheme,
+      dark: MyThemeData.darkTheme,
       initial: savedThemeMode ?? AdaptiveThemeMode.light,
       builder: (theme, darkTheme) => MaterialApp(
         title: 'PetON',
