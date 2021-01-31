@@ -163,7 +163,7 @@ class Server {
       List<Channels> list = await getRandChannels(category, cPage, cCount);
       for (Channels c in list) {
         List<VideosResponse> videos = await getbyChannelIdSort(c.channelId, sort, vPage, vCount);
-        if (videos.length != 0) {
+        if (videos.length >= 3) {
           map[c] = videos;
         }
         if (map.length == cCount) {
