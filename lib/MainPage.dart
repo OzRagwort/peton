@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:peton/ChannelInfoPage.dart';
+import 'package:peton/KeywordsPage.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/enums/MyIcons.dart';
@@ -156,7 +156,11 @@ class _MainPageState extends State<MainPage>{
               title: Text('Favorite', style: TextStyle(fontSize: 12),),
             ),
             BottomNavigationBarItem(
-              icon: _selectedTabIndex == 2 ? MyIcons.libraryPageIconFill : MyIcons.libraryPageIcon,
+              icon: _selectedTabIndex == 2 ? MyIcons.keywordPageIconFill : MyIcons.keywordPageIcon,
+              title: Text('Keyword', style: TextStyle(fontSize: 12),),
+            ),
+            BottomNavigationBarItem(
+              icon: _selectedTabIndex == 3 ? MyIcons.libraryPageIconFill : MyIcons.libraryPageIcon,
               title: Text('Library', style: TextStyle(fontSize: 12),),
             ),
           ],
@@ -176,8 +180,10 @@ class _MainPageState extends State<MainPage>{
       return HomePage();
     } else if(index == 1) {
       return FavoritePage();
+    } else if(index == 2) {
+      return KeywordsPage();
     } else {
-      return LibraryPage();
+    return LibraryPage();
     }
   }
 

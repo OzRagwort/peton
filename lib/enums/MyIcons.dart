@@ -12,6 +12,10 @@ class MyIcons {
 
   static const Icon favoritePageIconFill = Icon(CupertinoIcons.star_fill);
 
+  static const Icon keywordPageIcon = Icon(CupertinoIcons.number_circle);
+
+  static const Icon keywordPageIconFill = Icon(CupertinoIcons.number_circle_fill);
+
   static const Icon libraryPageIcon = Icon(Icons.video_library_outlined);
 
   static const Icon libraryPageIconFill = Icon(Icons.video_library);
