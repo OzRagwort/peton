@@ -48,7 +48,7 @@ class Server {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?randomCategory=' + categoryId + '&count=' + count.toString());
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?randomCategory=' + categoryId + '&maxResults=' + count.toString());
 
     List<VideosResponse> getList = [];
 
@@ -67,7 +67,7 @@ class Server {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.put(ServerInfo.serverURL + '/api/moaon/v1/videos/' + videoId + '/refresh');
+    response = await dio.post(ServerInfo.serverURL + '/api/moaon/v1/yt-videos', data: {"videoId":videoId});
 
     if (response.statusCode == 200) {
       return 0;
