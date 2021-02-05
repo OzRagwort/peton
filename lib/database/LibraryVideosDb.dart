@@ -6,7 +6,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:peton/model/LibraryVideos.dart';
 import 'package:sqflite/sqflite.dart';
 
-final String TableName = 'library_videos';
+final int version = 1;
+final String TableNameOrig = 'library_videos_v';
+final String TableName = TableNameOrig + version.toString();
 
 class LibraryVideosDb {
 
@@ -17,7 +19,12 @@ class LibraryVideosDb {
   static Database _database;
 
   Future<Database> get database async {
-    if(_database != null) return _database;
+    if(_database != null) {
+      if ((await _database.getVersion()) != version) {
+        _database = await initDB();
+      }
+      return _database;
+    }
 
     _database = await initDB();
     return _database;
@@ -27,11 +34,8 @@ class LibraryVideosDb {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, 'peton_library_videos_db.db');
 
-    return await openDatabase(
-        path,
-        version: 1,
-        onCreate: (db, version) async {
-          await db.execute('''
+    Map<int, String> versionColumn = {1:'channelId, channelName, channelThumbnail, videoId, videoName, videoThumbnail, videoPublishedDate, videoEmbeddable'};
+    var createTableQueryNew = '''
           CREATE TABLE $TableName(
             channelId TEXT, 
             channelName TEXT, 
@@ -42,9 +46,29 @@ class LibraryVideosDb {
             videoPublishedDate TEXT, 
             videoEmbeddable INTEGER
           )
-        ''');
+        ''';
+
+    return await openDatabase(
+        path,
+        version: version,
+        onCreate: (db, version) async {
+          await db.execute(createTableQueryNew);
         },
-        onUpgrade: (db, oldVersion, newVersion){}
+        onUpgrade: (db, oldVersion, newVersion) async {
+          String TableNameOld = TableNameOrig + oldVersion.toString();
+
+          var insertTableQuery = '''
+            INSERT INTO $TableName 
+            (${versionColumn[newVersion]}) 
+              select ${versionColumn[oldVersion]}
+              from $TableNameOld
+          ''';
+          var deleteTableQuery = "DROP TABLE IF EXISTS $TableNameOld";
+
+          await db.execute(createTableQueryNew);
+          await db.execute(insertTableQuery);
+          await db.execute(deleteTableQuery);
+        }
     );
   }
 
