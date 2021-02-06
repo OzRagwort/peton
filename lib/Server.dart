@@ -224,5 +224,78 @@ class Server {
     }
   }
 
+  /// 평균 Score 이상의 영상을 호출
+  Future<List<VideosResponse>> getVideosByScoreAvg(int category, int page, int count) async {
+    Response response;
+    Dio dio = new Dio();
+
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?overAvg=true' +
+        '&category=' + category.toString() +
+        '&page=' + page.toString() +
+        '&maxResults=' + count.toString()
+    );
+
+    List<VideosResponse> getList = [];
+
+    if (response.statusCode == 200) {
+      for(int i = page ; i < count ; i++) {
+        getList.add(VideosResponse.fromJson(response.data[i]));
+      }
+      return getList;
+    } else {
+      throw Exception('Faliled to load getData');
+    }
+  }
+
+  /// 공개일 기준 필터링 영상
+  Future<List<VideosResponse>> getVideosByPublishedDate(int hour, int category, String sort, bool random, int page, int count) async {
+    Response response;
+    Dio dio = new Dio();
+
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?publishedDateUnderHour=' + hour.toString() +
+        '&category=' + category.toString() +
+        '&page=' + page.toString() +
+        '&maxResults=' + count.toString() +
+        '&sort=' + sort.toString() +
+        '&random=' + random.toString()
+    );
+
+    List<VideosResponse> getList = [];
+
+    if (response.statusCode == 200) {
+      for(int i = page ; i < count ; i++) {
+        getList.add(VideosResponse.fromJson(response.data[i]));
+      }
+      return getList;
+    } else {
+      throw Exception('Faliled to load getData');
+    }
+  }
+
+  /// 공개일 기준 필터링 영상
+  Future<List<Channels>> getChannelsBySubscribers(int subscribers, bool over, int category, bool random, int page, int count) async {
+    Response response;
+    Dio dio = new Dio();
+
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/channels?subscribers=' + subscribers.toString() +
+        '&subscribersOver=' + over.toString() +
+        '&category=' + category.toString() +
+        '&page=' + page.toString() +
+        '&maxResults=' + count.toString() +
+        '&random=' + random.toString()
+    );
+
+    List<Channels> getList = [];
+
+    if (response.statusCode == 200) {
+      for(int i = page ; i < count ; i++) {
+        getList.add(Channels.fromJson(response.data[i]));
+      }
+      return getList;
+    } else {
+      throw Exception('Faliled to load getData');
+    }
+  }
+
 }
 
