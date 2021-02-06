@@ -28,7 +28,7 @@ class _LibraryPageState extends State<LibraryPage> {
 
   void insertLib() {
 
-    var getData = server.getRandbyCategoryId('1', 1);
+    var getData = server.getRandByCategoryId('1', 1);
     getData.then((value) => setState(() {
       libraryVideos = LibraryVideos(
         channelId : value[0].channels.channelId,

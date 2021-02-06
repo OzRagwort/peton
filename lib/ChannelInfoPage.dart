@@ -19,7 +19,7 @@ import 'model/VideosResponse.dart';
 class ChannelInfoPage extends StatefulWidget {
   ChannelInfoPage({this.channel});
 
-  final channel;
+  final Channels channel;
 
   @override
   _ChannelInfoPageState createState() => _ChannelInfoPageState();
@@ -44,7 +44,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
   void _onRefresh() async{
 
     myList = new List<VideosResponse>();
-    videosResponse = server.getbyChannelIdSort(channel.channelId, sort, 1, count);
+    videosResponse = server.getByChannelIdSort(channel.channelId, sort, 1, count);
 
     videosResponse.then((value) => setState(() {myList.addAll(value);}));
 
@@ -55,7 +55,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
 
     int index = (myList.length ~/ 10) + 1;
 
-    videosResponse = server.getbyChannelIdSort(channel.channelId, sort, index, count);
+    videosResponse = server.getByChannelIdSort(channel.channelId, sort, index, count);
     videosResponse.then((value) => myList.addAll(value));
 
     if(mounted)
@@ -74,7 +74,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
     }
 
     myList = new List<VideosResponse>();
-    videosResponse = server.getbyChannelIdSort(channel.channelId, sort, 1, count);
+    videosResponse = server.getByChannelIdSort(channel.channelId, sort, 1, count);
     videosResponse.then((value) {
       myList.addAll(value);
       setState(() {});
@@ -111,7 +111,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
     channel = widget.channel;
     _dropDownMenuItems = getDropDownMenuItems();
     _sortingMethod = _dropDownMenuItems[1].value;
-    videosResponse = server.getbyChannelIdSort(channel.channelId, sort, 1, count);
+    videosResponse = server.getByChannelIdSort(channel.channelId, sort, 1, count);
   }
 
   @override

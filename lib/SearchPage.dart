@@ -26,7 +26,7 @@ class _SearchPageState extends State<SearchPage> {
 
     int index = (listVideos.length ~/ 10) + 1;
 
-    videosResponse = server.getSearchVideos(keyword, index, 10);
+    videosResponse = server.getSearchVideos(keyword, 1, index, 10);
     videosResponse.then((value) => listVideos.addAll(value));
 
     if(mounted)
@@ -51,7 +51,7 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {
       listVideos = new List<VideosResponse>();
     });
-    videosResponse = server.getSearchVideos(keyword, 1, 10);
+    videosResponse = server.getSearchVideos(keyword, 1, 1, 10);
     videosResponse.then((value) => setState(() => listVideos = value));
   }
 

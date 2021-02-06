@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   void _onRefresh() async{
 
     myList = new List<VideosResponse>();
-    videosResponse = server.getRandbyCategoryId('1', 10);
+    videosResponse = server.getRandByCategoryId('1', 10);
     
     videosResponse.then((value) => setState(() {myList.addAll(value);}));
 
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
 
   void _onLoading() async{
 
-    videosResponse = server.getRandbyCategoryId('1', 10);
+    videosResponse = server.getRandByCategoryId('1', 10);
     videosResponse.then((value) => myList.addAll(value));
 
     if(mounted)
@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    videosResponse = server.getRandbyCategoryId('1', 10);
+    videosResponse = server.getRandByCategoryId('1', 10);
 
     /// appbar setting
     _scrollController = new ScrollController();

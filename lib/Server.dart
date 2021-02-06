@@ -42,13 +42,16 @@ class Server {
     }
   }
 
-  /// categoryId -> List<VideosResponse>
+  /// category -> List<VideosResponse>
   /// 특정 카테고리의 무작위 영상 정보 가져오기
-  Future<List<VideosResponse>> getRandbyCategoryId(String categoryId, int count) async {
+  Future<List<VideosResponse>> getRandByCategoryId(String category, int count) async {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?randomCategory=' + categoryId + '&maxResults=' + count.toString());
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?category=' + category +
+        '&maxResults=' + count.toString() +
+        '&random=true'
+    );
 
     List<VideosResponse> getList = [];
 
@@ -84,8 +87,8 @@ class Server {
   }
 
   /// channelId -> List<VideosResponse>
-  /// 특정 채널의 정령된 영상 가져오기
-  Future<List<VideosResponse>> getbyChannelIdSort(String channelId, String sort, int page, int count) async {
+  /// 특정 채널의 정렬된 영상 가져오기
+  Future<List<VideosResponse>> getByChannelIdSort(String channelId, String sort, int page, int count) async {
     Response response;
     Dio dio = new Dio();
 
@@ -109,11 +112,12 @@ class Server {
 
   /// keyword -> List<VideosResponse>
   /// 키워드 검색
-  Future<List<VideosResponse>> getSearchVideos(String keyword, int page, int count) async {
+  Future<List<VideosResponse>> getSearchVideos(String keyword, int category, int page, int count) async {
     Response response;
     Dio dio = new Dio();
 
     response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?search=' + keyword +
+        '&category=' + category.toString() +
         '&page=' + page.toString() +
         '&maxResults=' + count.toString()
     );
@@ -136,7 +140,8 @@ class Server {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/channels?randomCategory=' + category.toString() +
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/channels?category=' + category.toString() +
+        '&random=true' +
         '&page=' + page.toString() +
         '&maxResults=' + count.toString()
     );
@@ -162,7 +167,7 @@ class Server {
     while (map.length < cCount) {
       List<Channels> list = await getRandChannels(category, cPage, cCount);
       for (Channels c in list) {
-        List<VideosResponse> videos = await getbyChannelIdSort(c.channelId, sort, vPage, vCount);
+        List<VideosResponse> videos = await getByChannelIdSort(c.channelId, sort, vPage, vCount);
         if (videos.length >= 3) {
           map[c] = videos;
         }

@@ -70,7 +70,7 @@ class _FavoritePageState extends State<FavoritePage> {
   void _onRefresh() async {
 
     listVideos = new List<VideosResponse>();
-    videosResponse = server.getbyChannelIdSort(_listToString(listChannels), sort, 1, count);
+    videosResponse = server.getByChannelIdSort(_listToString(listChannels), sort, 1, count);
 
     videosResponse.then((value) => setState(() {listVideos.addAll(value);}));
 
@@ -81,7 +81,7 @@ class _FavoritePageState extends State<FavoritePage> {
 
     int index = (listVideos.length ~/ 10) + 1;
 
-    videosResponse = server.getbyChannelIdSort(_listToString(listChannels), sort, index, count);
+    videosResponse = server.getByChannelIdSort(_listToString(listChannels), sort, index, count);
     videosResponse.then((value) => listVideos.addAll(value));
 
     if(mounted)
@@ -100,7 +100,7 @@ class _FavoritePageState extends State<FavoritePage> {
     }
 
     listVideos = new List<VideosResponse>();
-    videosResponse = server.getbyChannelIdSort(_listToString(listChannels), sort, 1, count);
+    videosResponse = server.getByChannelIdSort(_listToString(listChannels), sort, 1, count);
     videosResponse.then((value) {
       listVideos.addAll(value);
       setState(() {});
@@ -111,7 +111,7 @@ class _FavoritePageState extends State<FavoritePage> {
 
     _channelClickCheck = index;
     listVideos = new List<VideosResponse>();
-    videosResponse = server.getbyChannelIdSort(listChannels[index].channelId, sort, 1, count);
+    videosResponse = server.getByChannelIdSort(listChannels[index].channelId, sort, 1, count);
 
     videosResponse.then((value) => setState(() {listVideos.addAll(value);}));
   }
@@ -270,7 +270,7 @@ class _FavoritePageState extends State<FavoritePage> {
           // ignore: missing_return
           itemBuilder: (context, index) {
             if (index == 0 && listVideos.length == 0) {
-              videosResponse = server.getbyChannelIdSort(_listToString(listChannels), sort, 1, count);
+              videosResponse = server.getByChannelIdSort(_listToString(listChannels), sort, 1, count);
               return FutureBuilder<List<VideosResponse>>(
                 future: videosResponse,
                 builder: (context, snapshot) {
@@ -324,7 +324,7 @@ class _FavoritePageState extends State<FavoritePage> {
     super.initState();
     _dropDownMenuItems = getDropDownMenuItems();
     _sortingMethod = _dropDownMenuItems[1].value;
-    videosResponse = server.getbyChannelIdSort(_listToString(listChannels), sort, 1, count);
+    videosResponse = server.getByChannelIdSort(_listToString(listChannels), sort, 1, count);
 
     /// appbar setting
     _scrollController = new ScrollController();
