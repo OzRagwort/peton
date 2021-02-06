@@ -54,6 +54,8 @@ dependencies:
   flutter_local_notifications: ^3.0.2
   flutter_local_notifications_platform_interface: ^2.0.0+1
   platform: ^2.2.1
+  # Carousel Slider
+  carousel_slider: ^3.0.0
 
   #################
   # 비공식 플러그인 #
