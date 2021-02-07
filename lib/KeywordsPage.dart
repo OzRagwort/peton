@@ -1,8 +1,10 @@
 
 import 'package:flutter/material.dart';
+import 'package:peton/KeywordsLatelyHitPage.dart';
+import 'package:peton/KeywordsRecommendPage.dart';
 import 'package:peton/widgets/CheckNetwork.dart';
 import 'package:peton/widgets/KeywordsLatelyHit.dart';
-import 'package:peton/widgets/KeywordsGridview.dart';
+import 'package:peton/widgets/KeywordsGridView.dart';
 import 'package:peton/widgets/KeywordsPopularChannels.dart';
 import 'package:peton/widgets/KeywordsRecommend.dart';
 import 'package:peton/widgets/KeywordsSmallChannels.dart';
@@ -44,19 +46,56 @@ class _KeywordsPageState extends State<KeywordsPage> {
           child: CheckNetwork(
             body: ListView(
               children: [
-                Text("최근 인기 영상", textAlign: TextAlign.center),
-                // KeywordsLatelyHit(),
+                /// 최근 인기 영상
+                InkWell(
+                  onTap: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => KeywordsLatelyHitPage()),
+                    )
+                  },
+                  child: Text(
+                    "최근 인기 영상",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 20
+                    ),
+                  ),
+                ),
+                KeywordsLatelyHit(),
                 divline,
-                // KeywordsGridview(width, context),
+
+                /// 그리드뷰
+                KeywordsGridView(width, context),
                 divline,
-                Text("추천 영상", textAlign: TextAlign.center),
-                // KeywordsRecommend(),
+
+                /// 추천 영상
+                InkWell(
+                  onTap: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => KeywordsRecommendPage()),
+                    )
+                  },
+                  child: Text(
+                    "추천 영상",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 20
+                    ),
+                  ),
+                ),
+                KeywordsRecommend(),
                 divline,
+
+                /// 인기 채널
                 Text("인기 채널", textAlign: TextAlign.center),
-                // KeywordsPopularChannels(),
+                KeywordsPopularChannels(),
                 divline,
+
+                /// 소규모 채널
                 Text("소규모 채널", textAlign: TextAlign.center),
-                // KeywordsSmallChannels()
+                KeywordsSmallChannels()
               ],
             ),
           ),

@@ -272,7 +272,7 @@ class Server {
     }
   }
 
-  /// 공개일 기준 필터링 영상
+  /// 구독자 기준 채널 필터링
   Future<List<Channels>> getChannelsBySubscribers(int subscribers, bool over, int category, bool random, int page, int count) async {
     Response response;
     Dio dio = new Dio();
