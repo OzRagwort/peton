@@ -2,6 +2,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:peton/ChannelInfoPage.dart';
+import 'package:peton/Server.dart';
 import 'package:peton/model/Channels.dart';
 
 class CarouselWithIndicatorChannels extends StatefulWidget {
@@ -18,11 +19,18 @@ class CarouselWithIndicatorChannels extends StatefulWidget {
 
 class _CarouselWithIndicatorChannelsState extends State<CarouselWithIndicatorChannels> {
 
-  List<Channels> channels;
+  Future<Map<Channels, List<String>>> mapsResponse;
+  Map<Channels, List<String>> maps = new Map<Channels, List<String>>();
+  List<Channels> channels = new List<Channels>();
 
   double height = 150;
 
   List<Widget> channelsSliders(List<Channels> channelsList) {
+
+    mapsResponse.then((value) {setState(() {
+      maps = value;
+    });});
+
     return channelsList.map((item) => GestureDetector(
       onTap: () => {
         Navigator.push(
@@ -42,34 +50,28 @@ class _CarouselWithIndicatorChannelsState extends State<CarouselWithIndicatorCha
               backgroundColor: Colors.transparent,
             ),
             const SizedBox(width: 20),
-            Text(
-              item.channelName,
-              maxLines: 2,
-              softWrap: false,
-              overflow: TextOverflow.fade,
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    item.channelName,
+                    maxLines: 2,
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    maps[item] != null ? maps[item].join(", ") : "",
+                    maxLines: 2,
+                    // overflow: TextOverflow.fade,
+                  ),
+                ],
               ),
             ),
-            // Row(
-            //   children: [
-            //     /// row 가 안되!!!!!!!!!!!!!!!!
-            //     Flexible(
-            //       child: Text(
-            //         item.channelName,
-            //         maxLines: 2,
-            //         softWrap: false,
-            //         overflow: TextOverflow.fade,
-            //         style: TextStyle(
-            //           fontSize: 20.0,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       ),
-            //     ),
-            //     Text("test"),
-            //   ],
-            // )
+            // ),
           ],
         )
       ),
@@ -80,6 +82,7 @@ class _CarouselWithIndicatorChannelsState extends State<CarouselWithIndicatorCha
   void initState() {
     super.initState();
     channels = widget.channels;
+    mapsResponse = server.getTagsByChannelsList(channels, 15);
   }
 
   @override

@@ -297,5 +297,34 @@ class Server {
     }
   }
 
+  /// 채널의 태그를 가져옴
+  Future<List<String>> getTagsByChannels(String channelId, int count) async {
+    Response response;
+    Dio dio = new Dio();
+
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/channels/' + channelId +
+        '/videos-tags' +
+        '?maxResults=' + count.toString()
+    );
+
+    if (response.statusCode == 200) {
+      return List.castFrom(response.data);
+    } else {
+      throw Exception('Faliled to load getData');
+    }
+  }
+
+  /// 채널들의 태그를 한번에 가져오는 함수
+  Future<Map<Channels, List<String>>> getTagsByChannelsList(List<Channels> channels, int count) async {
+
+    Map<Channels, List<String>> getMap = new Map<Channels, List<String>>();
+
+    for(Channels c in channels) {
+      getMap[c] = await getTagsByChannels(c.channelId, 10);
+    }
+
+    return getMap;
+  }
+
 }
 
