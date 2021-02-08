@@ -117,7 +117,7 @@ class _KeywordsPageState extends State<KeywordsPage> {
                     onTap: () => {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => KeywordsLatelyPage()),
+                        MaterialPageRoute(builder: (context) => KeywordsLatelyPage(popularVideosList: latelyList,)),
                       )
                     },
                     child: Text(

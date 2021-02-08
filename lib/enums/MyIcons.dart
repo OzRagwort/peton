@@ -40,4 +40,6 @@ class MyIcons {
 
   static const Icon sortDownIcon = Icon(Icons.keyboard_arrow_down);
 
+  static const Icon sortUpIcon = Icon(Icons.keyboard_arrow_up);
+
 }
