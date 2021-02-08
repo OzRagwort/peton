@@ -215,7 +215,7 @@ class Server {
     List<VideosResponse> getList = [];
 
     if (response.statusCode == 200) {
-      for(int i = page ; i < count ; i++) {
+      for(int i = 0 ; i < count ; i++) {
         getList.add(VideosResponse.fromJson(response.data[i]));
       }
       return getList;
@@ -238,7 +238,7 @@ class Server {
     List<VideosResponse> getList = [];
 
     if (response.statusCode == 200) {
-      for(int i = page ; i < count ; i++) {
+      for(int i = 0 ; i < count ; i++) {
         getList.add(VideosResponse.fromJson(response.data[i]));
       }
       return getList;
@@ -263,7 +263,7 @@ class Server {
     List<VideosResponse> getList = [];
 
     if (response.statusCode == 200) {
-      for(int i = page ; i < count ; i++) {
+      for(int i = 0 ; i < count ; i++) {
         getList.add(VideosResponse.fromJson(response.data[i]));
       }
       return getList;
@@ -288,7 +288,7 @@ class Server {
     List<Channels> getList = [];
 
     if (response.statusCode == 200) {
-      for(int i = page ; i < count ; i++) {
+      for(int i = 0 ; i < count ; i++) {
         getList.add(Channels.fromJson(response.data[i]));
       }
       return getList;
@@ -325,6 +325,33 @@ class Server {
 
     return getMap;
   }
+
+  /// 비디오 by sort
+  /// asc -> 오래된 순, desc -> 최근순, popular -> 조회수 순
+  /// asc-score -> 점수 낮은 순, desc-score -> 점수 높은 순
+  Future<List<VideosResponse>> getVideosBySort(String sort, int category, int page, int count) async {
+    Response response;
+    Dio dio = new Dio();
+
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?category=' + category.toString() +
+        '&sort=' + sort +
+        '&page=' + page.toString() +
+        '&maxResults=' + count.toString()
+    );
+
+    List<VideosResponse> getList = [];
+
+    if (response.statusCode == 200) {
+      for(int i = 0 ; i < count ; i++) {
+        getList.add(VideosResponse.fromJson(response.data[i]));
+      }
+      return getList;
+    } else {
+      throw Exception('Faliled to load getData');
+    }
+  }
+
+
 
 }
 
