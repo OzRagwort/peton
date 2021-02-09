@@ -199,17 +199,18 @@ class Server {
     }
   }
 
-  /// category -> List<VideosTagsPopularityResponse>
-  /// 카테고리의 인기 태그를 가져옴
-  /// 랜덤하게 또는 더 인기있는 순서대로 등등 어찌할지 수정해야함
-  Future<List<VideosResponse>> getVideosByTags(String tags, int category, int page, int count) async {
+  /// category -> List<VideosResponse>
+  /// 특정 카테고리 영상에서 태그를 검색하여 조건에 맞는 영상을 가져옴
+  /// 우선 랜덤하게 호출
+  Future<List<VideosResponse>> getVideosByTags(String tags, int category, bool random, int page, int count) async {
     Response response;
     Dio dio = new Dio();
 
     response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?tags=' + tags.toString() +
         '&category=' + category.toString() +
         '&page=' + page.toString() +
-        '&maxResults=' + count.toString()
+        '&maxResults=' + count.toString() +
+        '&random=' + random.toString()
     );
 
     List<VideosResponse> getList = [];
