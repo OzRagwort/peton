@@ -39,7 +39,7 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
   int page = 1;
   int count = 10;
 
-  void _onRefresh() async{
+  void _onRefresh() {
 
     latelyVideosList = new List<VideosResponse>();
     String sort = 'desc';
@@ -53,7 +53,7 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
     _refreshController.refreshCompleted();
   }
 
-  void _onLoading() async{
+  void _onLoading() {
 
     page++;
     latelyVideosResponse = server.getVideosBySort(sort, category, page, count);
