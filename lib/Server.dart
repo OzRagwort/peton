@@ -297,6 +297,36 @@ class Server {
     }
   }
 
+  /// 구독자 기준 채널 필터링
+  Future<List<VideosResponse>> getVideosBySubscribers(int subscribers, bool over, int category, bool random, int page, int count) async {
+    List<Channels> channelsList = await getChannelsBySubscribers(subscribers, over, category, random, page, count);
+    Response response;
+    Dio dio = new Dio();
+
+    List<String> channelNames = new List<String>();
+    channelsList.forEach((e) {
+      channelNames.add(e.channelId);
+    });
+    String channels = channelNames.join(",");
+
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?channel=' + channels +
+        '&page=' + page.toString() +
+        '&maxResults=' + count.toString() +
+        '&random=true'
+    );
+
+    List<VideosResponse> getList = [];
+
+    if (response.statusCode == 200) {
+      for(int i = 0 ; i < count ; i++) {
+        getList.add(VideosResponse.fromJson(response.data[i]));
+      }
+      return getList;
+    } else {
+      throw Exception('Faliled to load getData');
+    }
+  }
+
   /// 채널의 태그를 가져옴
   Future<List<String>> getTagsByChannels(String channelId, int count) async {
     Response response;
