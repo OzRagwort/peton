@@ -56,6 +56,8 @@ dependencies:
   platform: ^2.2.1
   # Carousel Slider
   carousel_slider: ^3.0.0
+  # listview, gridview 애니매이션
+  auto_animated: ^2.1.0
 
   #################
   # 비공식 플러그인 #
