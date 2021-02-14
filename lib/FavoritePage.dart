@@ -30,13 +30,12 @@ class FavoritePage extends StatefulWidget {
 class _FavoritePageState extends State<FavoritePage> {
 
   bool isScrollingDown = false;
-  double scrollOffset = 0;
 
   /// hide appbar
   ScrollController _scrollController;
 
   /// 구독 채널들 저장 변수
-  List<Channels> listChannels = new List<Channels>();
+  List<Channels> listChannels;
 
   /// 정렬 관련, count 관련 변수
   List<String> _sortList = ['인기 동영상', '최신 순', '오래된 순'];
@@ -67,17 +66,16 @@ class _FavoritePageState extends State<FavoritePage> {
     return listStr.join(',');
   }
 
-  void _onRefresh() async {
+  void _onRefresh() {
 
     listVideos = new List<VideosResponse>();
     videosResponse = server.getByChannelIdSort(_listToString(listChannels), sort, 1, count);
-
     videosResponse.then((value) => setState(() {listVideos.addAll(value);}));
 
     _refreshController.refreshCompleted();
   }
 
-  void _onLoading() async {
+  void _onLoading() {
 
     int index = (listVideos.length ~/ 10) + 1;
 
@@ -90,7 +88,7 @@ class _FavoritePageState extends State<FavoritePage> {
     _refreshController.loadComplete();
   }
 
-  void _sortRefresh(String index) async {
+  void _sortRefresh(String index) {
     if (index == _sortList[0]) {
       sort = 'popular';
     } else if (index == _sortList[1]) {
@@ -101,19 +99,19 @@ class _FavoritePageState extends State<FavoritePage> {
 
     listVideos = new List<VideosResponse>();
     videosResponse = server.getByChannelIdSort(_listToString(listChannels), sort, 1, count);
-    videosResponse.then((value) {
-      listVideos.addAll(value);
-      setState(() {});
-    });
+    videosResponse.then((value) {setState(() {
+        listVideos.addAll(value);
+      });});
   }
 
-  void _onClickChannel(int index) async {
+  void _onClickChannel(int index) {
 
     _channelClickCheck = index;
     listVideos = new List<VideosResponse>();
     videosResponse = server.getByChannelIdSort(listChannels[index].channelId, sort, 1, count);
-
-    videosResponse.then((value) => setState(() {listVideos.addAll(value);}));
+    videosResponse.then((value) {setState(() {
+      listVideos.addAll(value);
+    });});
   }
 
   void _offClickChannel(int index) async {
@@ -200,6 +198,9 @@ class _FavoritePageState extends State<FavoritePage> {
   }
 
   Widget _sortDropdown() {
+    _dropDownMenuItems = getDropDownMenuItems();
+    _sortingMethod = _dropDownMenuItems[1].value;
+
     return Container(
       height: isScrollingDown ? 0 : 36,
       padding: const EdgeInsets.only(left: 10),
@@ -226,6 +227,7 @@ class _FavoritePageState extends State<FavoritePage> {
   }
 
   Widget _channelsVideoListView() {
+    _getVideos();
     return Expanded(
       child: SmartRefresher(
         enablePullDown: true,
@@ -266,36 +268,17 @@ class _FavoritePageState extends State<FavoritePage> {
         onLoading: _onLoading,
         child: ListView.builder(
           controller: _scrollController,
-          itemCount: listVideos.length + 10,
+          itemCount: listVideos.length,
           // ignore: missing_return
           itemBuilder: (context, index) {
-            if (index == 0 && listVideos.length == 0) {
-              videosResponse = server.getByChannelIdSort(_listToString(listChannels), sort, 1, count);
-              return FutureBuilder<List<VideosResponse>>(
-                future: videosResponse,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    listVideos.addAll(snapshot.data);
-                    return _videosCart(index, MediaQuery.of(context).size.width);
-                  } else if (snapshot.hasError) {
-                    _onRefresh();
-                    // return Text("${snapshot.error}");
-                  }
-                  return Center(
-                    child: CupertinoActivityIndicator(),
-                  );
-                },
-              );
-            }
-            if (listVideos.length > index) {
-              return _videosCart(index, MediaQuery.of(context).size.width);
-            }
+            return _videosCart(index, MediaQuery.of(context).size.width);
           }
         ),
       ),
     );
   }
 
+  /// 구독한 채널이 있을 경우
   Widget _hasChannels() {
     return Column(
       children: [
@@ -306,46 +289,32 @@ class _FavoritePageState extends State<FavoritePage> {
     );
   }
 
+  /// 구독한 채널이 없을 경우
   Widget _searchChannel() {
-    /// 수정해야함 (종아요한 채널이 없을 때 뭘 출력해줬으면 좋겠음)
-    if (listChannels.length == 0) {
-      return Column(
-        children: [
-          Text('좋아요한 채널이 없음'),
-          Expanded(child: RandomChannelListPage(scrollController: _scrollController))
-        ],
-      );
-    }
     return RandomChannelListPage(scrollController: _scrollController);
+  }
+
+  void _getSubscribeChannels() {
+    Future<List<Channels>> futureChannels = FavoriteChannelsDb().getAllChannels();
+    futureChannels.then((value) {setState(() {
+      listChannels = value;
+    });});
+  }
+
+  void _getVideos() {
+    videosResponse = server.getByChannelIdSort(_listToString(listChannels), sort, 1, count);
+    videosResponse.then((value) {setState(() {
+      listVideos.addAll(value);
+    });});
   }
 
   @override
   void initState() {
     super.initState();
-    _dropDownMenuItems = getDropDownMenuItems();
-    _sortingMethod = _dropDownMenuItems[1].value;
-    videosResponse = server.getByChannelIdSort(_listToString(listChannels), sort, 1, count);
+    _getSubscribeChannels();
 
     /// appbar setting
     _scrollController = new ScrollController();
-    _scrollController.addListener (() {
-      if ((scrollOffset - _scrollController.offset).abs() > 3) {
-        if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-          if (!isScrollingDown) {
-            isScrollingDown = true;
-            setState(() {});
-          }
-        }
-
-        if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
-          if (isScrollingDown) {
-            isScrollingDown = false;
-            setState(() {});
-          }
-        }
-      }
-      scrollOffset = _scrollController.offset;
-    });
   }
 
   @override
@@ -357,27 +326,21 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      body: MyAnimatedAppBar(
-        scrollController: _scrollController,
-        child: MyAppBar(),
-        body: Expanded(
-          child: CheckNetwork(
-            body: FutureBuilder<List<Channels>>(
-              future: FavoriteChannelsDb().getAllChannels(),
-              builder: (context, snapshot) {
-                if(snapshot.hasData) {
-                  listChannels = snapshot.data;
-                  return listChannels.length == 0 ? _searchChannel() : _hasChannels();
-                } else {
-                  return Center(child: CupertinoActivityIndicator(),);
-                }
-              },
+    if (listChannels == null) {
+      return Center(child: CupertinoActivityIndicator(),);
+    } else {
+      return Scaffold(
+        body: MyAnimatedAppBar(
+          scrollController: _scrollController,
+          child: MyAppBar(),
+          body: Expanded(
+            child: CheckNetwork(
+              body: listChannels.length == 0 ? _searchChannel() : _hasChannels(),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
 
   }
 

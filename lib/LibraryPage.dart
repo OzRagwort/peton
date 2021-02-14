@@ -45,6 +45,12 @@ class _LibraryPageState extends State<LibraryPage> {
 
   }
 
+  Widget _emptyLibrary() {
+    return Center(
+      child: Text("즐겨찾기한 영상이 없습니다."),
+    );
+  }
+
   Widget _videosCartSmall(int listNum, double width) {
     return GestureDetector(
       onTap: () => {
@@ -57,9 +63,17 @@ class _LibraryPageState extends State<LibraryPage> {
     );
   }
 
+  void _getLibraryVideos() {
+    Future<List<LibraryVideos>> futureLibrary = LibraryVideosDb().getAllLibraryVideos();
+    futureLibrary.then((value) {setState(() {
+      listVideos = value;
+    });});
+  }
+
   @override
   void initState() {
     super.initState();
+    _getLibraryVideos();
 
     /// appbar setting
     _scrollController = new ScrollController();
@@ -73,74 +87,78 @@ class _LibraryPageState extends State<LibraryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: MyAnimatedAppBar(
-        scrollController: _scrollController,
-        child: MyAppBar(),
-        body: Expanded(
-          child: CheckNetwork(
-            body: FutureBuilder<List<LibraryVideos>>(
-              future: LibraryVideosDb().getAllLibraryVideos(),
-              builder: (context, snapshot) {
-                if(snapshot.hasData) {
-                  listVideos = snapshot.data;
-                  return ListView.builder(
-                    controller: _scrollController,
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return _videosCartSmall(index, MediaQuery.of(context).size.width);
-                    },
-                  );
-                } else {
-                  return Center(
-                    child: CupertinoActivityIndicator(),
-                  );
-                }
-              },
+    if (listVideos == null) {
+      return Center(child: CupertinoActivityIndicator(),);
+    } else if (listVideos.length == 0) {
+      return Scaffold(
+        body: MyAnimatedAppBar(
+          scrollController: _scrollController,
+          child: MyAppBar(),
+          body: Expanded(
+            child: CheckNetwork(
+              body: _emptyLibrary(),
             ),
           ),
         ),
-      ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FloatingActionButton(
-            // heroTag: 'libDelBtn',
-            heroTag: null,
-            child: Icon(Icons.delete),
-            onPressed: () {
-              //모두 삭제 버튼
-              log('deleteAll');
-              LibraryVideosDb().deleteAllLibraryVideos();
-              setState(() {});
-            },
+      );
+    } else {
+      return Scaffold(
+        body: MyAnimatedAppBar(
+          scrollController: _scrollController,
+          child: MyAppBar(),
+          body: Expanded(
+            child: CheckNetwork(
+              body: ListView.builder(
+                controller: _scrollController,
+                itemCount: listVideos.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return _videosCartSmall(index, MediaQuery.of(context).size.width);
+                },
+              ),
+            ),
           ),
-          SizedBox(height: 8.0),
-          FloatingActionButton(
-            // heroTag: 'libRefBtn',
-            heroTag: null,
-            child: Icon(Icons.refresh),
-            onPressed: () {
-              //새로고침
-              log('refresh');
-              setState(() {});
-            },
-          ),
-          SizedBox(height: 8.0),
-          FloatingActionButton(
-            // heroTag: 'libAddBtn',
-            heroTag: null,
-            child: Icon(Icons.add),
-            onPressed: () {
-              //추가 버튼
-              log('insert');
-              insertLib();
-              // setState(() {});
-            },
-          ),
-        ],
-      ),
-    );
+        ),
+        floatingActionButton: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FloatingActionButton(
+              // heroTag: 'libDelBtn',
+              heroTag: null,
+              child: Icon(Icons.delete),
+              onPressed: () {
+                //모두 삭제 버튼
+                log('deleteAll');
+                LibraryVideosDb().deleteAllLibraryVideos();
+                setState(() {});
+              },
+            ),
+            SizedBox(height: 8.0),
+            FloatingActionButton(
+              // heroTag: 'libRefBtn',
+              heroTag: null,
+              child: Icon(Icons.refresh),
+              onPressed: () {
+                //새로고침
+                log('refresh');
+                setState(() {});
+              },
+            ),
+            SizedBox(height: 8.0),
+            FloatingActionButton(
+              // heroTag: 'libAddBtn',
+              heroTag: null,
+              child: Icon(Icons.add),
+              onPressed: () {
+                //추가 버튼
+                log('insert');
+                insertLib();
+                // setState(() {});
+              },
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
 

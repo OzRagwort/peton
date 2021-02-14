@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   RefreshController(initialRefresh: false);
 
   Future<List<VideosResponse>> videosResponse;
-  List<VideosResponse> myList = new List<VideosResponse>();
+  List<VideosResponse> myList;
 
   void _onRefresh() async{
 
@@ -65,10 +65,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _getVideos() {
+    videosResponse = server.getRandByCategoryId('1', 10);
+    videosResponse.then((value) {setState(() {
+      myList = value;
+    });});
+  }
+
   @override
   void initState() {
     super.initState();
-    videosResponse = server.getRandByCategoryId('1', 10);
+    _getVideos();
 
     /// appbar setting
     _scrollController = new ScrollController();
@@ -85,80 +92,65 @@ class _HomePageState extends State<HomePage> {
 
     double width = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      body: MyAnimatedAppBar(
-        scrollController: _scrollController,
-        child: MyAppBar(),
-        body: Expanded(
-          child: CheckNetwork(
-            body: SmartRefresher(
-              enablePullDown: true,
-              enablePullUp: true,
-              header: MaterialClassicHeader(),
-              footer: CustomFooter(
-                loadStyle: LoadStyle.ShowWhenLoading,
-                builder: (BuildContext context,LoadStatus mode){
-                  Widget body ;
-                  /// 로드 완료 후
-                  if(mode==LoadStatus.idle){
-                    body =  Text("pull up load");
-                  }
-                  /// ?
-                  else if(mode==LoadStatus.loading){
-                    body =  CupertinoActivityIndicator();
-                  }
-                  /// ?
-                  else if(mode == LoadStatus.failed){
-                    body = Text("Load Failed!Click retry!");
-                  }
-                  /// 로드하려고 풀업했을 때 나타는 것
-                  else if(mode == LoadStatus.canLoading){
-                    body = Text("Load more");
-                  }
-                  /// ?
-                  else{
-                    body = Text("No more Data");
-                  }
-                  return Container(
-                    height: 55.0,
-                    child: Center(child:body),
-                  );
-                },
-              ),
-              controller: _refreshController,
-              onRefresh: _onRefresh,
-              onLoading: _onLoading,
-              child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: myList.length + 10,
-                  // ignore: missing_return
-                  itemBuilder: (context, index) {
-                    if (index == 0 && myList.length == 0) {
-                      return FutureBuilder<List<VideosResponse>>(
-                        future: videosResponse,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            myList.addAll(snapshot.data);
-                            return _videosCart(index, width);
-                          } else if (snapshot.hasError) {
-                            _onRefresh();
-                          }
-                          return Center(
-                            child: CupertinoActivityIndicator(),
-                          );
-                        },
-                      );
+    if (myList == null) {
+      return Center(child: CupertinoActivityIndicator(),);
+    } else {
+      return Scaffold(
+        body: MyAnimatedAppBar(
+          scrollController: _scrollController,
+          child: MyAppBar(),
+          body: Expanded(
+            child: CheckNetwork(
+              body: SmartRefresher(
+                enablePullDown: true,
+                enablePullUp: true,
+                header: MaterialClassicHeader(),
+                footer: CustomFooter(
+                  loadStyle: LoadStyle.ShowWhenLoading,
+                  builder: (BuildContext context,LoadStatus mode){
+                    Widget body ;
+                    /// 로드 완료 후
+                    if(mode==LoadStatus.idle){
+                      body =  Text("pull up load");
                     }
-                    if (myList.length > index) {
+                    /// ?
+                    else if(mode==LoadStatus.loading){
+                      body =  CupertinoActivityIndicator();
+                    }
+                    /// ?
+                    else if(mode == LoadStatus.failed){
+                      body = Text("Load Failed!Click retry!");
+                    }
+                    /// 로드하려고 풀업했을 때 나타는 것
+                    else if(mode == LoadStatus.canLoading){
+                      body = Text("Load more");
+                    }
+                    /// ?
+                    else{
+                      body = Text("No more Data");
+                    }
+                    return Container(
+                      height: 55.0,
+                      child: Center(child:body),
+                    );
+                  },
+                ),
+                controller: _refreshController,
+                onRefresh: _onRefresh,
+                onLoading: _onLoading,
+                child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: myList.length,
+                    itemBuilder: (context, index) {
                       return _videosCart(index, width);
                     }
-                  }
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
 
   }
 

@@ -28,7 +28,7 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
   RefreshController(initialRefresh: false);
 
   Future<Map<Channels, List<VideosResponse>>> response;
-  Map map = new Map<Channels, List<VideosResponse>>();
+  Map<Channels, List<VideosResponse>> map;
   List<Channels> list = new List<Channels>();
 
   int category = 1;
@@ -37,7 +37,7 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
   int videoCount = 3;
   int maxResults = 300;
 
-  void _onRefresh() async {
+  void _onRefresh() {
 
     map = new Map<Channels, List<VideosResponse>>();
     list = new List<Channels>();
@@ -51,7 +51,7 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
     _refreshController.refreshCompleted();
   }
 
-  void _onLoading() async {
+  void _onLoading() {
 
     response = server.getVideosByChannels(category, 1, channelCount, sort, 1, videoCount);
     response.then((value) => setState(() {
@@ -92,81 +92,73 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
     );
   }
 
+  void _getVideos() {
+    response = server.getVideosByChannels(category, 1, channelCount, sort, 1, videoCount);
+    response.then((value) {setState(() {
+      map = value;
+      list = map.keys.toList();
+    });});
+  }
+
   @override
   void initState() {
     super.initState();
     _scrollController = widget.scrollController ?? new ScrollController();
-    response = server.getVideosByChannels(category, 1, channelCount, sort, 1, videoCount);
+    _getVideos();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SmartRefresher(
-      enablePullDown: true,
-      enablePullUp: map.length < maxResults ? true : false,
-      header: MaterialClassicHeader(),
-      footer: CustomFooter(
-        loadStyle: LoadStyle.ShowWhenLoading,
-        builder: (BuildContext context, LoadStatus mode){
-          Widget body ;
-          /// 로드 완료 후
-          if(mode==LoadStatus.idle){
-            body =  Text("pull up load");
-          }
-          /// ?
-          else if(mode==LoadStatus.loading){
-            body =  CupertinoActivityIndicator();
-          }
-          /// ?
-          else if(mode == LoadStatus.failed){
-            body = Text("Load Failed!Click retry!");
-          }
-          /// 로드하려고 풀업했을 때 나타는 것
-          else if(mode == LoadStatus.canLoading){
-            body = Text("Load more");
-          }
-          /// ?
-          else{
-            body = Text("No more Data");
-          }
-          return Container(
-            height: 55.0,
-            child: Center(child:body),
-          );
-        },
-      ),
-      controller: _refreshController,
-      onRefresh: _onRefresh,
-      onLoading: _onLoading,
-      child: ListView.builder(
-        controller: _scrollController,
-        itemCount: map.length + channelCount,
-        // ignore: missing_return
-        itemBuilder: (context, index) {
-          if (index == 0 && map.length == 0) {
-            return FutureBuilder<Map<Channels, List<VideosResponse>>>(
-              future: response,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  map.addAll(snapshot.data);
-                  list = map.keys.toList();
-                  return _channelsCart(index, MediaQuery.of(context).size.width);
-                } else if (snapshot.hasError) {
-                  print(snapshot.error);
-                  _onRefresh();
-                }
-                return Center(
-                  child: CupertinoActivityIndicator(),
-                );
-              },
+
+    if (map == null) {
+      return Center(child: CupertinoActivityIndicator(),);
+    } else {
+      return SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: map.length < maxResults ? true : false,
+        header: MaterialClassicHeader(),
+        footer: CustomFooter(
+          loadStyle: LoadStyle.ShowWhenLoading,
+          builder: (BuildContext context, LoadStatus mode){
+            Widget body ;
+            /// 로드 완료 후
+            if(mode==LoadStatus.idle){
+              body =  Text("pull up load");
+            }
+            /// ?
+            else if(mode==LoadStatus.loading){
+              body =  CupertinoActivityIndicator();
+            }
+            /// ?
+            else if(mode == LoadStatus.failed){
+              body = Text("Load Failed!Click retry!");
+            }
+            /// 로드하려고 풀업했을 때 나타는 것
+            else if(mode == LoadStatus.canLoading){
+              body = Text("Load more");
+            }
+            /// ?
+            else{
+              body = Text("No more Data");
+            }
+            return Container(
+              height: 55.0,
+              child: Center(child:body),
             );
-          }
-          if (map.length > index) {
-            return _channelsCart(index, MediaQuery.of(context).size.width);
-          }
-        }
-      ),
-    );
+          },
+        ),
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        child: ListView.builder(
+            controller: _scrollController,
+            itemCount: map.length + channelCount,
+            itemBuilder: (context, index) {
+              return _channelsCart(index, MediaQuery.of(context).size.width);
+            }
+        ),
+      );
+    }
   }
 }
 
