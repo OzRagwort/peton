@@ -25,11 +25,14 @@ class _CarouselWithIndicatorChannelsState extends State<CarouselWithIndicatorCha
 
   double height = 150;
 
-  List<Widget> channelsSliders(List<Channels> channelsList) {
-
+  void _getChannels() {
+    mapsResponse = server.getTagsByChannelsList(channels, 15);
     mapsResponse.then((value) {setState(() {
       maps = value;
     });});
+  }
+
+  List<Widget> channelsSliders(List<Channels> channelsList) {
 
     return channelsList.map((item) => GestureDetector(
       onTap: () => {
@@ -82,7 +85,7 @@ class _CarouselWithIndicatorChannelsState extends State<CarouselWithIndicatorCha
   void initState() {
     super.initState();
     channels = widget.channels;
-    mapsResponse = server.getTagsByChannelsList(channels, 15);
+    _getChannels();
   }
 
   @override
