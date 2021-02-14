@@ -576,6 +576,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
+  search_choices:
+    dependency: "direct main"
+    description:
+      name: search_choices
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.17"
   share:
     dependency: "direct main"
     description:

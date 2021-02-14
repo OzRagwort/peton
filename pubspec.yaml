@@ -58,6 +58,8 @@ dependencies:
   carousel_slider: ^3.0.0
   # listview, gridview 애니매이션
   auto_animated: ^2.1.0
+  # 검색 바 (dialog 형식)
+  search_choices: ^1.0.17
 
   #################
   # 비공식 플러그인 #
