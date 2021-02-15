@@ -60,6 +60,8 @@ dependencies:
   auto_animated: ^2.1.0
   # 검색 바 (dialog 형식)
   search_choices: ^1.0.17
+  # url 링크
+  url_launcher: ^5.7.10
 
   #################
   # 비공식 플러그인 #
