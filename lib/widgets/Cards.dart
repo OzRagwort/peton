@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peton/enums/TextSize.dart';
@@ -27,8 +28,8 @@ Widget _getCard(VideosResponse videosResponse, double width, String imageQuality
                 children: [
                   SizedBox(
                     width: width,
-                    height: width * 9 / 16,
-                    child: CupertinoActivityIndicator(radius: 15,),
+                    height: (width * 9) / 16,
+                    child: Container(),
                   ),
                   homepageCardMetadata(videosResponse, width),
                 ],
@@ -44,6 +45,7 @@ Widget _getCard(VideosResponse videosResponse, double width, String imageQuality
                   ExtendedRawImage(
                     image: state.extendedImageInfo?.image,
                     width: width,
+                    height: (width * 9) / 16,
                     fit: BoxFit.fitWidth,
                   ),
                   homepageCardMetadata(videosResponse, width),
@@ -80,8 +82,8 @@ Widget videoCardSmall(VideosResponse videosResponse, double width) =>
           case LoadState.loading:
             return SizedBox(
               width: width,
-              height: width*3/16,
-              child: CupertinoActivityIndicator(radius: 10,),
+              height: (width * 3) / 16,
+              child: Container(),
             );
             break;
           case LoadState.completed:
@@ -93,6 +95,7 @@ Widget videoCardSmall(VideosResponse videosResponse, double width) =>
                       /// mqdefault
                       image: state.extendedImageInfo?.image,
                       width: width / 3,
+                      height: (width * 3) / 16,
                       fit: BoxFit.fitWidth,
                     ),
                     Expanded(
@@ -106,8 +109,8 @@ Widget videoCardSmall(VideosResponse videosResponse, double width) =>
           case LoadState.failed:
             return SizedBox(
               width: width,
-              height: width*3/16,
-              child: Text('error'),
+              height: (width * 3) / 16,
+              child: Container(),
             );
             break;
         }
@@ -118,7 +121,7 @@ Widget videoCardSmall(VideosResponse videosResponse, double width) =>
 Widget channelCardSmall(Channels channels, double width) {
 
   return Padding(
-    padding: const EdgeInsets.all(10),
+    padding: const EdgeInsets.all(20),
     child: Row(
       children: [
         CircleAvatar(
@@ -132,7 +135,12 @@ Widget channelCardSmall(Channels channels, double width) {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(channels.channelName, style: TextStyle(fontSize: TextSize.channelNameSize),),
+              AutoSizeText(
+                channels.channelName,
+                maxLines: 2,
+                style: TextStyle(fontSize: TextSize.channelCardSmallNameSize),
+              ),
+              const SizedBox(height: 5),
               Text(ChannelSubscriberCountCheck(channels.subscribers)),
             ],
           ),
