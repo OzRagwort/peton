@@ -62,6 +62,8 @@ dependencies:
   search_choices: ^1.0.17
   # url 링크
   url_launcher: ^5.7.10
+  # font_awesome_flutter 아이콘
+  font_awesome_flutter: ^8.11.0
 
   #################
   # 비공식 플러그인 #
