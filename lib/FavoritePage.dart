@@ -339,6 +339,16 @@ class _FavoritePageState extends State<FavoritePage> {
             ),
           ),
         ),
+        floatingActionButton: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FloatingActionButton(
+              heroTag: null,
+              child: Icon(Icons.keyboard_arrow_up),
+              onPressed: () => _scrollController.animateTo(0.0, duration: const Duration(seconds: 2), curve: Curves.fastOutSlowIn),
+            ),
+          ],
+        ),
       );
     }
 
