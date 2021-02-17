@@ -56,7 +56,7 @@ class Server {
     List<VideosResponse> getList = [];
 
     if (response.statusCode == 200) {
-      for(int i = 0 ; i < count ; i++) {
+      for(int i = 0 ; i < (count > (response.data as List<dynamic>).length ? (response.data as List<dynamic>).length : count) ; i++) {
         getList.add(VideosResponse.fromJson(response.data[i]));
       }
       return getList;
@@ -125,7 +125,7 @@ class Server {
     List<VideosResponse> getList = [];
 
     if (response.statusCode == 200) {
-      for(int i = 0 ; i < count ; i++) {
+      for(int i = 0 ; i < (count > (response.data as List<dynamic>).length ? (response.data as List<dynamic>).length : count) ; i++) {
         getList.add(VideosResponse.fromJson(response.data[i]));
       }
       return getList;
@@ -149,7 +149,7 @@ class Server {
     List<Channels> getList = [];
 
     if (response.statusCode == 200) {
-      for(int i = 0 ; i < count ; i++) {
+      for(int i = 0 ; i < (count > (response.data as List<dynamic>).length ? (response.data as List<dynamic>).length : count) ; i++) {
         getList.add(Channels.fromJson(response.data[i]));
       }
       return getList;
@@ -216,7 +216,7 @@ class Server {
     List<VideosResponse> getList = [];
 
     if (response.statusCode == 200) {
-      for(int i = 0 ; i < count ; i++) {
+      for(int i = 0 ; i < (count > (response.data as List<dynamic>).length ? (response.data as List<dynamic>).length : count) ; i++) {
         getList.add(VideosResponse.fromJson(response.data[i]));
       }
       return getList;
@@ -239,7 +239,7 @@ class Server {
     List<VideosResponse> getList = [];
 
     if (response.statusCode == 200) {
-      for(int i = 0 ; i < count ; i++) {
+      for(int i = 0 ; i < (count > (response.data as List<dynamic>).length ? (response.data as List<dynamic>).length : count) ; i++) {
         getList.add(VideosResponse.fromJson(response.data[i]));
       }
       return getList;
@@ -264,7 +264,7 @@ class Server {
     List<VideosResponse> getList = [];
 
     if (response.statusCode == 200) {
-      for(int i = 0 ; i < count ; i++) {
+      for(int i = 0 ; i < (count > (response.data as List<dynamic>).length ? (response.data as List<dynamic>).length : count) ; i++) {
         getList.add(VideosResponse.fromJson(response.data[i]));
       }
       return getList;
@@ -290,7 +290,7 @@ class Server {
     List<Channels> getList = [];
 
     if (response.statusCode == 200) {
-      for(int i = 0 ; i < count ; i++) {
+      for(int i = 0 ; i < (count > (response.data as List<dynamic>).length ? (response.data as List<dynamic>).length : count) ; i++) {
         getList.add(Channels.fromJson(response.data[i]));
       }
       return getList;
@@ -320,7 +320,7 @@ class Server {
     List<VideosResponse> getList = [];
 
     if (response.statusCode == 200) {
-      for(int i = 0 ; i < count ; i++) {
+      for(int i = 0 ; i < (count > (response.data as List<dynamic>).length ? (response.data as List<dynamic>).length : count) ; i++) {
         getList.add(VideosResponse.fromJson(response.data[i]));
       }
       return getList;
@@ -374,7 +374,7 @@ class Server {
     List<VideosResponse> getList = [];
 
     if (response.statusCode == 200) {
-      for(int i = 0 ; i < count ; i++) {
+      for(int i = 0 ; i < (count > (response.data as List<dynamic>).length ? (response.data as List<dynamic>).length : count) ; i++) {
         getList.add(VideosResponse.fromJson(response.data[i]));
       }
       return getList;
