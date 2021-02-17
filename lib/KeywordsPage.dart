@@ -61,9 +61,10 @@ class _KeywordsPageState extends State<KeywordsPage> {
   void _popularChannels() {
     int subscribers = 100000;
     int category = 1;
+    String sort = 'asc';
     int page = 1;
     int count = 15;
-    popularChannelsResponse = server.getChannelsBySubscribers(subscribers, true, category, true, page, count);
+    popularChannelsResponse = server.getChannelsBySubscribers(subscribers, true, category, sort, true, page, count);
     popularChannelsResponse.then((value) {setState(() {
       popularChannelsList = value;
     });});
@@ -72,9 +73,10 @@ class _KeywordsPageState extends State<KeywordsPage> {
   void _smallChannels() {
     int subscribers = 50000;
     int category = 1;
+    String sort = 'asc';
     int page = 1;
     int count = 15;
-    smallChannelsResponse = server.getChannelsBySubscribers(subscribers, false, category, true, page, count);
+    smallChannelsResponse = server.getChannelsBySubscribers(subscribers, false, category, sort, true, page, count);
     smallChannelsResponse.then((value) {setState(() {
       smallChannelsList = value;
     });});

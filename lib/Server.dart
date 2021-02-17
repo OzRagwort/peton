@@ -274,7 +274,7 @@ class Server {
   }
 
   /// 구독자 기준 채널 필터링
-  Future<List<Channels>> getChannelsBySubscribers(int subscribers, bool over, int category, bool random, int page, int count) async {
+  Future<List<Channels>> getChannelsBySubscribers(int subscribers, bool over, int category, String sort, bool random, int page, int count) async {
     Response response;
     Dio dio = new Dio();
 
@@ -283,7 +283,8 @@ class Server {
         '&category=' + category.toString() +
         '&page=' + page.toString() +
         '&maxResults=' + count.toString() +
-        '&random=' + random.toString()
+        '&random=' + random.toString() +
+        '&sort=' + sort
     );
 
     List<Channels> getList = [];
@@ -298,9 +299,9 @@ class Server {
     }
   }
 
-  /// 구독자 기준 채널 필터링
-  Future<List<VideosResponse>> getVideosBySubscribers(int subscribers, bool over, int category, bool random, int page, int count) async {
-    List<Channels> channelsList = await getChannelsBySubscribers(subscribers, over, category, random, page, count);
+  /// 구독자 기준 영상 필터링
+  Future<List<VideosResponse>> getVideosBySubscribers(int subscribers, bool over, int category, String channelSort, bool random, int page, int count) async {
+    List<Channels> channelsList = await getChannelsBySubscribers(subscribers, over, category, channelSort, random, page, count);
     Response response;
     Dio dio = new Dio();
 

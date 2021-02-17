@@ -20,6 +20,7 @@ class _KeywordsRecommendPageState extends State<KeywordsRecommendPage> {
   List<String> classNames = ['인기 채널', '10만 이상', '소규모', '고양이', '강아지'];
   int index = 0;
   int category = 1;
+  String channelSort = 'asc';
   int page = 1;
   int count = 10;
 
@@ -46,11 +47,11 @@ class _KeywordsRecommendPageState extends State<KeywordsRecommendPage> {
     int page = 1;
 
     if (index == 0) {
-      mapFuture[index] = server.getVideosBySubscribers(bestChannel, true, category, true, page, count);
+      mapFuture[index] = server.getVideosBySubscribers(bestChannel, true, category, channelSort, true, page, count);
     } else if(index == 1) {
-      mapFuture[index] = server.getVideosBySubscribers(popularChannel, true, category, true, page, count);
+      mapFuture[index] = server.getVideosBySubscribers(popularChannel, true, category, channelSort, true, page, count);
     } else if(index == 2) {
-      mapFuture[index] = server.getVideosBySubscribers(smallChannel, false, category, true, page, count);
+      mapFuture[index] = server.getVideosBySubscribers(smallChannel, false, category, channelSort, true, page, count);
     } else {
       mapFuture[index] = server.getVideosByTags(classNames[index], category, true, page, count);
     }
@@ -66,11 +67,11 @@ class _KeywordsRecommendPageState extends State<KeywordsRecommendPage> {
     page++;
 
     if (index == 0) {
-      mapFuture[index] = server.getVideosBySubscribers(bestChannel, true, category, true, page, count);
+      mapFuture[index] = server.getVideosBySubscribers(bestChannel, true, category, channelSort, true, page, count);
     } else if(index == 1) {
-      mapFuture[index] = server.getVideosBySubscribers(popularChannel, true, category, true, page, count);
+      mapFuture[index] = server.getVideosBySubscribers(popularChannel, true, category, channelSort, true, page, count);
     } else if(index == 2) {
-      mapFuture[index] = server.getVideosBySubscribers(smallChannel, false, category, true, page, count);
+      mapFuture[index] = server.getVideosBySubscribers(smallChannel, false, category, channelSort, true, page, count);
     } else {
       mapFuture[index] = server.getVideosByTags(classNames[index], category, true, page, count);
     }
