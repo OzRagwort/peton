@@ -64,6 +64,8 @@ dependencies:
   url_launcher: ^5.7.10
   # font_awesome_flutter 아이콘
   font_awesome_flutter: ^8.11.0
+  # 확장 가능한 appbar
+  customizable_space_bar: ^0.1.0
 
   #################
   # 비공식 플러그인 #
