@@ -26,22 +26,7 @@ class _LibraryPageState extends State<LibraryPage> {
   List<LibraryVideos> listVideos;
   LibraryVideos libraryVideos;
 
-  void insertLib() {
-
-    var getData = server.getRandByCategoryId('1', 1);
-    getData.then((value) => setState(() {
-      libraryVideos = LibraryVideos(
-        channelId : value[0].channels.channelId,
-        channelName : value[0].channels.channelName,
-        channelThumbnail : value[0].channels.channelThumbnail,
-        videoId : value[0].videoId,
-        videoName : value[0].videoName,
-        videoThumbnail : value[0].videoThumbnail,
-        videoPublishedDate : value[0].videoPublishedDate,
-        videoEmbeddable : value[0].videoEmbeddable,
-      );
-      LibraryVideosDb().insertLibraryVideo(libraryVideos);
-    }));
+  Map<int, LibraryVideos> deleteBuffer = new Map<int, LibraryVideos>();
 
   }
 
@@ -108,54 +93,52 @@ class _LibraryPageState extends State<LibraryPage> {
           child: MyAppBar(),
           body: Expanded(
             child: CheckNetwork(
-              body: ListView.builder(
-                controller: _scrollController,
-                itemCount: listVideos.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return _videosCartSmall(index, MediaQuery.of(context).size.width);
-                },
+              body: listVideos.length == 0
+                  ? _emptyLibrary()
+                  : Container(
+                padding: const EdgeInsets.all(10),
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: listVideos.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Dismissible(
+                      key: Key(listVideos[index].videoId),
+                      onDismissed: (direction) {
+                        setState(() {
+                          Map<int, LibraryVideos> m = {index: listVideos[index]};
+                          deleteBuffer.addAll(m);
+                          LibraryVideosDb().deleteLibraryVideo(listVideos[index].videoId);
+                          listVideos.removeAt(index);
+                        });
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          duration: Duration(seconds: 2),
+                          content: Row(
+                            children: [
+                              Expanded(child: Text('보관함에서 영상 삭제', style: TextStyle(fontSize: 18, color: Color(Theme.of(context).textTheme.bodyText1.color.value)),),),
+                              InkWell(
+                                onTap: () {
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                    duration: Duration(seconds: 1),
+                                    content: Text('삭제 취소됨', style: TextStyle(fontSize: 18, color: Color(Theme.of(context).textTheme.bodyText1.color.value)),),
+                                  ));
+                                  setState(() {
+                                    LibraryVideosDb().insertLibraryVideo(deleteBuffer[index]);
+                                    listVideos.add(deleteBuffer[index]);
+                                  });
+                                },
+                                child: Text('취소', style: TextStyle(color: Colors.red),),
+                              ),
+                            ],
+                          ),
+                        ));
+                      },
+                      child: _videosCartSmall(index, MediaQuery.of(context).size.width - 20),
+                    );
+                  },
+                ),
               ),
             ),
           ),
-        ),
-        floatingActionButton: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            FloatingActionButton(
-              // heroTag: 'libDelBtn',
-              heroTag: null,
-              child: Icon(Icons.delete),
-              onPressed: () {
-                //모두 삭제 버튼
-                log('deleteAll');
-                LibraryVideosDb().deleteAllLibraryVideos();
-                setState(() {});
-              },
-            ),
-            SizedBox(height: 8.0),
-            FloatingActionButton(
-              // heroTag: 'libRefBtn',
-              heroTag: null,
-              child: Icon(Icons.refresh),
-              onPressed: () {
-                //새로고침
-                log('refresh');
-                setState(() {});
-              },
-            ),
-            SizedBox(height: 8.0),
-            FloatingActionButton(
-              // heroTag: 'libAddBtn',
-              heroTag: null,
-              child: Icon(Icons.add),
-              onPressed: () {
-                //추가 버튼
-                log('insert');
-                insertLib();
-                // setState(() {});
-              },
-            ),
-          ],
         ),
       );
     }
