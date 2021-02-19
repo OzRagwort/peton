@@ -112,24 +112,21 @@ class _LibraryPageState extends State<LibraryPage> {
                         });
                         Scaffold.of(context).showSnackBar(SnackBar(
                           duration: Duration(seconds: 2),
-                          content: Row(
-                            children: [
-                              Expanded(child: Text('보관함에서 영상 삭제', style: TextStyle(fontSize: 18, color: Color(Theme.of(context).textTheme.bodyText1.color.value)),),),
-                              InkWell(
-                                onTap: () {
-                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                    duration: Duration(seconds: 1),
-                                    content: Text('삭제 취소됨', style: TextStyle(fontSize: 18, color: Color(Theme.of(context).textTheme.bodyText1.color.value)),),
-                                  ));
-                                  setState(() {
-                                    LibraryVideosDb().insertLibraryVideo(deleteBuffer[index]);
-                                    listVideos.add(deleteBuffer[index]);
-                                  });
-                                },
-                                child: Text('취소', style: TextStyle(color: Colors.red),),
-                              ),
-                            ],
+                          action: SnackBarAction(
+                            onPressed: () {
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                duration: Duration(seconds: 1),
+                                content: Text('삭제 취소됨', style: TextStyle(fontSize: 18, color: Colors.white),),
+                              ));
+                              setState(() {
+                                LibraryVideosDb().insertLibraryVideo(deleteBuffer[index]);
+                                listVideos.add(deleteBuffer[index]);
+                              });
+                            },
+                            label: '취소',
+                            textColor: Colors.red,
                           ),
+                          content: Text('보관함에서 영상 삭제', style: TextStyle(fontSize: 18, color: Colors.white),),
                         ));
                       },
                       child: _videosCartSmall(index, MediaQuery.of(context).size.width - 20),
