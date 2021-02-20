@@ -66,6 +66,8 @@ dependencies:
   font_awesome_flutter: ^8.11.0
   # 확장 가능한 appbar
   customizable_space_bar: ^0.1.0
+  # 앱 패키지 정보 가져오기
+  package_info: ^0.4.3+4
 
   #################
   # 비공식 플러그인 #
