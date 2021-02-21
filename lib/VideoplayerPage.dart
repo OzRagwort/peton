@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:peton/model/VideosResponse.dart';
+import 'package:peton/widgets/Cards.dart';
 import 'package:peton/widgets/CheckNetwork.dart';
 import 'package:peton/widgets/Line.dart';
 import 'package:peton/widgets/PlayerButtonBar.dart';
@@ -15,8 +16,6 @@ import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 import 'widgets/VideoDataSection.dart';
 import 'widgets/ChannelDataSection.dart';
-import 'widgets/PlayerStateSection.dart';
-import 'widgets/VolumeSlider.dart';
 
 import 'Server.dart';
 
@@ -30,14 +29,38 @@ class VideoPlayerPage extends StatefulWidget {
 }
 
 class _VideoPlayerPageState extends State<VideoPlayerPage> {
-  VideosResponse _videosResponse;
+
+  /// 재생 영상 정보
+  Future<VideosResponse> vidoesResponse;
+  VideosResponse videos;
   String videoId;
 
+  /// 해당 채널의 영상들
+  Future<List<VideosResponse>> vidoesResponseByChannel;
+  List<VideosResponse> videosByChannel;
+
   YoutubePlayerController _controller;
+
+  void _getVideos() {
+    vidoesResponseByChannel = server.getByChannelIdSort(videos.channels.channelId, 'asc', true, 1, 10);
+    vidoesResponseByChannel.then((value) {setState(() {
+      videosByChannel = value;
+    });});
+  }
+
+  void _getData() {
+    vidoesResponse = server.refreshGetVideo(videoId);
+    vidoesResponse.then((value) {setState(() {
+      videos = value;
+      _getVideos();
+    });});
+  }
+
   @override
   void initState() {
     super.initState();
     videoId = widget.videoId;
+    _getData();
 
     _controller = YoutubePlayerController(
       initialVideoId: videoId,
@@ -50,7 +73,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
         enableCaption: false,
         captionLanguage: 'ko',
         showVideoAnnotations: false,
-        strictRelatedVideos: true,
+        strictRelatedVideos: false,
         color: 'white',
       ),
     )..listen((value) {
@@ -85,27 +108,24 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     return YoutubePlayerControllerProvider(
       controller: _controller,
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(0),
-          child: AppBar(
-            title: Text(''),
-          ),
-        ),
-
-        body: CheckNetwork(
-          slidingUp: true,
-          body: ListView(
-            children: [
-              player,
-              YoutubeValueBuilder(
-                builder: (context, value) {
-                  if (value.playerState != PlayerState.unknown) {
-                    return _videosResponse == null ? _getData() : _section();
-                  }
-                  return LinearProgressIndicator();
-                },
-              ),
-            ],
+        body: SafeArea(
+          child: CheckNetwork(
+            slidingUp: true,
+            body: Column(
+              children: [
+                player,
+                Expanded(
+                  child: YoutubeValueBuilder(
+                    builder: (context, value) {
+                      if (value.playerState != PlayerState.unknown) {
+                        return _section();
+                      }
+                      return Center(child: CupertinoActivityIndicator(),);
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -118,41 +138,55 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     super.dispose();
   }
 
-  Widget _getData() {
-    return
-      FutureBuilder<VideosResponse>(
-        future: server.refreshGetVideo(videoId),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            _videosResponse = snapshot.data;
-            return _section();
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
-          return space;
-        },
-      );
+  Widget _videosCart(int listNum, double width) {
+    return GestureDetector(
+      onTap: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => VideoPlayerPage(videoId: videosByChannel[listNum].videoId)),
+        )
+      },
+      child: videoCard(videosByChannel[listNum], width),
+    );
   }
 
   Widget _section() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          space,
-          VideoDataSection(videosResponse: _videosResponse,),
-          divline,
-          ChannelDataSection(videosResponse: _videosResponse,),
-          divline,
-          PlayerButtonBar(videosResponse: _videosResponse),
-          space,
-          VolumeSlider(),
-          space,
-          PlayerStateSection(),
-        ],
-      ),
-    );
+    if (videos == null) {
+      return Expanded(child: CupertinoActivityIndicator());
+    } else {
+      return ListView.builder(
+        itemCount: videosByChannel.length + 1,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                space,
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: VideoDataSection(videosResponse: videos,),
+                ),
+                divline,
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  child: ChannelDataSection(videosResponse: videos,),
+                ),
+                divline,
+                PlayerButtonBar(videosResponse: videos, nextVideo: videosByChannel[0].videoId,),
+                divline,
+                Container(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Text('채널의 다른 영상', style: TextStyle(fontSize: 18),),
+                ),
+                space,
+              ],
+            );
+          } else {
+            return _videosCart(index - 1, MediaQuery.of(context).size.width);
+          }
+        },
+      );
+    }
   }
 
 }
