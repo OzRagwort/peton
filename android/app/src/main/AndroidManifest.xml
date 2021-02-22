@@ -60,5 +60,9 @@
        <meta-data
            android:name="com.google.android.gms.ads.APPLICATION_ID"
            android:value="ca-app-pub-0737873676591453~3969794701" />
+        <!--       firebase cloud message icon -->
+       <meta-data
+           android:name="com.google.firebase.messaging.default_notification_icon"
+           android:resource="@mipmap/notification_icon" />
     </application>
 </manifest>
