@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
    <application
         android:label="peton"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:name=".Application"
         android:usesCleartextTraffic="true">
         <activity
