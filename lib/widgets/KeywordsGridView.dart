@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path/path.dart';
+import 'package:peton/AdMobManager.dart';
 import 'package:peton/ChannelInfoPage.dart';
 import 'package:peton/KeywordsDetailsPage.dart';
 import 'package:peton/KeywordsSearchPage.dart';
@@ -10,7 +11,7 @@ import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/model/Channels.dart';
 import 'package:peton/model/VideosResponse.dart';
 
-Widget KeywordsGridView(double width, BuildContext context) {
+Widget KeywordsGridView(double width, BuildContext context, AdMobManager adMobManager) {
 
   double itemWidth = width / 2;
   double itemHeight = 40;
@@ -29,11 +30,13 @@ Widget KeywordsGridView(double width, BuildContext context) {
       } else {
         keyword = '힐링';
       }
+      adMobManager.showInterstitialAd();
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => KeywordsDetailsPage(keyword: keyword,)),
       );
     } else if (equals(value, gridData[3])) {
+      adMobManager.showInterstitialAd();
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => KeywordsSearchPage()),
@@ -47,6 +50,7 @@ Widget KeywordsGridView(double width, BuildContext context) {
         );
       });
     } else if (equals(value, gridData[5])) {
+      adMobManager.showInterstitialAd();
       Future<List<Channels>> getData = server.getRandChannels(1, 1, 1);
       getData.then((value) {
         Navigator.push(
