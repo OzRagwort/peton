@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
    <application
-        android:label="peton"
+        android:label="애니멀봄"
         android:icon="@mipmap/launcher_icon"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:name=".Application"
@@ -39,6 +39,7 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!--     firebase cloud message notification     -->
             <intent-filter>
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />
                 <category android:name="android.intent.category.DEFAULT" />
