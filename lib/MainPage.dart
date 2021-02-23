@@ -228,41 +228,47 @@ class _MainPageState extends State<MainPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(0),
-        child: AppBar(
-          title: Text(''),
-        ),
+      body: SafeArea(
+        child: _buildPage(_selectedTabIndex),
       ),
-      body: _buildPage(_selectedTabIndex),
-      bottomNavigationBar: SizedBox(
-        height: 50,
-        child: BottomNavigationBar(
-          iconSize: 21,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: _selectedTabIndex == 0 ? MyIcons.homePageIconFill : MyIcons.homePageIcon,
-              title: Text('Home', style: TextStyle(fontSize: 12),),
-            ),
-            BottomNavigationBarItem(
-              icon: _selectedTabIndex == 1 ? MyIcons.favoritePageIconFill : MyIcons.favoritePageIcon,
-              title: Text('Favorite', style: TextStyle(fontSize: 12),),
-            ),
-            BottomNavigationBarItem(
-              icon: _selectedTabIndex == 2 ? MyIcons.keywordPageIconFill : MyIcons.keywordPageIcon,
-              title: Text('Keyword', style: TextStyle(fontSize: 12),),
-            ),
-            BottomNavigationBarItem(
-              icon: _selectedTabIndex == 3 ? MyIcons.libraryPageIconFill : MyIcons.libraryPageIcon,
-              title: Text('Library', style: TextStyle(fontSize: 12),),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
             ),
           ],
-          currentIndex: _selectedTabIndex,
-          onTap: (index) {
-            setState(() {
-              _selectedTabIndex = index;
-            });
-          },
+        ),
+        child: SizedBox(
+          height: 50,
+          child: BottomNavigationBar(
+            iconSize: 21,
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: _selectedTabIndex == 0 ? MyIcons.homePageIconFill : MyIcons.homePageIcon,
+                title: Text('Video', style: TextStyle(fontSize: 12),),
+              ),
+              BottomNavigationBarItem(
+                icon: _selectedTabIndex == 1 ? MyIcons.favoritePageIconFill : MyIcons.favoritePageIcon,
+                title: Text('Favorite', style: TextStyle(fontSize: 12),),
+              ),
+              BottomNavigationBarItem(
+                icon: _selectedTabIndex == 2 ? MyIcons.keywordPageIconFill : MyIcons.keywordPageIcon,
+                title: Text('Keyword', style: TextStyle(fontSize: 12),),
+              ),
+              BottomNavigationBarItem(
+                icon: _selectedTabIndex == 3 ? MyIcons.libraryPageIconFill : MyIcons.libraryPageIcon,
+                title: Text('Library', style: TextStyle(fontSize: 12),),
+              ),
+            ],
+            currentIndex: _selectedTabIndex,
+            onTap: (index) {
+              setState(() {
+                _selectedTabIndex = index;
+              });
+            },
+          ),
         ),
       ),
     );
@@ -276,7 +282,7 @@ class _MainPageState extends State<MainPage>{
     } else if(index == 2) {
       return KeywordsPage();
     } else {
-    return LibraryPage();
+      return LibraryPage();
     }
   }
 

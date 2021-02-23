@@ -45,7 +45,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
   void _onRefresh() async{
 
     videosList = new List<VideosResponse>();
-    videosResponse = server.getByChannelIdSort(channel.channelId, sort, 1, count);
+    videosResponse = server.getByChannelIdSort(channel.channelId, sort, false, 1, count);
 
     videosResponse.then((value) => setState(() {videosList = value;}));
 
@@ -56,7 +56,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
 
     int index = (videosList.length ~/ 10) + 1;
 
-    videosResponse = server.getByChannelIdSort(channel.channelId, sort, index, count);
+    videosResponse = server.getByChannelIdSort(channel.channelId, sort, false, index, count);
     videosResponse.then((value) => videosList.addAll(value));
 
     if(mounted)
@@ -75,13 +75,13 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
     }
 
     videosList = new List<VideosResponse>();
-    videosResponse = server.getByChannelIdSort(channel.channelId, sort, 1, count);
+    videosResponse = server.getByChannelIdSort(channel.channelId, sort, false, 1, count);
     videosResponse.then((value) {setState(() {
       videosList = value;
     });});
   }
 
-  Widget _videosCartSmall(int listNum, double width) {
+  Widget _videosCardSmall(int listNum, double width) {
     return GestureDetector(
       onTap: () => {
         Navigator.push(
@@ -131,7 +131,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
   }
   
   void _getVideos() {
-    videosResponse = server.getByChannelIdSort(channel.channelId, sort, 1, count);
+    videosResponse = server.getByChannelIdSort(channel.channelId, sort, false, 1, count);
     videosResponse.then((value) {setState(() {
       videosList = value;
     });});
@@ -288,7 +288,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
                     if (index == 0) {
                       return _sortDropDownMenu();
                     } else {
-                      return _videosCartSmall(index - 1, MediaQuery.of(context).size.width);
+                      return _videosCardSmall(index - 1, MediaQuery.of(context).size.width);
                     }
                   },
                     childCount: videosList.length + 1,

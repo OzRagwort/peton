@@ -23,6 +23,8 @@ Widget _getCard(VideosResponse videosResponse, double width, String imageQuality
       switch (state.extendedImageLoadState) {
         case LoadState.loading:
           return Card(
+            color: Colors.transparent,
+            elevation: 0,
             child: Container(
               child: Column(
                 children: [
@@ -39,6 +41,8 @@ Widget _getCard(VideosResponse videosResponse, double width, String imageQuality
           break;
         case LoadState.completed:
           return Card(
+            color: Colors.transparent,
+            elevation: 0,
             child: Container(
               child: Column(
                 children: [
@@ -88,6 +92,8 @@ Widget videoCardSmall(VideosResponse videosResponse, double width) =>
             break;
           case LoadState.completed:
             return Card(
+              color: Colors.transparent,
+              elevation: 0,
               child: Container(
                 child: Row(
                   children: [
@@ -152,3 +158,35 @@ Widget channelCardSmall(Channels channels, double width) {
 
 }
 
+Widget channelCardSmallNonIcon(Channels channels, double width) {
+
+  return Padding(
+    padding: const EdgeInsets.all(20),
+    child: Row(
+      children: [
+        CircleAvatar(
+          radius: width / 10,
+          backgroundImage:
+          NetworkImage(channels.channelThumbnail),
+          backgroundColor: Colors.transparent,
+        ),
+        verticalDivline,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AutoSizeText(
+                channels.channelName,
+                maxLines: 2,
+                style: TextStyle(fontSize: TextSize.channelCardSmallNameSize),
+              ),
+              const SizedBox(height: 5),
+              Text(ChannelSubscriberCountCheck(channels.subscribers)),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+
+}

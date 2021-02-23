@@ -1,9 +1,7 @@
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:peton/Server.dart';
 import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/database/LibraryVideosDb.dart';
 import 'package:peton/model/LibraryVideos.dart';
@@ -28,15 +26,14 @@ class _LibraryPageState extends State<LibraryPage> {
 
   Map<int, LibraryVideos> deleteBuffer = new Map<int, LibraryVideos>();
 
-  }
-
+  /// 즐겨찾기한 영상이 없을 경우
   Widget _emptyLibrary() {
     return Center(
       child: Text("즐겨찾기한 영상이 없습니다."),
     );
   }
 
-  Widget _videosCartSmall(int listNum, double width) {
+  Widget _videosCardSmall(int listNum, double width) {
     return GestureDetector(
       onTap: () => {
         Navigator.push(
@@ -66,8 +63,8 @@ class _LibraryPageState extends State<LibraryPage> {
 
   @override
   void dispose() {
-    super.dispose();
     _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -129,7 +126,7 @@ class _LibraryPageState extends State<LibraryPage> {
                           content: Text('보관함에서 영상 삭제', style: TextStyle(fontSize: 18, color: Colors.white),),
                         ));
                       },
-                      child: _videosCartSmall(index, MediaQuery.of(context).size.width - 20),
+                      child: _videosCardSmall(index, MediaQuery.of(context).size.width - 20),
                     );
                   },
                 ),

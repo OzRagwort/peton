@@ -68,7 +68,7 @@ class _KeywordsDetailsPageState extends State<KeywordsDetailsPage> {
     _refreshController.loadComplete();
   }
 
-  Widget _videosCart(int listNum, double width) {
+  Widget _videosCard(int listNum, double width) {
     return GestureDetector(
       onTap: () => {
         Navigator.push(
@@ -186,6 +186,7 @@ class _KeywordsDetailsPageState extends State<KeywordsDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('$keyword 영상'),
+        centerTitle: false,
       ),
       body: CheckNetwork(
         body: SmartRefresher(
@@ -226,7 +227,7 @@ class _KeywordsDetailsPageState extends State<KeywordsDetailsPage> {
                 if (index == 0) {
                   return _channelListView();
                 } else {
-                  return _videosCart(index-1, width);
+                  return _videosCard(index-1, width);
                 }
               }
           ),

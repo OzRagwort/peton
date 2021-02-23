@@ -53,9 +53,9 @@ class _HomePageState extends State<HomePage> {
     _refreshController.loadComplete();
   }
 
-  Widget _videosCart(int listNum, double width) {
+  Widget _videosCard(int listNum, double width) {
     return GestureDetector(
-      onTap: () => {
+      onTap: () async => {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => VideoPlayerPage(videoId: myList[listNum].videoId)),
@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> {
                     controller: _scrollController,
                     itemCount: myList.length,
                     itemBuilder: (context, index) {
-                      return _videosCart(index, width);
+                      return _videosCard(index, width);
                     }
                 ),
               ),

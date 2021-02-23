@@ -25,6 +25,7 @@ class _KeywordsSearchPageState extends State<KeywordsSearchPage> {
     listResponse = server.getPopularTags(category);
     listResponse.then((value) {setState(() {
       value.forEach((e) => listTags.add(e.tags));
+      listTags.shuffle();
       for(String tag in listTags) {
         tagItems.add(new DropdownMenuItem(
           value: tag,
@@ -48,56 +49,70 @@ class _KeywordsSearchPageState extends State<KeywordsSearchPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("키워드로 검색"),
+        centerTitle: false,
       ),
       body: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: SearchChoices.single(
-                    items: tagItems,
-                    value: selectedValueSingleDialog,
-                    hint: "키워드 검색하기",
-                    isExpanded: true,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedValueSingleDialog = value;
-                      });
-                    },
-                  ),
-                ),
-                RaisedButton(
-                  child: Text(
-                    "검색",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  color: Colors.green,
-                  onPressed: () {
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+            alignment: Alignment.center,
+            child: SearchChoices.single(
+              items: tagItems,
+              value: selectedValueSingleDialog,
+              hint: "키워드 검색하기",
+              isExpanded: true,
+              displayClearIcon: false,
+              onChanged: (value) {
+                if (listTags.indexOf(value) == 0) {
+                  setState(() {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => KeywordsDetailsPage(keyword: selectedValueSingleDialog,)),
+                      MaterialPageRoute(builder: (context) => KeywordsDetailsPage(keyword: value,)),
                     );
+                  });
+                }
+              },
+              closeButton: Align(
+                alignment: Alignment.bottomRight,
+                child: RaisedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
                   },
-                )
-              ],
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  elevation: 0,
+                  child: Text('Close'),
+                ),
+              ),
             ),
           ),
           Expanded(
-            child: LiveGrid(
-              padding: EdgeInsets.all(16),
-              showItemInterval: Duration(milliseconds: 25),
-              showItemDuration: Duration(milliseconds: 100),
-              visibleFraction: 0.001,
-              itemCount: listTags.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: (itemWidth / itemHeight),
-                crossAxisCount: 3,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
+            child: NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overScroll) {
+                overScroll.disallowGlow();
+                return;
+              },
+              child: LiveGrid(
+                padding: EdgeInsets.all(16),
+                showItemInterval: Duration(milliseconds: 2),
+                showItemDuration: Duration(milliseconds: 100),
+                visibleFraction: 0.001,
+                itemCount: listTags.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: (itemWidth / itemHeight),
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                ),
+                itemBuilder: animationItemBuilder((index) =>
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => KeywordsDetailsPage(keyword: listTags[index],)),
+                      ),
+                      child: HorizontalItem(title: listTags[index]),
+                    ),
+                ),
               ),
-              itemBuilder: animationItemBuilder((index) => HorizontalItem(title: listTags[index])),
             ),
           ),
         ],
@@ -123,7 +138,7 @@ class HorizontalItem extends StatelessWidget {
         color: Colors.transparent,
         child: Center(
           child: AutoSizeText(
-            '#$title',
+            title,
             style: TextStyle(fontSize: MediaQuery.of(context).size.width / 18),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

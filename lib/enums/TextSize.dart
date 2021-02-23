@@ -11,6 +11,8 @@ class TextSize {
 
   static const double channelNameSize = 16;
 
+  static const double channelCardSmallNameSize = 20;
+
   static const double channelSubscriberSize = 12;
 
   static const double channelThumbnailSize = 25;

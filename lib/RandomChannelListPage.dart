@@ -1,17 +1,19 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:peton/ChannelInfoPage.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/model/Channels.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/widgets/Cards.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:search_choices/search_choices.dart';
 
 class RandomChannelListPage extends StatefulWidget {
   RandomChannelListPage({
     Key key,
-    this.scrollController
+    this.scrollController,
   }) : super(key: key);
 
   ScrollController scrollController;
@@ -31,11 +33,13 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
   Map<Channels, List<VideosResponse>> map;
   List<Channels> list = new List<Channels>();
 
+  List<Channels> allChannelsList = new List<Channels>();
+  List<DropdownMenuItem> channelItems = List<DropdownMenuItem>();
+
   int category = 1;
   String sort = 'popular';
   int channelCount = 10;
   int videoCount = 3;
-  int maxResults = 300;
 
   void _onRefresh() {
 
@@ -44,7 +48,7 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
     response = server.getVideosByChannels(category, 1, channelCount, sort, 1, videoCount);
 
     response.then((value) => setState(() {
-      map.addAll(value);
+      map = value;
       list = map.keys.toList();
     }));
 
@@ -65,29 +69,43 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
     _refreshController.loadComplete();
   }
 
-  Widget _videosCart(VideosResponse videosResponse, double width) {
-    return GestureDetector(
-      onTap: () => {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => VideoPlayerPage(videoId: videosResponse.videoId)),
-        )
-      },
-      child: videoCardSmall(videosResponse, width),
-    );
+  Widget _videosCard(VideosResponse videosResponse, double width) {
+    if (videosResponse != null) {
+      return GestureDetector(
+        onTap: () => {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => VideoPlayerPage(videoId: videosResponse.videoId)),
+          )
+        },
+        child: videoCardSmall(videosResponse, width),
+      );
+    } else {
+      return null;
+    }
   }
 
-  Widget _channelsCart(int listNum, double width) {
+  /// 한 채널의 카드
+  Widget _channelsCard(int listNum, double width) {
 
     Channels channels = list[listNum];
     List<VideosResponse> videosResponse = map[list[listNum]];
 
+    /// 3개인것 검증은 server.dart에서
     return Column(
       children: [
-        channelCardSmall(channels, width),
-        _videosCart(videosResponse[0], width - 40),
-        _videosCart(videosResponse[1], width - 40),
-        _videosCart(videosResponse[2], width - 40),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ChannelInfoPage(channel: channels,)),
+            );
+          },
+          child: channelCardSmall(channels, width),
+        ),
+        _videosCard(videosResponse[0], width - 40),
+        _videosCard(videosResponse[1], width - 40),
+        _videosCard(videosResponse[2], width - 40),
       ],
     );
   }
@@ -100,22 +118,57 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
     });});
   }
 
+  void _getChannelsAll() async {
+    int subscribers = 0;
+    int category = 1;
+    String sort = 'popular';
+    bool rand = false;
+    int page = 1;
+    int count = 200;
+    int responseListLength = 0;
+
+    do {
+      List<Channels> buffer = await server.getChannelsBySubscribers(subscribers, true, category, sort, rand, page, count);
+      allChannelsList.addAll(buffer);
+      responseListLength = buffer.length;
+      page++;
+    } while (responseListLength != 0);
+
+    setState(() {
+      for(Channels channel in allChannelsList) {
+        channelItems.add(new DropdownMenuItem(
+          value: channel,
+          child: channelCardSmallNonIcon(channel, MediaQuery.of(context).size.width),
+        ));
+      }
+    });
+
+  }
+
   @override
   void initState() {
     super.initState();
     _scrollController = widget.scrollController ?? new ScrollController();
     _getVideos();
+    _getChannelsAll();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    String selectedValueSingleDialog;
 
     if (map == null) {
       return Center(child: CupertinoActivityIndicator(),);
     } else {
       return SmartRefresher(
         enablePullDown: true,
-        enablePullUp: map.length < maxResults ? true : false,
+        enablePullUp: true,
         header: MaterialClassicHeader(),
         footer: CustomFooter(
           loadStyle: LoadStyle.ShowWhenLoading,
@@ -152,9 +205,74 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
         onLoading: _onLoading,
         child: ListView.builder(
             controller: _scrollController,
-            itemCount: map.length + channelCount,
+            itemCount: map.length + 1,
             itemBuilder: (context, index) {
-              return _channelsCart(index, MediaQuery.of(context).size.width);
+              if (index == 0) {
+                return Container(
+                  padding: const EdgeInsets.all(10),
+                  height: 64,
+                  child: RaisedButton(
+                    onPressed: () {
+
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                      side: BorderSide(color: Colors.grey, ),
+                    ),
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    elevation: 0,
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: SearchChoices.single(
+                        items: channelItems,
+                        value: selectedValueSingleDialog,
+                        hint: "채널 찾기",
+                        isExpanded: true,
+                        displayClearIcon: false,
+                        searchFn: (keyword, items) {
+                          List<int> shownIndexes = [];
+                          int i = 0;
+                          channelItems.forEach((item) {
+                            if (item.value.channelName
+                                .toString()
+                                .toLowerCase()
+                                .contains(keyword.toLowerCase())) {
+                              shownIndexes.add(i);
+                            }
+                            i++;
+                          });
+                          return (shownIndexes);
+                        },
+                        onChanged: (Channels value) {
+                          setState(() {
+                            selectedValueSingleDialog = value?.channelName;
+                            if (value != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ChannelInfoPage(channel: value,)),
+                              );
+                            }
+                          });
+                        },
+                        closeButton: Align(
+                          alignment: Alignment.centerRight,
+                          child: RaisedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            elevation: 0,
+                            child: Text('Close'),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+
+              } else {
+                return _channelsCard(index - 1, MediaQuery.of(context).size.width);
+              }
             }
         ),
       );

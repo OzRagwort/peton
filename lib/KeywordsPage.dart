@@ -120,19 +120,31 @@ class _KeywordsPageState extends State<KeywordsPage> {
               body: ListView(
                 children: [
                   /// 최근 인기 영상
-                  InkWell(
-                    onTap: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => KeywordsLatelyPage(popularVideosList: latelyList,)),
-                      )
-                    },
-                    child: Text(
-                      "최근 인기 영상",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20
-                      ),
+                  Container(
+                    height: 45,
+                    padding: EdgeInsets.only(left: 30, right: 20),
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => KeywordsLatelyPage(popularVideosList: latelyList,)),
+                              )
+                            },
+                            child: Text(
+                              "최근 인기 영상",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontSize: 20
+                              ),
+                            ),
+                          ),
+                        ),
+                        Icon(Icons.keyboard_arrow_right),
+                      ],
                     ),
                   ),
                   KeywordsLatelyHit(latelyList: latelyList,),
@@ -143,57 +155,93 @@ class _KeywordsPageState extends State<KeywordsPage> {
                   divline,
 
                   /// 추천 영상
-                  InkWell(
-                    onTap: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => KeywordsRecommendPage()),
-                      )
-                    },
-                    child: Text(
-                      "추천 영상",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20
-                      ),
+                  Container(
+                    height: 45,
+                    padding: EdgeInsets.only(left: 30, right: 20),
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => KeywordsRecommendPage()),
+                              )
+                            },
+                            child: Text(
+                              "추천 영상",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontSize: 20
+                              ),
+                            ),
+                          ),
+                        ),
+                        Icon(Icons.keyboard_arrow_right),
+                      ],
                     ),
                   ),
                   KeywordsRecommend(recommendList: recommendList,),
                   divline,
 
                   /// 인기 채널
-                  InkWell(
-                    onTap: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => KeywordsPopularChannelsPage()),
-                      )
-                    },
-                    child: Text(
-                      "인기 채널",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20
-                      ),
+                  Container(
+                    height: 45,
+                    padding: EdgeInsets.only(left: 30, right: 20),
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => KeywordsPopularChannelsPage()),
+                              )
+                            },
+                            child: Text(
+                              "인기 채널",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontSize: 20
+                              ),
+                            ),
+                          ),
+                        ),
+                        Icon(Icons.keyboard_arrow_right),
+                      ],
                     ),
                   ),
                   KeywordsPopularChannels(channelsList: popularChannelsList,),
                   divline,
 
                   /// 소규모 채널
-                  InkWell(
-                    onTap: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => KeywordsSmallChannelsPage()),
-                      )
-                    },
-                    child: Text(
-                      "소규모 채널",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20
-                      ),
+                  Container(
+                    height: 45,
+                    padding: EdgeInsets.only(left: 30, right: 20),
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => KeywordsSmallChannelsPage()),
+                              )
+                            },
+                            child: Text(
+                              "소규모 채널",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontSize: 20
+                              ),
+                            ),
+                          ),
+                        ),
+                        Icon(Icons.keyboard_arrow_right),
+                      ],
                     ),
                   ),
                   KeywordsSmallChannels(channelsList: smallChannelsList,),

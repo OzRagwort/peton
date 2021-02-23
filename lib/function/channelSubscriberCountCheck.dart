@@ -13,6 +13,9 @@ String ChannelSubscriberCountCheck(int subscriberCount) {
     value += '만명';
 
     // 만 미만
+  } else if (subscriberCount == 0) {
+    return '';
+    // 만 미만
   } else {
     value = subscriberCount.toString();
     value += '명';

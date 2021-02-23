@@ -525,14 +525,14 @@ class QuestionPage extends StatelessWidget {
                           children: [
                             Container(
                               padding: EdgeInsets.only(left: 15, right: 15),
-                              child: Icon(Icons.email),
+                              child: Icon(Icons.email, color: Colors.black,),
                             ),
                             Expanded(
-                              child: Text('이메일로 문의하기'),
+                              child: Text('이메일로 문의하기', style: TextStyle(color: Colors.black,),),
                             ),
                             Container(
                               padding: EdgeInsets.only(left: 15, right: 15),
-                              child: Icon(Icons.keyboard_arrow_right),
+                              child: Icon(Icons.keyboard_arrow_right, color: Colors.black,),
                             ),
                           ],
                         ),
@@ -563,14 +563,14 @@ class QuestionPage extends StatelessWidget {
                           children: [
                             Container(
                               padding: EdgeInsets.only(left: 15, right: 15),
-                              child: Icon(FontAwesomeIcons.kickstarterK),
+                              child: Icon(FontAwesomeIcons.kickstarterK, color: Colors.black,),
                             ),
                             Expanded(
-                              child: Text('오픈 채팅으로 문의하기'),
+                              child: Text('오픈 채팅으로 문의하기', style: TextStyle(color: Colors.black,),),
                             ),
                             Container(
                               padding: EdgeInsets.only(left: 15, right: 15),
-                              child: Icon(Icons.keyboard_arrow_right),
+                              child: Icon(Icons.keyboard_arrow_right, color: Colors.black,),
                             ),
                           ],
                         ),
@@ -582,7 +582,7 @@ class QuestionPage extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                child: Text('ozragwort@gmail.com'),
+                child: Text(''),
               ),
             ),
 
@@ -652,7 +652,7 @@ class SendEmailPage extends StatelessWidget {
                         Navigator.pop(context);
                       },
                       color: Colors.grey[100],
-                      child: Text('취소', style: TextStyle(fontSize: 18)),
+                      child: Text('취소', style: TextStyle(fontSize: 18, color: Colors.black,),),
                     ),
                   ),
                 ),
@@ -672,7 +672,7 @@ class SendEmailPage extends StatelessWidget {
                         launch(_emailLaunchUri.toString());
                       },
                       color: Colors.orangeAccent,
-                      child: Text('전송하기', style: TextStyle(fontSize: 18)),
+                      child: Text('전송하기', style: TextStyle(fontSize: 18, color: Colors.black,),),
                     ),
                   ),
                 ),

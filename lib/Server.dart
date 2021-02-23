@@ -88,11 +88,12 @@ class Server {
 
   /// channelId -> List<VideosResponse>
   /// 특정 채널의 정렬된 영상 가져오기
-  Future<List<VideosResponse>> getByChannelIdSort(String channelId, String sort, int page, int count) async {
+  Future<List<VideosResponse>> getByChannelIdSort(String channelId, String sort, bool random, int page, int count) async {
     Response response;
     Dio dio = new Dio();
 
     response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?channel=' + channelId +
+        '&random=' + random.toString() +
         '&sort=' + sort +
         '&page=' + page.toString() +
         '&maxResults=' + count.toString()
@@ -167,7 +168,7 @@ class Server {
     while (map.length < cCount) {
       List<Channels> list = await getRandChannels(category, cPage, cCount);
       for (Channels c in list) {
-        List<VideosResponse> videos = await getByChannelIdSort(c.channelId, sort, vPage, vCount);
+        List<VideosResponse> videos = await getByChannelIdSort(c.channelId, sort, false, vPage, vCount);
         if (videos.length >= 3) {
           map[c] = videos;
         }

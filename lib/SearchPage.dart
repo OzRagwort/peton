@@ -35,7 +35,7 @@ class _SearchPageState extends State<SearchPage> {
     _refreshController.loadComplete();
   }
 
-  Widget _videosCart(int listNum, double width) {
+  Widget _videosCard(int listNum, double width) {
     return GestureDetector(
       onTap: () => {
         Navigator.push(
@@ -130,7 +130,7 @@ class _SearchPageState extends State<SearchPage> {
           child: ListView.builder(
               itemCount: listVideos.length,
               itemBuilder: (context, index) {
-                return _videosCart(index, MediaQuery.of(context).size.width);
+                return _videosCard(index, MediaQuery.of(context).size.width);
               }
           ),
         ),

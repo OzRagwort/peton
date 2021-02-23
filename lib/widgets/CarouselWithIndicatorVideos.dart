@@ -47,8 +47,8 @@ class _CarouselWithIndicatorVideosState extends State<CarouselWithIndicatorVideo
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Color.fromARGB(200, 0, 0, 0),
-                            Color.fromARGB(0, 0, 0, 0)
+                            Color.fromARGB(250, 0, 0, 0),
+                            Color.fromARGB(30, 0, 0, 0)
                           ],
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
@@ -60,8 +60,7 @@ class _CarouselWithIndicatorVideosState extends State<CarouselWithIndicatorVideo
                         maxLines: 1,
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
                         ),
                       ),
                     ),
@@ -98,23 +97,6 @@ class _CarouselWithIndicatorVideosState extends State<CarouselWithIndicatorVideo
                   });
                 }
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: videos.map((url) {
-              int index = videos.indexOf(url);
-              return Container(
-                width: 8.0,
-                height: 8.0,
-                margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _current == index
-                      ? Color.fromRGBO(0, 0, 0, 0.9)
-                      : Color.fromRGBO(0, 0, 0, 0.4),
-                ),
-              );
-            }).toList(),
           ),
         ]
     );

@@ -31,17 +31,6 @@ class _KeywordsRecommendPageState extends State<KeywordsRecommendPage> {
   Map<int, Future<List<VideosResponse>>> mapFuture = new Map<int, Future<List<VideosResponse>>>();
   Map<int, List<VideosResponse>> mapList = new Map<int, List<VideosResponse>>();
 
-  // Future<List<VideosResponse>> bestVideosResponse;
-  // Future<List<VideosResponse>> popularVideosResponse;
-  // Future<List<VideosResponse>> smallVideosResponse;
-  // Future<List<VideosResponse>> dogVideosResponse;
-  // Future<List<VideosResponse>> catVideosResponse;
-  // List<VideosResponse> bestVideosList = new List<VideosResponse>();
-  // List<VideosResponse> popularVideosList = new List<VideosResponse>();
-  // List<VideosResponse> smallVideosList = new List<VideosResponse>();
-  // List<VideosResponse> dogVideosList = new List<VideosResponse>();
-  // List<VideosResponse> catVideosList = new List<VideosResponse>();
-
   void _onRefresh() {
     mapList[index] = new List<VideosResponse>();
     int page = 1;
@@ -119,7 +108,7 @@ class _KeywordsRecommendPageState extends State<KeywordsRecommendPage> {
     );
   }
 
-  Widget _videosCart(int listNum, double width) {
+  Widget _videosCard(int listNum, double width) {
     return GestureDetector(
       onTap: () => {
         Navigator.push(
@@ -144,6 +133,7 @@ class _KeywordsRecommendPageState extends State<KeywordsRecommendPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("추천 영상"),
+        centerTitle: false,
       ),
       body: CheckNetwork(
         body: Column(
@@ -185,7 +175,7 @@ class _KeywordsRecommendPageState extends State<KeywordsRecommendPage> {
                 child: ListView.builder(
                     itemCount: mapList[index].length,
                     itemBuilder: (context, index) {
-                      return _videosCart(index, width);
+                      return _videosCard(index, width);
                     }
                 ),
               ),

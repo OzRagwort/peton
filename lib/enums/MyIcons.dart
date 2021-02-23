@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 class MyIcons {
 
-  static const Icon homePageIcon = Icon(CupertinoIcons.music_house);
+  static const Icon homePageIcon = Icon(Icons.pets);
 
-  static const Icon homePageIconFill = Icon(CupertinoIcons.music_house_fill);
+  static const Icon homePageIconFill = Icon(CupertinoIcons.paw);
 
   static const Icon favoritePageIcon = Icon(CupertinoIcons.star);
 
@@ -30,11 +30,13 @@ class MyIcons {
 
   static const Icon youtubeIcon = Icon(CupertinoIcons.play_rectangle_fill);
 
+  static const Icon skipNextIcon = Icon(Icons.skip_next);
+
   static const Icon shareIcon = Icon(Icons.share);
 
   static const Icon searchIcon = Icon(CupertinoIcons.search);
 
-  static const Icon settingIcon = Icon(CupertinoIcons.person);
+  static const Icon settingIcon = Icon(Icons.settings);
 
   static const Icon sortIcon = Icon(Icons.sort);
 

@@ -138,7 +138,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     super.dispose();
   }
 
-  Widget _videosCart(int listNum, double width) {
+  Widget _videosCard(int listNum, double width) {
     return GestureDetector(
       onTap: () => {
         Navigator.push(
@@ -182,7 +182,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
               ],
             );
           } else {
-            return _videosCart(index - 1, MediaQuery.of(context).size.width);
+            return _videosCard(index - 1, MediaQuery.of(context).size.width);
           }
         },
       );

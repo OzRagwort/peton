@@ -6,7 +6,7 @@ class MyThemeData {
   static ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     primaryColor: Colors.black,
-    accentColor: Colors.orangeAccent,
+    accentColor: Colors.brown,
     appBarTheme: AppBarTheme(
       centerTitle: true,
       color: Colors.white,
@@ -29,19 +29,23 @@ class MyThemeData {
     accentColor: Colors.white,
     appBarTheme: AppBarTheme(
       centerTitle: true,
-      color: Colors.black12,
+      color: Colors.grey[800],
       iconTheme: IconThemeData(color: Colors.white),
       textTheme: TextTheme(title: TextStyle(color: Colors.white, fontSize: 18)),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: Colors.transparent,
-        selectedItemColor: Colors.white,
-        selectedLabelStyle: TextStyle(color: Colors.white),
-        showSelectedLabels: true,
-        unselectedItemColor: Colors.white70,
-        unselectedLabelStyle: TextStyle(color: Colors.white70),
-        showUnselectedLabels: true
+      // backgroundColor: Colors.transparent,
+      selectedItemColor: Colors.white,
+      selectedLabelStyle: TextStyle(color: Colors.white),
+      showSelectedLabels: true,
+      unselectedItemColor: Colors.white70,
+      unselectedLabelStyle: TextStyle(color: Colors.white70),
+      showUnselectedLabels: true,
     ),
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: Colors.grey[800],
+    ),
+    // scaffoldBackgroundColor: Colors.black54,
   );
 
 }

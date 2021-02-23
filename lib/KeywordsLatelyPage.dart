@@ -65,7 +65,7 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
     _refreshController.loadComplete();
   }
 
-  Widget _videosCart(int listNum, double width) {
+  Widget _videosCard(int listNum, double width) {
     return GestureDetector(
       onTap: () => {
         Navigator.push(
@@ -107,10 +107,9 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.only(top: 10, bottom: 10),
           child: AnimatedContainer(
-            height: (showRecommend || showPopular) ? 0.0 : 40,
-            duration: Duration(milliseconds: 300),
+            height: (showRecommend || showPopular) ? 0.0 : 60,
+            duration: Duration(milliseconds: 100),
             curve: Curves.fastOutSlowIn,
             child: Row(
               children: [
@@ -122,6 +121,7 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
                         showPopular = false;
                         showRecommend = true;
                       });},
+                      color: Color(Theme.of(context).scaffoldBackgroundColor.value),
                       child: Text(
                         '오늘의 추천 영상',
                         style: TextStyle(fontSize: 18),
@@ -130,13 +130,14 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
                   ),
                 ),
                 Expanded(
-                  child: Padding(
+                  child: Container(
                     padding: const EdgeInsets.all(5),
                     child: RaisedButton(
                       onPressed: () {setState(() {
                         showRecommend = false;
                         showPopular = true;
                       });},
+                      color: Color(Theme.of(context).scaffoldBackgroundColor.value),
                       child: Text(
                         '실시간 인기 영상',
                         style: TextStyle(fontSize: 18),
@@ -148,31 +149,27 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
             ),
           ),
         ),
-        Container(
-          child: AnimatedContainer(
-            height: (showRecommend || showPopular) ? 40.0 : 0.0,
-            duration: Duration(milliseconds: 300),
-            curve: Curves.fastOutSlowIn,
-            child: GestureDetector(
-              onTap: () {setState(() {
-                showPopular = false;
-                showRecommend = false;
-              });},
-              child: Padding(
-                padding: const EdgeInsets.only(top: 0, bottom: 0, right: 20, left: 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        child: Text(
-                          showRecommend ? '오늘의 추천 영상' : showPopular ? '실시간 인기 영상' : '',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ),
+        AnimatedContainer(
+          height: (showRecommend || showPopular) ? 60 : 0.0,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.fastOutSlowIn,
+          child: GestureDetector(
+            onTap: () {setState(() {
+              showPopular = false;
+              showRecommend = false;
+            });},
+            child: Container(
+              padding: const EdgeInsets.only(top: 5, bottom: 0, right: 20, left: 20),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      showRecommend ? '오늘의 추천 영상' : showPopular ? '실시간 인기 영상' : '',
+                      style: TextStyle(fontSize: 18),
                     ),
-                    MyIcons.sortUpIcon,
-                  ],
-                ),
+                  ),
+                  MyIcons.sortUpIcon,
+                ],
               ),
             ),
           ),
@@ -205,6 +202,7 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("실시간 업로드 영상"),
+        centerTitle: false,
       ),
       body: CheckNetwork(
         body: SmartRefresher(
@@ -245,7 +243,7 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
                 if (index == 0) {
                   return _specialTaps(height);
                 } else {
-                  return _videosCart(index-1, width);
+                  return _videosCard(index-1, width);
                 }
               }
           ),
