@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:peton/ChannelInfoPage.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/VideoplayerPage.dart';
+import 'package:peton/enums/CategoryId.dart';
 import 'package:peton/model/Channels.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/widgets/Cards.dart';
@@ -36,7 +37,7 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
   List<Channels> allChannelsList = new List<Channels>();
   List<DropdownMenuItem> channelItems = List<DropdownMenuItem>();
 
-  int category = 1;
+  String category = CategoryId.id;
   String sort = 'popular';
   int channelCount = 10;
   int videoCount = 3;
@@ -120,7 +121,6 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
 
   void _getChannelsAll() async {
     int subscribers = 0;
-    int category = 1;
     String sort = 'popular';
     bool rand = false;
     int page = 1;

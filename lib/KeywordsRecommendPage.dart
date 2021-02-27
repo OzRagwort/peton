@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/VideoplayerPage.dart';
+import 'package:peton/enums/CategoryId.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/widgets/Cards.dart';
 import 'package:peton/widgets/CheckNetwork.dart';
@@ -19,7 +20,7 @@ class _KeywordsRecommendPageState extends State<KeywordsRecommendPage> {
 
   List<String> classNames = ['인기 채널', '10만 이상', '소규모', '고양이', '강아지'];
   int index = 0;
-  int category = 1;
+  String category = CategoryId.id;
   String channelSort = 'asc';
   int page = 1;
   int count = 10;

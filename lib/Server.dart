@@ -113,12 +113,12 @@ class Server {
 
   /// keyword -> List<VideosResponse>
   /// 키워드 검색
-  Future<List<VideosResponse>> getSearchVideos(String keyword, int category, int page, int count) async {
+  Future<List<VideosResponse>> getSearchVideos(String keyword, String category, int page, int count) async {
     Response response;
     Dio dio = new Dio();
 
     response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?search=' + keyword +
-        '&category=' + category.toString() +
+        '&category=' + category +
         '&page=' + page.toString() +
         '&maxResults=' + count.toString()
     );
@@ -137,11 +137,11 @@ class Server {
 
   /// category -> List<Channels>
   /// 특정 카테고리 랜덤 채널 가져오기
-  Future<List<Channels>> getRandChannels(int category, int page, int count) async {
+  Future<List<Channels>> getRandChannels(String category, int page, int count) async {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/channels?category=' + category.toString() +
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/channels?category=' + category +
         '&random=true' +
         '&page=' + page.toString() +
         '&maxResults=' + count.toString()
@@ -161,7 +161,7 @@ class Server {
 
   /// category -> List<VideosByChannels>
   /// 지금은 중복으로 채널을 가져오기도 함(수정해야함)
-  Future<Map<Channels, List<VideosResponse>>> getVideosByChannels(int category, int cPage, int cCount, String sort, int vPage, int vCount) async {
+  Future<Map<Channels, List<VideosResponse>>> getVideosByChannels(String category, int cPage, int cCount, String sort, int vPage, int vCount) async {
 
     Map map = new Map<Channels, List<VideosResponse>>();
 
@@ -184,11 +184,11 @@ class Server {
   /// category -> List<VideosTagsPopularityResponse>
   /// 카테고리의 인기 태그를 가져옴
   /// 랜덤하게 또는 더 인기있는 순서대로 등등 어찌할지 수정해야함
-  Future<List<VideosTagsPopularityResponse>> getPopularTags(int category) async {
+  Future<List<VideosTagsPopularityResponse>> getPopularTags(String category) async {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/popular-tags?category=' + category.toString());
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/popular-tags?category=' + category);
 
     var lists = response.data as List;
     List<VideosTagsPopularityResponse> list = lists.map((e) => VideosTagsPopularityResponse.fromJson(e)).toList();
@@ -203,12 +203,12 @@ class Server {
   /// category -> List<VideosResponse>
   /// 특정 카테고리 영상에서 태그를 검색하여 조건에 맞는 영상을 가져옴
   /// 우선 랜덤하게 호출
-  Future<List<VideosResponse>> getVideosByTags(String tags, int category, bool random, int page, int count) async {
+  Future<List<VideosResponse>> getVideosByTags(String tags, String category, bool random, int page, int count) async {
     Response response;
     Dio dio = new Dio();
 
     response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?tags=' + tags.toString() +
-        '&category=' + category.toString() +
+        '&category=' + category +
         '&page=' + page.toString() +
         '&maxResults=' + count.toString() +
         '&random=' + random.toString()
@@ -227,12 +227,12 @@ class Server {
   }
 
   /// 평균 Score 이상의 영상을 호출
-  Future<List<VideosResponse>> getVideosByScoreAvg(int category, int page, int count) async {
+  Future<List<VideosResponse>> getVideosByScoreAvg(String category, int page, int count) async {
     Response response;
     Dio dio = new Dio();
 
     response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?overAvg=true' +
-        '&category=' + category.toString() +
+        '&category=' + category +
         '&page=' + page.toString() +
         '&maxResults=' + count.toString()
     );
@@ -250,12 +250,12 @@ class Server {
   }
 
   /// 공개일 기준 필터링 영상
-  Future<List<VideosResponse>> getVideosByPublishedDate(int hour, int category, String sort, bool random, int page, int count) async {
+  Future<List<VideosResponse>> getVideosByPublishedDate(int hour, String category, String sort, bool random, int page, int count) async {
     Response response;
     Dio dio = new Dio();
 
     response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?publishedDateUnderHour=' + hour.toString() +
-        '&category=' + category.toString() +
+        '&category=' + category +
         '&page=' + page.toString() +
         '&maxResults=' + count.toString() +
         '&sort=' + sort.toString() +
@@ -275,13 +275,13 @@ class Server {
   }
 
   /// 구독자 기준 채널 필터링
-  Future<List<Channels>> getChannelsBySubscribers(int subscribers, bool over, int category, String sort, bool random, int page, int count) async {
+  Future<List<Channels>> getChannelsBySubscribers(int subscribers, bool over, String category, String sort, bool random, int page, int count) async {
     Response response;
     Dio dio = new Dio();
 
     response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/channels?subscribers=' + subscribers.toString() +
         '&subscribersOver=' + over.toString() +
-        '&category=' + category.toString() +
+        '&category=' + category +
         '&page=' + page.toString() +
         '&maxResults=' + count.toString() +
         '&random=' + random.toString() +
@@ -301,7 +301,7 @@ class Server {
   }
 
   /// 구독자 기준 영상 필터링
-  Future<List<VideosResponse>> getVideosBySubscribers(int subscribers, bool over, int category, String channelSort, bool random, int page, int count) async {
+  Future<List<VideosResponse>> getVideosBySubscribers(int subscribers, bool over, String category, String channelSort, bool random, int page, int count) async {
     List<Channels> channelsList = await getChannelsBySubscribers(subscribers, over, category, channelSort, random, page, count);
     Response response;
     Dio dio = new Dio();
@@ -362,11 +362,11 @@ class Server {
   /// 비디오 by sort
   /// asc -> 오래된 순, desc -> 최근순, popular -> 조회수 순
   /// asc-score -> 점수 낮은 순, desc-score -> 점수 높은 순
-  Future<List<VideosResponse>> getVideosBySort(String sort, int category, int page, int count) async {
+  Future<List<VideosResponse>> getVideosBySort(String sort, String category, int page, int count) async {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?category=' + category.toString() +
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v1/videos?category=' + category +
         '&sort=' + sort +
         '&page=' + page.toString() +
         '&maxResults=' + count.toString()

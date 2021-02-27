@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/VideoplayerPage.dart';
+import 'package:peton/enums/CategoryId.dart';
 import 'package:peton/enums/MyIcons.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/widgets/Cards.dart';
@@ -35,15 +36,13 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
   bool showPopular;
 
   String sort = 'desc';
-  int category = 1;
+  String category = CategoryId.id;
   int page = 1;
   int count = 10;
 
   void _onRefresh() {
 
     latelyVideosList = new List<VideosResponse>();
-    String sort = 'desc';
-    int category = 1;
     int page = 1;
     int count = 10;
     latelyVideosResponse = server.getVideosBySort(sort, category, page, count);
@@ -86,7 +85,7 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
   }
 
   void _getRecommendVideos() {
-    recommendVideosResponse = server.getVideosByPublishedDate(72, 1, 'desc-score', false, Random().nextInt(5) + 1, 15);
+    recommendVideosResponse = server.getVideosByPublishedDate(72, category, 'desc-score', false, Random().nextInt(5) + 1, 15);
 
     recommendVideosResponse.then((recommendValue) {setState(() {
       recommendVideosList = recommendValue;

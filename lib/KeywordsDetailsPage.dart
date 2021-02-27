@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:peton/ChannelInfoPage.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/VideoplayerPage.dart';
+import 'package:peton/enums/CategoryId.dart';
 import 'package:peton/model/Channels.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/widgets/Cards.dart';
@@ -30,7 +31,7 @@ class _KeywordsDetailsPageState extends State<KeywordsDetailsPage> {
   List<String> channelsKey = new List<String>();
 
   String keyword;
-  int category = 1;
+  String category = CategoryId.id;
   bool random = true;
   int page = 1;
   int count = 10;

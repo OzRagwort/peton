@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:peton/VideoplayerPage.dart';
+import 'package:peton/enums/CategoryId.dart';
 import 'package:peton/widgets/CheckNetwork.dart';
 import 'package:peton/widgets/MyAnimatedAppBar.dart';
 import 'package:peton/widgets/MyAppBar.dart';
@@ -32,10 +33,12 @@ class _HomePageState extends State<HomePage> {
   Future<List<VideosResponse>> videosResponse;
   List<VideosResponse> myList;
 
+  String category = CategoryId.id;
+
   void _onRefresh() async{
 
     myList = new List<VideosResponse>();
-    videosResponse = server.getRandByCategoryId('1', 10);
+    videosResponse = server.getRandByCategoryId(category, 10);
     
     videosResponse.then((value) => setState(() {myList.addAll(value);}));
 
@@ -44,7 +47,7 @@ class _HomePageState extends State<HomePage> {
 
   void _onLoading() async{
 
-    videosResponse = server.getRandByCategoryId('1', 10);
+    videosResponse = server.getRandByCategoryId(category, 10);
     videosResponse.then((value) => myList.addAll(value));
 
     if(mounted)
@@ -66,7 +69,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _getVideos() {
-    videosResponse = server.getRandByCategoryId('1', 10);
+    videosResponse = server.getRandByCategoryId(category, 10);
     videosResponse.then((value) {setState(() {
       myList = value;
     });});

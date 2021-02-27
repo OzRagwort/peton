@@ -8,6 +8,7 @@ import 'package:peton/KeywordsDetailsPage.dart';
 import 'package:peton/KeywordsSearchPage.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/VideoplayerPage.dart';
+import 'package:peton/enums/CategoryId.dart';
 import 'package:peton/model/Channels.dart';
 import 'package:peton/model/VideosResponse.dart';
 
@@ -19,6 +20,8 @@ Widget KeywordsGridView(double width, BuildContext context, AdMobManager adMobMa
 
   List<String> gridData = ['고양이 영상', '강아지 영상', '힐링 영상', '키워드 탐색', '랜덤 영상 재생', '랜덤 채널 찾기'];
   List<IconData> iconDataList = [FontAwesomeIcons.cat, FontAwesomeIcons.dog, FontAwesomeIcons.heart, FontAwesomeIcons.hashtag, FontAwesomeIcons.play, FontAwesomeIcons.search];
+
+  String category = CategoryId.id;
 
   void _pushPage(String value) {
     if (equals(value, gridData[0]) || equals(value, gridData[1]) || equals(value, gridData[2])) {
@@ -42,7 +45,7 @@ Widget KeywordsGridView(double width, BuildContext context, AdMobManager adMobMa
         MaterialPageRoute(builder: (context) => KeywordsSearchPage()),
       );
     } else if (equals(value, gridData[4])) {
-      Future<List<VideosResponse>> getData = server.getRandByCategoryId('1', 1);
+      Future<List<VideosResponse>> getData = server.getRandByCategoryId(category, 1);
       getData.then((value) {
         Navigator.push(
           context,
@@ -51,7 +54,7 @@ Widget KeywordsGridView(double width, BuildContext context, AdMobManager adMobMa
       });
     } else if (equals(value, gridData[5])) {
       adMobManager.showInterstitialAd();
-      Future<List<Channels>> getData = server.getRandChannels(1, 1, 1);
+      Future<List<Channels>> getData = server.getRandChannels(category, 1, 1);
       getData.then((value) {
         Navigator.push(
           context,
