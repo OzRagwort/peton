@@ -64,7 +64,7 @@ class _KeywordsSearchPageState extends State<KeywordsSearchPage> {
               isExpanded: true,
               displayClearIcon: false,
               onChanged: (value) {
-                if (listTags.indexOf(value) == 0) {
+                if (value != null) {
                   setState(() {
                     Navigator.push(
                       context,
