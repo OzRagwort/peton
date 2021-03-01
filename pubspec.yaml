@@ -73,6 +73,8 @@ dependencies:
   package_info: ^0.4.3+4
   # http
   http: ^0.12.2
+  # slidable using for Dismissible
+  flutter_slidable: ^0.5.7
 
   #################
   # 비공식 플러그인 #
