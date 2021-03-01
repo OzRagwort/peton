@@ -24,8 +24,6 @@ class _LibraryPageState extends State<LibraryPage> {
   List<LibraryVideos> listVideos;
   LibraryVideos libraryVideos;
 
-  Map<int, LibraryVideos> deleteBuffer = new Map<int, LibraryVideos>();
-
   /// 즐겨찾기한 영상이 없을 경우
   Widget _emptyLibrary() {
     return Center(
@@ -71,19 +69,8 @@ class _LibraryPageState extends State<LibraryPage> {
   Widget build(BuildContext context) {
     if (listVideos == null) {
       return Center(child: CupertinoActivityIndicator(),);
-    } else if (listVideos.length == 0) {
-      return Scaffold(
-        body: MyAnimatedAppBar(
-          scrollController: _scrollController,
-          child: MyAppBar(),
-          body: Expanded(
-            child: CheckNetwork(
-              body: _emptyLibrary(),
-            ),
-          ),
-        ),
-      );
-    } else {
+    }
+    else {
       return Scaffold(
         body: MyAnimatedAppBar(
           scrollController: _scrollController,
@@ -97,13 +84,12 @@ class _LibraryPageState extends State<LibraryPage> {
                 child: ListView.builder(
                   controller: _scrollController,
                   itemCount: listVideos.length,
-                  itemBuilder: (BuildContext context, int index) {
+                  itemBuilder: (BuildContext contextItemBuilder, int index) {
                     return Dismissible(
                       key: Key(listVideos[index].videoId),
                       onDismissed: (direction) {
+                        LibraryVideos buf = listVideos[index];
                         setState(() {
-                          Map<int, LibraryVideos> m = {index: listVideos[index]};
-                          deleteBuffer.addAll(m);
                           LibraryVideosDb().deleteLibraryVideo(listVideos[index].videoId);
                           listVideos.removeAt(index);
                         });
@@ -115,10 +101,8 @@ class _LibraryPageState extends State<LibraryPage> {
                                 duration: Duration(seconds: 1),
                                 content: Text('삭제 취소됨', style: TextStyle(fontSize: 18, color: Colors.white),),
                               ));
-                              setState(() {
-                                LibraryVideosDb().insertLibraryVideo(deleteBuffer[index]);
-                                listVideos.add(deleteBuffer[index]);
-                              });
+                              LibraryVideosDb().insertLibraryVideo(buf);
+                              _getLibraryVideos();
                             },
                             label: '취소',
                             textColor: Colors.red,
