@@ -52,6 +52,7 @@ dependencies:
   meta: ^1.2.4
   # admob
   firebase_admob: ^0.10.3
+  admob_flutter: ^1.0.1
   # 알림창
   flutter_local_notifications: ^3.0.2
   flutter_local_notifications_platform_interface: ^2.0.0+1
