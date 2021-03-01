@@ -2,6 +2,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:peton/ChannelInfoPage.dart';
+import 'package:peton/Server.dart';
 import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/database/LibraryVideosDb.dart';
 import 'package:peton/model/LibraryVideos.dart';
@@ -85,32 +88,53 @@ class _LibraryPageState extends State<LibraryPage> {
                   controller: _scrollController,
                   itemCount: listVideos.length,
                   itemBuilder: (BuildContext contextItemBuilder, int index) {
-                    return Dismissible(
-                      key: Key(listVideos[index].videoId),
-                      onDismissed: (direction) {
-                        LibraryVideos buf = listVideos[index];
-                        setState(() {
-                          LibraryVideosDb().deleteLibraryVideo(listVideos[index].videoId);
-                          listVideos.removeAt(index);
-                        });
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          duration: Duration(seconds: 2),
-                          action: SnackBarAction(
-                            onPressed: () {
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                duration: Duration(seconds: 1),
-                                content: Text('삭제 취소됨', style: TextStyle(fontSize: 18, color: Colors.white),),
-                              ));
-                              LibraryVideosDb().insertLibraryVideo(buf);
-                              _getLibraryVideos();
-                            },
-                            label: '취소',
-                            textColor: Colors.red,
-                          ),
-                          content: Text('보관함에서 영상 삭제', style: TextStyle(fontSize: 18, color: Colors.white),),
-                        ));
-                      },
-                      child: _videosCardSmall(index, MediaQuery.of(context).size.width - 20),
+                    return Slidable(
+                      actionPane: SlidableDrawerActionPane(),
+                      actionExtentRatio: 0.25,
+                      child: Container(
+                        child: _videosCardSmall(index, MediaQuery.of(context).size.width - 20),
+                      ),
+                      secondaryActions: <Widget>[
+                        IconSlideAction(
+                          caption: '채널 더보기',
+                          color: Colors.green,
+                          icon: Icons.add,
+                          onTap: () {
+                            server.getChannel(listVideos[index].channelId).then((value) => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ChannelInfoPage(channel: value)),
+                            ));
+                          },
+                        ),
+                        IconSlideAction(
+                          caption: '삭제',
+                          color: Colors.red,
+                          icon: Icons.delete,
+                          onTap: () {
+                            LibraryVideos buf = listVideos[index];
+                            setState(() {
+                              LibraryVideosDb().deleteLibraryVideo(listVideos[index].videoId);
+                              listVideos.removeAt(index);
+                            });
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              duration: Duration(seconds: 2),
+                              action: SnackBarAction(
+                                onPressed: () {
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                    duration: Duration(seconds: 1),
+                                    content: Text('삭제 취소됨', style: TextStyle(fontSize: 18, color: Colors.white),),
+                                  ));
+                                  LibraryVideosDb().insertLibraryVideo(buf);
+                                  _getLibraryVideos();
+                                },
+                                label: '취소',
+                                textColor: Colors.red,
+                              ),
+                              content: Text('보관함에서 영상 삭제', style: TextStyle(fontSize: 18, color: Colors.white),),
+                            ));
+                          },
+                        ),
+                      ],
                     );
                   },
                 ),
