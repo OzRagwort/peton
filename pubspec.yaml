@@ -92,6 +92,8 @@ dependencies:
   adaptive_theme: ^1.1.0
   # text size 자동 조절
   auto_size_text: ^2.1.0
+  # 버전 정보 크롤링용
+  web_scraper: ^0.0.9
 
 
 dev_dependencies:
