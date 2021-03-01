@@ -4,12 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info/package_info.dart';
+import 'package:peton/enums/MyThemeData.dart';
 import 'package:peton/enums/OpenSourceLicense.dart';
 import 'package:peton/model/OpenSourceLicenseModel.dart';
 import 'package:peton/widgets/Line.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:web_scraper/web_scraper.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -26,11 +28,16 @@ class _SettingPageState extends State<SettingPage> {
   List<String> _startPageList = ['Video', 'Favorite', 'Keyword', 'Library'];
   List<DropdownMenuItem<String>> _startPageDropDownMenuItems;
 
+  /// 버전 관리
+  String origVersion;
+  String deviceVersion;
+
   @override
   void initState() {
     super.initState();
     _themeDropDownMenuItems = getDropDownMenuItems(_themeList);
     _startPageDropDownMenuItems = getDropDownMenuItems(_startPageList);
+    _getVersion();
   }
 
   @override
@@ -337,33 +344,59 @@ class _SettingPageState extends State<SettingPage> {
       padding: EdgeInsets.only(left: 20, right: 10),
       height: 40,
       alignment: Alignment.center,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Text(
-              '앱 버전',
-              style: TextStyle(fontSize: 16),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => VersionPage(origVersion: origVersion, deviceVersion: deviceVersion,)),
+          );
+        },
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Text(
+                '앱 버전',
+                style: TextStyle(fontSize: 16),
+              ),
             ),
-          ),
-          FutureBuilder<PackageInfo>(
-              future: PackageInfo.fromPlatform(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Container(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Text(snapshot.data.version, style: TextStyle(fontSize: 16),),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-                return Text('');
-              }
-          ),
-        ],
+            Container(
+              padding: EdgeInsets.only(right: 5),
+              child: (deviceVersion != null && origVersion != null)
+                  ? deviceVersion != origVersion
+                    ? FlatButton(
+                        onPressed: () {
+                          const url = "https://play.google.com/store/apps/details?id=com.ozragwort.peton";
+                          launch(url);
+                        },
+                        color: Colors.amber,
+                        child: Text("업데이트", style: TextStyle(fontSize: 16, color: Colors.black),),
+                      )
+                    : Text("최신 버전", style: TextStyle(fontSize: 16),)
+                  : null,
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  /// 최신 버전 가져오기
+  void _getVersion() {
+    WebScraper webScraper = new WebScraper("https://play.google.com");
+    var ws = webScraper.loadWebPage("/store/apps/details?id=com.ozragwort.peton");
+    ws.then((value) {
+      String newVersion = webScraper.getElement('div.IQ1z0d > span.htlgb', [])[3]['title'];
+      setState(() {
+        origVersion = newVersion;
+      });
+    });
+
+    Future<PackageInfo> dv = PackageInfo.fromPlatform();
+    dv.then((value) {setState(() {
+      deviceVersion = value.version;
+    });});
   }
 
   /// 문의하기
@@ -469,6 +502,58 @@ class _SettingPageState extends State<SettingPage> {
   }
 
 }
+
+class VersionPage extends StatelessWidget {
+  VersionPage({this.origVersion, this.deviceVersion});
+
+  String origVersion;
+  String deviceVersion;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('버전 정보'),
+      ),
+      body: Container(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image(
+              image: Theme.of(context).brightness == MyThemeData.lightTheme.brightness
+                  ? AssetImage('assets/mainTitleBlack.png')
+                  : AssetImage('assets/mainTitleWhite.png'),
+              height: 50,
+            ),
+            space,
+            Container(
+              padding: EdgeInsets.only(right: 5),
+              child: (deviceVersion != null && origVersion != null)
+                  ? deviceVersion != origVersion
+                  ? FlatButton(
+                onPressed: () {
+                  const url = "https://play.google.com/store/apps/details?id=com.ozragwort.peton";
+                  launch(url);
+                },
+                color: Colors.amber,
+                child: Text("업데이트가 필요합니다", style: TextStyle(fontSize: 20, color: Colors.black),),
+              )
+                  : Text("최신 버전을 사용하고 있습니다", style: TextStyle(fontSize: 20),)
+                  : null,
+            ),
+            space,
+            Text('최신 버전 $origVersion', style: TextStyle(fontSize: 16),),
+            Text('현재 버전 $deviceVersion', style: TextStyle(fontSize: 16),),
+            const SizedBox(height: 100),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 /// 문의
 class QuestionPage extends StatelessWidget {
