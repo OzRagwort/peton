@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peton/ChannelInfoPage.dart';
 import 'package:peton/Server.dart';
+import 'package:peton/enums/CategoryId.dart';
 import 'package:peton/model/Channels.dart';
 import 'package:peton/widgets/Cards.dart';
 import 'package:peton/widgets/CheckNetwork.dart';
@@ -21,7 +22,7 @@ class _KeywordsPopularChannelsPageState extends State<KeywordsPopularChannelsPag
   List<DropdownMenuItem> channelItems = List<DropdownMenuItem>();
 
   int subscribers = 100000;
-  int category = 1;
+  String category = CategoryId.id;
   String sort = 'popular';
   bool rand = false;
   int page = 1;

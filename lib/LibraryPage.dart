@@ -2,6 +2,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:peton/ChannelInfoPage.dart';
+import 'package:peton/Server.dart';
 import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/database/LibraryVideosDb.dart';
 import 'package:peton/model/LibraryVideos.dart';
@@ -23,8 +26,6 @@ class _LibraryPageState extends State<LibraryPage> {
 
   List<LibraryVideos> listVideos;
   LibraryVideos libraryVideos;
-
-  Map<int, LibraryVideos> deleteBuffer = new Map<int, LibraryVideos>();
 
   /// 즐겨찾기한 영상이 없을 경우
   Widget _emptyLibrary() {
@@ -71,19 +72,8 @@ class _LibraryPageState extends State<LibraryPage> {
   Widget build(BuildContext context) {
     if (listVideos == null) {
       return Center(child: CupertinoActivityIndicator(),);
-    } else if (listVideos.length == 0) {
-      return Scaffold(
-        body: MyAnimatedAppBar(
-          scrollController: _scrollController,
-          child: MyAppBar(),
-          body: Expanded(
-            child: CheckNetwork(
-              body: _emptyLibrary(),
-            ),
-          ),
-        ),
-      );
-    } else {
+    }
+    else {
       return Scaffold(
         body: MyAnimatedAppBar(
           scrollController: _scrollController,
@@ -97,36 +87,54 @@ class _LibraryPageState extends State<LibraryPage> {
                 child: ListView.builder(
                   controller: _scrollController,
                   itemCount: listVideos.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Dismissible(
-                      key: Key(listVideos[index].videoId),
-                      onDismissed: (direction) {
-                        setState(() {
-                          Map<int, LibraryVideos> m = {index: listVideos[index]};
-                          deleteBuffer.addAll(m);
-                          LibraryVideosDb().deleteLibraryVideo(listVideos[index].videoId);
-                          listVideos.removeAt(index);
-                        });
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          duration: Duration(seconds: 2),
-                          action: SnackBarAction(
-                            onPressed: () {
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                duration: Duration(seconds: 1),
-                                content: Text('삭제 취소됨', style: TextStyle(fontSize: 18, color: Colors.white),),
-                              ));
-                              setState(() {
-                                LibraryVideosDb().insertLibraryVideo(deleteBuffer[index]);
-                                listVideos.add(deleteBuffer[index]);
-                              });
-                            },
-                            label: '취소',
-                            textColor: Colors.red,
-                          ),
-                          content: Text('보관함에서 영상 삭제', style: TextStyle(fontSize: 18, color: Colors.white),),
-                        ));
-                      },
-                      child: _videosCardSmall(index, MediaQuery.of(context).size.width - 20),
+                  itemBuilder: (BuildContext contextItemBuilder, int index) {
+                    return Slidable(
+                      actionPane: SlidableDrawerActionPane(),
+                      actionExtentRatio: 0.25,
+                      child: Container(
+                        child: _videosCardSmall(index, MediaQuery.of(context).size.width - 20),
+                      ),
+                      secondaryActions: <Widget>[
+                        IconSlideAction(
+                          caption: '채널 더보기',
+                          color: Colors.green,
+                          icon: Icons.add,
+                          onTap: () {
+                            server.getChannel(listVideos[index].channelId).then((value) => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ChannelInfoPage(channel: value)),
+                            ));
+                          },
+                        ),
+                        IconSlideAction(
+                          caption: '삭제',
+                          color: Colors.red,
+                          icon: Icons.delete,
+                          onTap: () {
+                            LibraryVideos buf = listVideos[index];
+                            setState(() {
+                              LibraryVideosDb().deleteLibraryVideo(listVideos[index].videoId);
+                              listVideos.removeAt(index);
+                            });
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              duration: Duration(seconds: 2),
+                              action: SnackBarAction(
+                                onPressed: () {
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                    duration: Duration(seconds: 1),
+                                    content: Text('삭제 취소됨', style: TextStyle(fontSize: 18, color: Colors.white),),
+                                  ));
+                                  LibraryVideosDb().insertLibraryVideo(buf);
+                                  _getLibraryVideos();
+                                },
+                                label: '취소',
+                                textColor: Colors.red,
+                              ),
+                              content: Text('보관함에서 영상 삭제', style: TextStyle(fontSize: 18, color: Colors.white),),
+                            ));
+                          },
+                        ),
+                      ],
                     );
                   },
                 ),

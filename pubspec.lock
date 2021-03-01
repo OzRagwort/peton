@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  admob_flutter:
+    dependency: "direct main"
+    description:
+      name: admob_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   analyzer:
     dependency: transitive
     description:
@@ -225,6 +232,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
+  csslib:
+    dependency: transitive
+    description:
+      name: csslib
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.16.2"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -370,6 +384,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0+1"
+  flutter_slidable:
+    dependency: "direct main"
+    description:
+      name: flutter_slidable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.7"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -401,6 +422,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
+  html:
+    dependency: transitive
+    description:
+      name: html
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.14.0+4"
   http:
     dependency: "direct main"
     description:
@@ -882,6 +910,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.7+15"
+  web_scraper:
+    dependency: "direct main"
+    description:
+      name: web_scraper
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
   web_socket_channel:
     dependency: transitive
     description:

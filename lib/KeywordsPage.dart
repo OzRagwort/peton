@@ -7,6 +7,7 @@ import 'package:peton/KeywordsPopularChannelsPage.dart';
 import 'package:peton/KeywordsRecommendPage.dart';
 import 'package:peton/KeywordsSmallChannelsPage.dart';
 import 'package:peton/Server.dart';
+import 'package:peton/enums/CategoryId.dart';
 import 'package:peton/model/Channels.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/widgets/CheckNetwork.dart';
@@ -39,9 +40,10 @@ class _KeywordsPageState extends State<KeywordsPage> {
   List<Channels> popularChannelsList;
   List<Channels> smallChannelsList;
 
+  String category = CategoryId.id;
+
   void _late() {
     int hour = 24;
-    int category = 1;
     String sort = "popular";
     int page = 1;
     int count = 15;
@@ -52,7 +54,6 @@ class _KeywordsPageState extends State<KeywordsPage> {
   }
 
   void _recommend() {
-    int category = 1;
     int page = 1;
     int count = 15;
     keywordsRecommendResponse = server.getVideosByScoreAvg(category, page, count);
@@ -63,7 +64,6 @@ class _KeywordsPageState extends State<KeywordsPage> {
 
   void _popularChannels() {
     int subscribers = 100000;
-    int category = 1;
     String sort = 'asc';
     int page = 1;
     int count = 15;
@@ -75,7 +75,6 @@ class _KeywordsPageState extends State<KeywordsPage> {
 
   void _smallChannels() {
     int subscribers = 50000;
-    int category = 1;
     String sort = 'asc';
     int page = 1;
     int count = 15;

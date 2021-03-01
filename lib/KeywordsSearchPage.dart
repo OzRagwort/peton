@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:peton/KeywordsDetailsPage.dart';
 import 'package:peton/Server.dart';
+import 'package:peton/enums/CategoryId.dart';
 import 'package:peton/model/VideosTagsPopularityResponse.dart';
 import 'package:search_choices/search_choices.dart';
 
@@ -19,7 +20,7 @@ class _KeywordsSearchPageState extends State<KeywordsSearchPage> {
   List<DropdownMenuItem> tagItems = List<DropdownMenuItem>();
   String selectedValueSingleDialog;
 
-  int category = 1;
+  String category = CategoryId.id;
 
   void _getTags() {
     listResponse = server.getPopularTags(category);
@@ -63,7 +64,7 @@ class _KeywordsSearchPageState extends State<KeywordsSearchPage> {
               isExpanded: true,
               displayClearIcon: false,
               onChanged: (value) {
-                if (listTags.indexOf(value) == 0) {
+                if (value != null) {
                   setState(() {
                     Navigator.push(
                       context,

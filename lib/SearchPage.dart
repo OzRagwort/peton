@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/VideoplayerPage.dart';
+import 'package:peton/enums/CategoryId.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/widgets/Cards.dart';
 import 'package:peton/widgets/CheckNetwork.dart';
@@ -21,12 +22,13 @@ class _SearchPageState extends State<SearchPage> {
   List<VideosResponse> listVideos = new List<VideosResponse>();
 
   String keyword = '';
+  String category = CategoryId.id;
 
   void _onLoading() async{
 
     int index = (listVideos.length ~/ 10) + 1;
 
-    videosResponse = server.getSearchVideos(keyword, 1, index, 10);
+    videosResponse = server.getSearchVideos(keyword, category, index, 10);
     videosResponse.then((value) => listVideos.addAll(value));
 
     if(mounted)
@@ -51,7 +53,7 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {
       listVideos = new List<VideosResponse>();
     });
-    videosResponse = server.getSearchVideos(keyword, 1, 1, 10);
+    videosResponse = server.getSearchVideos(keyword, category, 1, 10);
     videosResponse.then((value) => setState(() => listVideos = value));
   }
 

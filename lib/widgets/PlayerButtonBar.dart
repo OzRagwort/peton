@@ -50,10 +50,11 @@ class PlayerButtonBar extends StatelessWidget {
               IconButton(
                 icon: MyIcons.skipNextIcon,
                 onPressed: () {
+                  context.ytController.pause();
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => VideoPlayerPage(videoId: nextVideo)),
-                  );
+                  ).then((value) => context.ytController.play());
                 },
               ),
               Text('다음 영상', style: TextStyle(fontSize: 12)),
