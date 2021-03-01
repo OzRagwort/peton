@@ -7,6 +7,7 @@ import 'package:package_info/package_info.dart';
 import 'package:peton/enums/OpenSourceLicense.dart';
 import 'package:peton/model/OpenSourceLicenseModel.dart';
 import 'package:peton/widgets/Line.dart';
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -59,16 +60,14 @@ class _SettingPageState extends State<SettingPage> {
             /// 시작페이지
             startPage(),
 
-            // /// 앱에 대하여
-            // _aboutApp(),
-            // /// 앱공유
-            // appShare(),
-            // Divider(color: Color(Theme.of(context).scaffoldBackgroundColor.value ^ 0xffffff).withOpacity(0.1), height: 0, thickness: 1,),
-            // /// 평점
-            // appRating(),
-
             /// 정보
             settingInfo(),
+            /// 앱공유
+            appShare(),
+            Divider(color: Color(Theme.of(context).scaffoldBackgroundColor.value ^ 0xffffff).withOpacity(0.1), height: 0, thickness: 1,),
+            /// 평점
+            appRating(),
+            Divider(color: Color(Theme.of(context).scaffoldBackgroundColor.value ^ 0xffffff).withOpacity(0.1), height: 0, thickness: 1,),
             /// 버전
             versionInfo(),
             Divider(color: Color(Theme.of(context).scaffoldBackgroundColor.value ^ 0xffffff).withOpacity(0.1), height: 0, thickness: 1,),
@@ -259,42 +258,29 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  /// 앱에 대하여
-  Widget _aboutApp() {
-    return Container(
-      height: 45,
-      color: Color(Theme.of(context).scaffoldBackgroundColor.value ^ 0x222222),
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-      alignment: Alignment.bottomLeft,
-      child: Text(
-        '앱 홍보하기',
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Color(Theme.of(context).textTheme.bodyText1.color.value ^ 0x333333),
-        ),
-      ),
-    );
-  }
-
   /// 앱공유
   Widget appShare() {
     return Container(
       padding: EdgeInsets.only(left: 20, right: 10),
       height: 40,
       alignment: Alignment.center,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Text(
-              '앱 공유하기',
-              style: TextStyle(fontSize: 16),
+      child: GestureDetector(
+        onTap: () {
+          Share.share("https://play.google.com/store/apps/details?id=com.ozragwort.peton");
+        },
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Text(
+                '앱 공유하기',
+                style: TextStyle(fontSize: 16),
+              ),
             ),
-          ),
-          Icon(Icons.keyboard_arrow_right),
-        ],
+            Icon(Icons.keyboard_arrow_right),
+          ],
+        ),
       ),
     );
   }
@@ -305,18 +291,24 @@ class _SettingPageState extends State<SettingPage> {
       padding: EdgeInsets.only(left: 20, right: 10),
       height: 40,
       alignment: Alignment.center,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Text(
-              '앱 평가하기',
-              style: TextStyle(fontSize: 16),
+      child: GestureDetector(
+        onTap: () {
+          const url = "https://play.google.com/store/apps/details?id=com.ozragwort.peton";
+          launch(url);
+        },
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Text(
+                '앱 평가하기',
+                style: TextStyle(fontSize: 16),
+              ),
             ),
-          ),
-          Icon(Icons.keyboard_arrow_right),
-        ],
+            Icon(Icons.keyboard_arrow_right),
+          ],
+        ),
       ),
     );
   }
