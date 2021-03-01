@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:peton/AdMobManager.dart';
 import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/enums/CategoryId.dart';
 import 'package:peton/widgets/CheckNetwork.dart';
@@ -21,6 +23,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  /// admob
+  AdmobBannerSize bannerSize;
+  GlobalKey<ScaffoldState> scaffoldState = GlobalKey();
 
   bool isDisposed = false;
 
@@ -79,6 +85,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _getVideos();
+
+    /// admob
+    bannerSize = AdmobBannerSize.LARGE_BANNER;
 
     /// appbar setting
     _scrollController = new ScrollController();
@@ -145,7 +154,20 @@ class _HomePageState extends State<HomePage> {
                     controller: _scrollController,
                     itemCount: myList.length,
                     itemBuilder: (context, index) {
-                      return _videosCard(index, width);
+                      if ((index % 10) == 3) {
+                        return Container(
+                          margin: EdgeInsets.only(top: 20, bottom: 20),
+                          child: AdmobBanner(
+                            adUnitId: AdMobManager().bannerID,
+                            adSize: bannerSize,
+                            onBannerCreated:
+                                (AdmobBannerController controller) {
+                            },
+                          ),
+                        );
+                      } else {
+                        return _videosCard(index, width);
+                      }
                     }
                 ),
               ),
