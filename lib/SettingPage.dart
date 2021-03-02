@@ -702,21 +702,19 @@ class SendEmailPage extends StatelessWidget {
             ),
             Container(
               margin: EdgeInsets.only(right: 8, left: 8, bottom: 8),
-              child: Expanded(
-                child: TextField(
-                  controller: myControllerContent,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: '문의를 입력해주세요\n'
-                        '    버그 제보\n'
-                        '    기능 추가 요청\n'
-                        '    의견/건의사항 등',
-                    counterText: '',
-                  ),
-                  maxLength: 1000,
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
+              child: TextField(
+                controller: myControllerContent,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: '문의를 입력해주세요\n'
+                      '    버그 제보\n'
+                      '    기능 추가 요청\n'
+                      '    의견/건의사항 등',
+                  counterText: '',
                 ),
+                maxLength: 1000,
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
               ),
             ),
             Row(
