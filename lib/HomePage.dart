@@ -39,13 +39,17 @@ class _HomePageState extends State<HomePage> {
   Future<List<VideosResponse>> videosResponse;
   List<VideosResponse> myList;
 
-  String category = CategoryId.id;
+  Map<String, String> paramMap = {
+    'categoryId' : CategoryId.id,
+    'random' : 'true',
+    'size' : '10'
+  };
 
   void _onRefresh() async{
 
     myList = new List<VideosResponse>();
-    videosResponse = server.getRandByCategoryId(category, 10);
-    
+    videosResponse = server.getVideoByParam(paramMap);
+
     videosResponse.then((value) => setState(() {myList.addAll(value);}));
 
     _refreshController.refreshCompleted();
@@ -53,7 +57,7 @@ class _HomePageState extends State<HomePage> {
 
   void _onLoading() async{
 
-    videosResponse = server.getRandByCategoryId(category, 10);
+    videosResponse = server.getVideoByParam(paramMap);
     videosResponse.then((value) => myList.addAll(value));
 
     if(mounted)
@@ -75,7 +79,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _getVideos() {
-    videosResponse = server.getRandByCategoryId(category, 10);
+    videosResponse = server.getVideoByParam(paramMap);
     videosResponse.then((value) {setState(() {
       myList = value;
     });});

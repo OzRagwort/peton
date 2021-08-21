@@ -21,9 +21,8 @@ class _KeywordsRecommendPageState extends State<KeywordsRecommendPage> {
   List<String> classNames = ['인기 채널', '10만 이상', '소규모', '고양이', '강아지'];
   int index = 0;
   String category = CategoryId.id;
-  String channelSort = 'asc';
-  int page = 1;
-  int count = 10;
+  int page = 0;
+  int size = 10;
 
   int bestChannel = 300000;
   int popularChannel = 100000;
@@ -32,23 +31,35 @@ class _KeywordsRecommendPageState extends State<KeywordsRecommendPage> {
   Map<int, Future<List<VideosResponse>>> mapFuture = new Map<int, Future<List<VideosResponse>>>();
   Map<int, List<VideosResponse>> mapList = new Map<int, List<VideosResponse>>();
 
-  void _onRefresh() {
-    mapList[index] = new List<VideosResponse>();
-    int page = 1;
+  void _setMap() {
+    Map<String, String> paramMap = {
+      'categoryId' : category,
+      'random' : 'true',
+      'size' : size.toString(),
+      'page' : page.toString()
+    };
 
     if (index == 0) {
-      mapFuture[index] = server.getVideosBySubscribers(bestChannel, true, category, channelSort, true, page, count);
+      paramMap['subscribersover'] = bestChannel.toString();
     } else if(index == 1) {
-      mapFuture[index] = server.getVideosBySubscribers(popularChannel, true, category, channelSort, true, page, count);
+      paramMap['subscribersover'] = popularChannel.toString();
     } else if(index == 2) {
-      mapFuture[index] = server.getVideosBySubscribers(smallChannel, false, category, channelSort, true, page, count);
+      paramMap['subscribersunder'] = smallChannel.toString();
     } else {
-      mapFuture[index] = server.getVideosByTags(classNames[index], category, true, page, count);
+      paramMap['tags'] = classNames[index];
     }
 
+    mapFuture[index] = server.getVideoByParam(paramMap);
     mapFuture[index].then((value) => setState(() {
       mapList[index].addAll(value);
     }));
+  }
+
+  void _onRefresh() {
+    mapList[index] = new List<VideosResponse>();
+    page = 0;
+
+    _setMap();
 
     _refreshController.refreshCompleted();
   }
@@ -56,19 +67,7 @@ class _KeywordsRecommendPageState extends State<KeywordsRecommendPage> {
   void _onLoading() {
     page++;
 
-    if (index == 0) {
-      mapFuture[index] = server.getVideosBySubscribers(bestChannel, true, category, channelSort, true, page, count);
-    } else if(index == 1) {
-      mapFuture[index] = server.getVideosBySubscribers(popularChannel, true, category, channelSort, true, page, count);
-    } else if(index == 2) {
-      mapFuture[index] = server.getVideosBySubscribers(smallChannel, false, category, channelSort, true, page, count);
-    } else {
-      mapFuture[index] = server.getVideosByTags(classNames[index], category, true, page, count);
-    }
-
-    mapFuture[index].then((value) => setState(() {
-      mapList[index].addAll(value);
-    }));
+    _setMap();
 
     if(mounted)
       setState(() {});

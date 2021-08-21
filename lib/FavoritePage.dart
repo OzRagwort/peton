@@ -42,7 +42,7 @@ class _FavoritePageState extends State<FavoritePage> {
   List<String> _sortList = ['인기 동영상', '최신 순', '오래된 순'];
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   String _sortingMethod;
-  String sort = 'desc'; // 최신순
+  String sort = 'videoPublishedDate,desc'; // 최신순
   int count = 10;
 
   /// 리프레시
@@ -70,7 +70,13 @@ class _FavoritePageState extends State<FavoritePage> {
   void _onRefresh() {
 
     listVideos = new List<VideosResponse>();
-    videosResponse = server.getByChannelIdSort(_listToString(listChannels), sort, false, 1, count);
+    Map<String, String> paramMap = {
+      'channelId' : _listToString(listChannels),
+      'sort' : sort,
+      'size' : count.toString(),
+      'page' : '0'
+    };
+    videosResponse = server.getVideoByParam(paramMap);
     videosResponse.then((value) => setState(() {listVideos = value;}));
 
     _refreshController.refreshCompleted();
@@ -78,9 +84,15 @@ class _FavoritePageState extends State<FavoritePage> {
 
   void _onLoading() {
 
-    int index = (listVideos.length ~/ 10) + 1;
+    int index = (listVideos.length ~/ 10);
 
-    videosResponse = server.getByChannelIdSort(_listToString(listChannels), sort, false, index, count);
+    Map<String, String> paramMap = {
+      'channelId' : _listToString(listChannels),
+      'sort' : sort,
+      'size' : count.toString(),
+      'page' : index.toString()
+    };
+    videosResponse = server.getVideoByParam(paramMap);
     videosResponse.then((value) => listVideos.addAll(value));
 
     if(mounted)
@@ -91,15 +103,21 @@ class _FavoritePageState extends State<FavoritePage> {
 
   void _sortRefresh(String index) {
     if (index == _sortList[0]) {
-      sort = 'popular';
+      sort = 'viewCount,desc';
     } else if (index == _sortList[1]) {
-      sort = 'desc';
+      sort = 'videoPublishedDate,desc';
     } else {
-      sort = 'asc';
+      sort = 'videoPublishedDate,asc';
     }
 
     listVideos = new List<VideosResponse>();
-    videosResponse = server.getByChannelIdSort(_listToString(listChannels), sort, false, 1, count);
+    Map<String, String> paramMap = {
+      'channelId' : _listToString(listChannels),
+      'sort' : sort,
+      'size' : count.toString(),
+      'page' : '0'
+    };
+    videosResponse = server.getVideoByParam(paramMap);
     videosResponse.then((value) {setState(() {
         listVideos = value;
       });});
@@ -108,7 +126,13 @@ class _FavoritePageState extends State<FavoritePage> {
   void _onClickChannel(int index) {
     _channelClickCheck = index;
     listVideos = new List<VideosResponse>();
-    videosResponse = server.getByChannelIdSort(listChannels[index].channelId, sort, false, 1, count);
+    Map<String, String> paramMap = {
+      'channelId' : _listToString(listChannels),
+      'sort' : sort,
+      'size' : count.toString(),
+      'page' : '0'
+    };
+    videosResponse = server.getVideoByParam(paramMap);
     videosResponse.then((value) {setState(() {
       listVideos = value;
     });});
@@ -323,7 +347,13 @@ class _FavoritePageState extends State<FavoritePage> {
 
   /// 구독 채널의 영상 불러오기
   void _getVideos() {
-    videosResponse = server.getByChannelIdSort(_listToString(listChannels), sort, false, 1, count);
+    Map<String, String> paramMap = {
+      'channelId' : _listToString(listChannels),
+      'sort' : sort,
+      'size' : count.toString(),
+      'page' : '0'
+    };
+    videosResponse = server.getVideoByParam(paramMap);
     videosResponse.then((value) {setState(() {
       listVideos.addAll(value);
     });});

@@ -21,21 +21,26 @@ class _KeywordsPopularChannelsPageState extends State<KeywordsPopularChannelsPag
   List<Channels> popularChannelsList = new List<Channels>();
   List<DropdownMenuItem> channelItems = List<DropdownMenuItem>();
 
-  int subscribers = 100000;
   String category = CategoryId.id;
-  String sort = 'popular';
-  bool rand = false;
-  int page = 1;
-  int count = 200;
 
   void _getPopularChannels() async {
     int responseListLength = 0;
+    int page = 0;
+
+    Map<String, String> paramMap = {
+      'categoryId' : category,
+      'subscriberover' : '100000',
+      'sort' : 'subscribers,desc',
+      'size' : '200',
+      'page' : page.toString()
+    };
 
     do {
-      List<Channels> buffer = await server.getChannelsBySubscribers(subscribers, true, category, sort, rand, page, count);
+      List<Channels> buffer = await server.getChannelsByParam(paramMap);
       popularChannelsList.addAll(buffer);
       responseListLength = buffer.length;
       page++;
+      paramMap['page'] = page.toString();
     } while (responseListLength != 0);
 
     setState(() {

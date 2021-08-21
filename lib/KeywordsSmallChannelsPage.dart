@@ -22,22 +22,27 @@ class _KeywordsSmallChannelsPageState extends State<KeywordsSmallChannelsPage> {
   List<Channels> smallChannelsList = new List<Channels>();
   List<DropdownMenuItem> channelItems = List<DropdownMenuItem>();
 
-  int subscribers = 30000;
   String category = CategoryId.id;
-  String sort = 'popular';
-  bool rand = false;
-  int page = 1;
-  int count = 200;
 
-  void _getsmallChannels() async {
+  void _getSmallChannels() async {
     int responseListLength = 0;
+    int page = 0;
+
+    Map<String, String> paramMap = {
+      'categoryId' : category,
+      'subscriberunder' : '30000',
+      'sort' : 'subscribers,desc',
+      'size' : '200',
+      'page' : page.toString()
+    };
 
     do {
-      List<Channels> buffer = await server.getChannelsBySubscribers(subscribers, false, category, sort, rand, page, count);
+      List<Channels> buffer = await server.getChannelsByParam(paramMap);
       buffer.shuffle();
       smallChannelsList.addAll(buffer);
       responseListLength = buffer.length;
       page++;
+      paramMap['page'] = page.toString();
     } while (responseListLength != 0);
 
     setState(() {
@@ -70,7 +75,7 @@ class _KeywordsSmallChannelsPageState extends State<KeywordsSmallChannelsPage> {
   @override
   void initState() {
     super.initState();
-    _getsmallChannels();
+    _getSmallChannels();
   }
 
   @override

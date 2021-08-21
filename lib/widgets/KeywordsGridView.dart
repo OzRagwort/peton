@@ -45,7 +45,12 @@ Widget KeywordsGridView(double width, BuildContext context, AdMobManager adMobMa
         MaterialPageRoute(builder: (context) => KeywordsSearchPage()),
       );
     } else if (equals(value, gridData[4])) {
-      Future<List<VideosResponse>> getData = server.getRandByCategoryId(category, 1);
+      Map<String, String> paramMap = {
+        'categoryId' : category,
+        'random' : 'true',
+        'size' : '1'
+      };
+      Future<List<VideosResponse>> getData = server.getVideoByParam(paramMap);
       getData.then((value) {
         Navigator.push(
           context,
@@ -54,7 +59,14 @@ Widget KeywordsGridView(double width, BuildContext context, AdMobManager adMobMa
       });
     } else if (equals(value, gridData[5])) {
       adMobManager.showInterstitialAd();
-      Future<List<Channels>> getData = server.getRandChannels(category, 1, 1);
+
+      Map<String, String> paramMap = {
+        'categoryId' : category,
+        'random' : 'true',
+        'size' : '1',
+        'page' : '0'
+      };
+      Future<List<Channels>> getData = server.getChannelsByParam(paramMap);
       getData.then((value) {
         Navigator.push(
           context,

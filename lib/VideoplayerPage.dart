@@ -42,14 +42,20 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   YoutubePlayerController _controller;
 
   void _getVideos() {
-    vidoesResponseByChannel = server.getByChannelIdSort(videos.channels.channelId, 'asc', true, 1, 10);
+    Map<String, String> paramMap = {
+      'channelId' : videos.channels.channelId,
+      'random' : 'true',
+      'size' : '10',
+      'page' : '0'
+    };
+    vidoesResponseByChannel = server.getVideoByParam(paramMap);
     vidoesResponseByChannel.then((value) {setState(() {
       videosByChannel = value;
     });});
   }
 
   void _getData() {
-    vidoesResponse = server.refreshGetVideo(videoId);
+    vidoesResponse = server.getVideo(videoId);
     vidoesResponse.then((value) {setState(() {
       videos = value;
       _getVideos();

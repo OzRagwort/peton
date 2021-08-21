@@ -5,7 +5,6 @@ import 'package:auto_animated/auto_animated.dart';
 import 'package:peton/KeywordsDetailsPage.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/enums/CategoryId.dart';
-import 'package:peton/model/VideosTagsPopularityResponse.dart';
 import 'package:search_choices/search_choices.dart';
 
 class KeywordsSearchPage extends StatefulWidget {
@@ -15,7 +14,7 @@ class KeywordsSearchPage extends StatefulWidget {
 
 class _KeywordsSearchPageState extends State<KeywordsSearchPage> {
 
-  Future<List<VideosTagsPopularityResponse>> listResponse;
+  Future<List<String>> listResponse;
   List<String> listTags = List<String>();
   List<DropdownMenuItem> tagItems = List<DropdownMenuItem>();
   String selectedValueSingleDialog;
@@ -23,9 +22,9 @@ class _KeywordsSearchPageState extends State<KeywordsSearchPage> {
   String category = CategoryId.id;
 
   void _getTags() {
-    listResponse = server.getPopularTags(category);
+    listResponse = server.getTagsByCategory(category, 300);
     listResponse.then((value) {setState(() {
-      value.forEach((e) => listTags.add(e.tags));
+      listTags = value;
       listTags.shuffle();
       for(String tag in listTags) {
         tagItems.add(new DropdownMenuItem(

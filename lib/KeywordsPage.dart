@@ -43,42 +43,55 @@ class _KeywordsPageState extends State<KeywordsPage> {
   String category = CategoryId.id;
 
   void _late() {
-    int hour = 24;
-    String sort = "popular";
-    int page = 1;
-    int count = 15;
-    keywordsLatelyResponse = server.getVideosByPublishedDate(hour, category, sort, false, page, count);
+    Map<String, String> paramMap = {
+      'categoryId' : category,
+      'sort' : 'videoPublishedDate,desc',
+      'size' : '15',
+      'page' : '0'
+    };
+
+    keywordsLatelyResponse = server.getVideoByParam(paramMap);
     keywordsLatelyResponse.then((value) {setState(() {
       latelyList = value;
     });});
   }
 
   void _recommend() {
-    int page = 1;
-    int count = 15;
-    keywordsRecommendResponse = server.getVideosByScoreAvg(category, page, count);
+    Map<String, String> paramMap = {
+      'categoryId' : category,
+      'score' : '50',
+      'random' : 'true',
+      'size' : '15',
+      'page' : '0'
+    };
+
+    keywordsRecommendResponse = server.getVideoByParam(paramMap);
     keywordsRecommendResponse.then((value) {setState(() {
       recommendList = value;
     });});
   }
 
   void _popularChannels() {
-    int subscribers = 100000;
-    String sort = 'asc';
-    int page = 1;
-    int count = 15;
-    popularChannelsResponse = server.getChannelsBySubscribers(subscribers, true, category, sort, true, page, count);
+    Map<String, String> paramMap = {
+      'categoryId' : category,
+      'subscriberover' : '100000',
+      'random' : 'true',
+      'size' : '15'
+    };
+    popularChannelsResponse = server.getChannelsByParam(paramMap);
     popularChannelsResponse.then((value) {setState(() {
       popularChannelsList = value;
     });});
   }
 
   void _smallChannels() {
-    int subscribers = 50000;
-    String sort = 'asc';
-    int page = 1;
-    int count = 15;
-    smallChannelsResponse = server.getChannelsBySubscribers(subscribers, false, category, sort, true, page, count);
+    Map<String, String> paramMap = {
+      'categoryId' : category,
+      'subscriberunder' : '50000',
+      'random' : 'true',
+      'size' : '15'
+    };
+    smallChannelsResponse = server.getChannelsByParam(paramMap);
     smallChannelsResponse.then((value) {setState(() {
       smallChannelsList = value;
     });});

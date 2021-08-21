@@ -26,10 +26,12 @@ class _CarouselWithIndicatorChannelsState extends State<CarouselWithIndicatorCha
   double height = 150;
 
   void _getChannels() {
-    mapsResponse = server.getTagsByChannelsList(channels, 15);
-    mapsResponse.then((value) {setState(() {
-      maps = value;
-    });});
+    for(Channels c in channels) {
+      Future<List<String>> channelsResponse = server.getTagsByChannels(c.channelId, 10);
+      channelsResponse.then((value) {
+        maps[c] = value;
+      }).then((value) {setState(() {});});
+    }
   }
 
   List<Widget> channelsSliders(List<Channels> channelsList) {

@@ -32,33 +32,32 @@ class _KeywordsDetailsPageState extends State<KeywordsDetailsPage> {
 
   String keyword;
   String category = CategoryId.id;
-  bool random = true;
-  int page = 1;
-  int count = 10;
+
+  Map<String, String> _getParamMap() {
+    Map<String, String> paramMap = {
+      'categoryId' : category,
+      'tags' : keyword,
+      'random' : 'true',
+      'size' : '10'
+    };
+
+    return paramMap;
+  }
 
   void _onRefresh() {
     videosList = new List<VideosResponse>();
     channelsMap = new Map<String, Channels>();
     channelsKey = new List<String>();
 
-    int page = 1;
-    videosResponse = server.getVideosByTags(keyword, category, random, page, count);
-    videosResponse.then((value) {setState(() {
-      videosList.addAll(value);
-      value.forEach((e) {
-        if (!channelsKey.contains(e.channels.channelId)) {
-          channelsKey.add(e.channels.channelId);
-          channelsMap[e.channels.channelId] = e.channels;
-        }
-      });
-    });});
+    _getVideos();
 
     _refreshController.refreshCompleted();
   }
 
   void _onLoading() {
 
-    videosResponse = server.getVideosByTags(keyword, category, random, page, count);
+    Map<String, String> paramMap = _getParamMap();
+    videosResponse = server.getVideoByParam(paramMap);
     videosResponse.then((value) {setState(() {
       videosList.addAll(value);
     });});
@@ -161,7 +160,8 @@ class _KeywordsDetailsPageState extends State<KeywordsDetailsPage> {
   }
 
   void _getVideos() {
-    videosResponse = server.getVideosByTags(keyword, category, random, page, count);
+    Map<String, String> paramMap = _getParamMap();
+    videosResponse = server.getVideoByParam(paramMap);
     videosResponse.then((value) {setState(() {
       videosList = value;
       value.forEach((e) {

@@ -31,38 +31,28 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
   RefreshController(initialRefresh: false);
 
   Future<Map<Channels, List<VideosResponse>>> response;
-  Map<Channels, List<VideosResponse>> map;
+  Map<Channels, List<VideosResponse>> map = new Map();
   List<Channels> list = new List<Channels>();
 
   List<Channels> allChannelsList = new List<Channels>();
   List<DropdownMenuItem> channelItems = List<DropdownMenuItem>();
 
   String category = CategoryId.id;
-  String sort = 'popular';
-  int channelCount = 10;
-  int videoCount = 3;
+  String sort = 'viewCount,desc';
 
   void _onRefresh() {
 
     map = new Map<Channels, List<VideosResponse>>();
     list = new List<Channels>();
-    response = server.getVideosByChannels(category, 1, channelCount, sort, 1, videoCount);
 
-    response.then((value) => setState(() {
-      map = value;
-      list = map.keys.toList();
-    }));
+    _getVideos();
 
     _refreshController.refreshCompleted();
   }
 
   void _onLoading() {
 
-    response = server.getVideosByChannels(category, 1, channelCount, sort, 1, videoCount);
-    response.then((value) => setState(() {
-      map.addAll(value);
-      list = map.keys.toList();
-    }));
+    _getVideos();
 
     if(mounted)
       setState(() {});
@@ -92,7 +82,6 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
     Channels channels = list[listNum];
     List<VideosResponse> videosResponse = map[list[listNum]];
 
-    /// 3개인것 검증은 server.dart에서
     return Column(
       children: [
         GestureDetector(
@@ -111,37 +100,54 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
     );
   }
 
-  void _getVideos() {
-    response = server.getVideosByChannels(category, 1, channelCount, sort, 1, videoCount);
-    response.then((value) {setState(() {
-      map = value;
-      list = map.keys.toList();
-    });});
+  void _getVideos() async {
+    Map<String, String> paramChannelMap = {
+      'categoryId' : category,
+      'random' : 'true',
+      'size' : '10'
+    };
+
+    Map<String, String> paramVideoMap = {
+      'channelId' : '',
+      'sort' : sort,
+      'size' : '3',
+      'page' : '0'
+    };
+
+    List<Channels> channelList = await server.getChannelsByParam(paramChannelMap);
+    for (Channels c in channelList) {
+      paramVideoMap['channelId'] = c.channelId;
+      Future<List<VideosResponse>> videos = server.getVideoByParam(paramVideoMap);
+
+      videos.then((value) => {
+        if (value.length >= 3) {
+          map[c] = value
+        }
+      }).then((value) {setState(() {
+        list = map.keys.toList();
+      });});
+    }
   }
 
   void _getChannelsAll() async {
-    int subscribers = 0;
-    String sort = 'popular';
-    bool rand = false;
-    int page = 1;
-    int count = 200;
-    int responseListLength = 0;
+    Map<String, String> paramMap = {
+      'categoryId' : category,
+      'sort' : 'subscribers,desc',
+      'size' : '500',
+      'page' : '0'
+    };
 
-    do {
-      List<Channels> buffer = await server.getChannelsBySubscribers(subscribers, true, category, sort, rand, page, count);
-      allChannelsList.addAll(buffer);
-      responseListLength = buffer.length;
-      page++;
-    } while (responseListLength != 0);
+    Future<List<Channels>> buffer = server.getChannelsByParam(paramMap);
 
-    setState(() {
+    buffer.then((value) {setState(() {
+      allChannelsList.addAll(value);
       for(Channels channel in allChannelsList) {
         channelItems.add(new DropdownMenuItem(
           value: channel,
           child: channelCardSmallNonIcon(channel, MediaQuery.of(context).size.width),
         ));
       }
-    });
+    });});
 
   }
 

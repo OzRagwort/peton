@@ -1,6 +1,4 @@
 
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peton/Server.dart';
@@ -35,19 +33,21 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
   bool showRecommend;
   bool showPopular;
 
-  String sort = 'desc';
-  String category = CategoryId.id;
-  int page = 1;
-  int count = 10;
+  int page = 0;
+  Map<String, String> paramMap = {
+    'categoryId' : CategoryId.id,
+    'sort' : 'videoPublishedDate,desc',
+    'size' : '10',
+    'page' : '0'
+  };
 
   void _onRefresh() {
 
     latelyVideosList = new List<VideosResponse>();
-    int page = 1;
-    int count = 10;
-    latelyVideosResponse = server.getVideosBySort(sort, category, page, count);
+    page = 0;
+    paramMap['page'] = page.toString();
 
-    latelyVideosResponse.then((value) => setState(() {latelyVideosList.addAll(value);}));
+    _getLatelyVideos();
 
     _refreshController.refreshCompleted();
   }
@@ -55,8 +55,9 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
   void _onLoading() {
 
     page++;
-    latelyVideosResponse = server.getVideosBySort(sort, category, page, count);
-    latelyVideosResponse.then((value) => latelyVideosList.addAll(value));
+    paramMap['page'] = page.toString();
+
+    _getLatelyVideos();
 
     if(mounted)
       setState(() {});
@@ -77,16 +78,20 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
   }
 
   void _getLatelyVideos() {
-    latelyVideosResponse = server.getVideosBySort(sort, category, page, count);
-
-    latelyVideosResponse.then((latelyValue) {setState(() {
-      latelyVideosList = latelyValue;
-    });});
+    latelyVideosResponse = server.getVideoByParam(paramMap);
+    latelyVideosResponse.then((value) => setState(() {latelyVideosList.addAll(value);}));
   }
 
   void _getRecommendVideos() {
-    recommendVideosResponse = server.getVideosByPublishedDate(72, category, 'desc-score', false, Random().nextInt(5) + 1, 15);
+    Map<String, String> paramMap = {
+      'categoryId' : CategoryId.id,
+      'score' : '80',
+      'sort' : 'videoPublishedDate,desc',
+      'size' : '15',
+      'page' : '0'
+    };
 
+    recommendVideosResponse = server.getVideoByParam(paramMap);
     recommendVideosResponse.then((recommendValue) {setState(() {
       recommendVideosList = recommendValue;
     });});

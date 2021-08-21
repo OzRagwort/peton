@@ -29,7 +29,7 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
   final dataKey = new GlobalKey();
 
   Channels channel;
-  String sort = 'desc'; // 최신순 desc:최신, asc:오래된순, popular:인기순
+  String sort = 'videoPublishedDate,desc'; // 최신순 desc:최신, asc:오래된순, popular:인기순
   int count = 10;
 
   List<String> _sortList = ['인기 동영상', '최신 순', '오래된 순'];
@@ -45,7 +45,14 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
   void _onRefresh() async{
 
     videosList = new List<VideosResponse>();
-    videosResponse = server.getByChannelIdSort(channel.channelId, sort, false, 1, count);
+
+    Map<String, String> paramMap = {
+      'channelId' : channel.channelId,
+      'sort' : sort,
+      'size' : count.toString(),
+      'page' : '0'
+    };
+    videosResponse = server.getVideoByParam(paramMap);
 
     videosResponse.then((value) => setState(() {videosList = value;}));
 
@@ -54,9 +61,15 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
 
   void _onLoading() async{
 
-    int index = (videosList.length ~/ 10) + 1;
+    int index = videosList.length ~/ 10;
 
-    videosResponse = server.getByChannelIdSort(channel.channelId, sort, false, index, count);
+    Map<String, String> paramMap = {
+      'channelId' : channel.channelId,
+      'sort' : sort,
+      'size' : count.toString(),
+      'page' : index.toString()
+    };
+    videosResponse = server.getVideoByParam(paramMap);
     videosResponse.then((value) => videosList.addAll(value));
 
     if(mounted)
@@ -67,15 +80,23 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
 
   void _sortRefresh(String index) async{
     if (index == _sortList[0]) {
-      sort = 'popular';
+      sort = 'viewCount,desc';
     } else if (index == _sortList[1]) {
-      sort = 'desc';
+      sort = 'videoPublishedDate,desc';
     } else {
-      sort = 'asc';
+      sort = 'videoPublishedDate,asc';
     }
 
     videosList = new List<VideosResponse>();
-    videosResponse = server.getByChannelIdSort(channel.channelId, sort, false, 1, count);
+
+    Map<String, String> paramMap = {
+      'channelId' : channel.channelId,
+      'sort' : sort,
+      'size' : count.toString(),
+      'page' : '0'
+    };
+    videosResponse = server.getVideoByParam(paramMap);
+
     videosResponse.then((value) {setState(() {
       videosList = value;
     });});
@@ -131,7 +152,14 @@ class _ChannelInfoPageState extends State<ChannelInfoPage> {
   }
   
   void _getVideos() {
-    videosResponse = server.getByChannelIdSort(channel.channelId, sort, false, 1, count);
+    Map<String, String> paramMap = {
+      'channelId' : channel.channelId,
+      'sort' : sort,
+      'size' : count.toString(),
+      'page' : '0'
+    };
+    videosResponse = server.getVideoByParam(paramMap);
+
     videosResponse.then((value) {setState(() {
       videosList = value;
     });});

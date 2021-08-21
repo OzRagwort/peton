@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:peton/model/LibraryVideos.dart';
 import 'package:sqflite/sqflite.dart';
 
-final int version = 1;
+final int version = 2;
 final String TableNameOrig = 'library_videos_v';
 final String TableName = TableNameOrig + version.toString();
 
@@ -34,7 +34,7 @@ class LibraryVideosDb {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, 'peton_library_videos_db.db');
 
-    Map<int, String> versionColumn = {1:'channelId, channelName, channelThumbnail, videoId, videoName, videoThumbnail, videoPublishedDate, videoEmbeddable'};
+    Map<int, String> versionColumn = {1:'channelId, channelName, channelThumbnail, videoId, videoName, videoThumbnail, videoPublishedDate'};
     var createTableQueryNew = '''
           CREATE TABLE $TableName(
             channelId TEXT, 
@@ -43,8 +43,7 @@ class LibraryVideosDb {
             videoId TEXT, 
             videoName TEXT, 
             videoThumbnail TEXT, 
-            videoPublishedDate TEXT, 
-            videoEmbeddable INTEGER
+            videoPublishedDate TEXT
           )
         ''';
 
@@ -97,7 +96,6 @@ class LibraryVideosDb {
       videoName : res.first['videoName'],
       videoThumbnail : res.first['videoThumbnail'],
       videoPublishedDate : res.first['videoPublishedDate'],
-      videoEmbeddable : res.first['videoEmbeddable']==1?true:false,
     ) : null;
   }
 
@@ -115,7 +113,6 @@ class LibraryVideosDb {
         videoName : maps[index]['videoName'],
         videoThumbnail : maps[index]['videoThumbnail'],
         videoPublishedDate : maps[index]['videoPublishedDate'],
-        videoEmbeddable : maps[index]['videoEmbeddable']==1?true:false,
       );
     });
   }

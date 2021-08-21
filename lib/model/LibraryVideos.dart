@@ -12,9 +12,8 @@ class LibraryVideos {
   final String videoName;
   final String videoThumbnail;
   final String videoPublishedDate;
-  final bool videoEmbeddable;
 
-  LibraryVideos({this.channelId, this.channelName, this.channelThumbnail, this.videoId, this.videoName, this.videoThumbnail, this.videoPublishedDate, this.videoEmbeddable});
+  LibraryVideos({this.channelId, this.channelName, this.channelThumbnail, this.videoId, this.videoName, this.videoThumbnail, this.videoPublishedDate});
 
   Map<String, dynamic> toMap() {
     return {
@@ -25,14 +24,12 @@ class LibraryVideos {
       'videoName' : videoName,
       'videoThumbnail' : videoThumbnail,
       'videoPublishedDate' : videoPublishedDate,
-      'videoEmbeddable' : videoEmbeddable?1:0,
     };
   }
 
   VideosResponse toVideosResponse() {
     return VideosResponse(
       idx: null,
-      categoriesIdx: null,
       channels: Channels(
         idx: null,
         channelId: channelId,
@@ -47,11 +44,6 @@ class LibraryVideos {
       videoDescription: null,
       videoPublishedDate: videoPublishedDate,
       videoDuration: null,
-      videoEmbeddable: videoEmbeddable,
-      viewCount: null,
-      likeCount: null,
-      dislikeCount: null,
-      commentCount: null,
       tags: null,
     );
   }
@@ -65,7 +57,6 @@ class LibraryVideos {
       videoName: videosResponse.videoName,
       videoThumbnail: videosResponse.videoThumbnail,
       videoPublishedDate: videosResponse.videoPublishedDate,
-      videoEmbeddable: videosResponse.videoEmbeddable,
     );
   }
 

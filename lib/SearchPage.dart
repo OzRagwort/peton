@@ -22,13 +22,20 @@ class _SearchPageState extends State<SearchPage> {
   List<VideosResponse> listVideos = new List<VideosResponse>();
 
   String keyword = '';
+  int size = 20;
   String category = CategoryId.id;
 
   void _onLoading() async{
 
-    int index = (listVideos.length ~/ 10) + 1;
+    int index = listVideos.length ~/ size;
 
-    videosResponse = server.getSearchVideos(keyword, category, index, 10);
+    Map<String, String> paramMap = {
+      'categoryId' : category,
+      'search' : keyword,
+      'size' : size.toString(),
+      'page' : index.toString()
+    };
+    videosResponse = server.getVideoByParam(paramMap);
     videosResponse.then((value) => listVideos.addAll(value));
 
     if(mounted)
@@ -50,10 +57,14 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _getSearchVideos() {
-    setState(() {
-      listVideos = new List<VideosResponse>();
-    });
-    videosResponse = server.getSearchVideos(keyword, category, 1, 10);
+    listVideos = new List<VideosResponse>();
+    Map<String, String> paramMap = {
+      'categoryId' : category,
+      'search' : keyword,
+      'size' : size.toString(),
+      'page' : '0'
+    };
+    videosResponse = server.getVideoByParam(paramMap);
     videosResponse.then((value) => setState(() => listVideos = value));
   }
 
