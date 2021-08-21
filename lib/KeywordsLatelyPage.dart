@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:peton/Server.dart';
 import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/enums/CategoryId.dart';
-import 'package:peton/enums/MyIcons.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/widgets/Cards.dart';
-import 'package:peton/widgets/CarouselWithNonIndicatorVideos.dart';
 import 'package:peton/widgets/CheckNetwork.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -25,13 +23,7 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
   RefreshController(initialRefresh: false);
 
   Future<List<VideosResponse>> latelyVideosResponse;
-  Future<List<VideosResponse>> recommendVideosResponse;
   List<VideosResponse> latelyVideosList = new List<VideosResponse>();
-  List<VideosResponse> popularVideosList = new List<VideosResponse>();
-  List<VideosResponse> recommendVideosList = new List<VideosResponse>();
-
-  bool showRecommend;
-  bool showPopular;
 
   int page = 0;
   Map<String, String> paramMap = {
@@ -82,120 +74,10 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
     latelyVideosResponse.then((value) => setState(() {latelyVideosList.addAll(value);}));
   }
 
-  void _getRecommendVideos() {
-    Map<String, String> paramMap = {
-      'categoryId' : CategoryId.id,
-      'score' : '80',
-      'sort' : 'videoPublishedDate,desc',
-      'size' : '15',
-      'page' : '0'
-    };
-
-    recommendVideosResponse = server.getVideoByParam(paramMap);
-    recommendVideosResponse.then((recommendValue) {setState(() {
-      recommendVideosList = recommendValue;
-    });});
-  }
-
-  Widget _carouselVideos() {
-    if (showRecommend) {
-      return CarouselWithNonIndicatorVideos(videos: recommendVideosList,);
-    } else if (showPopular) {
-      return CarouselWithNonIndicatorVideos(videos: popularVideosList,);
-    } else {
-      return Text('');
-    }
-  }
-
-  Widget _specialTaps(double height) {
-    return Column(
-      children: [
-        Container(
-          child: AnimatedContainer(
-            height: (showRecommend || showPopular) ? 0.0 : 60,
-            duration: Duration(milliseconds: 100),
-            curve: Curves.fastOutSlowIn,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: RaisedButton(
-                      onPressed: () {setState(() {
-                        showPopular = false;
-                        showRecommend = true;
-                      });},
-                      color: Color(Theme.of(context).scaffoldBackgroundColor.value),
-                      child: Text(
-                        '오늘의 추천 영상',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(5),
-                    child: RaisedButton(
-                      onPressed: () {setState(() {
-                        showRecommend = false;
-                        showPopular = true;
-                      });},
-                      color: Color(Theme.of(context).scaffoldBackgroundColor.value),
-                      child: Text(
-                        '실시간 인기 영상',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        AnimatedContainer(
-          height: (showRecommend || showPopular) ? 60 : 0.0,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.fastOutSlowIn,
-          child: GestureDetector(
-            onTap: () {setState(() {
-              showPopular = false;
-              showRecommend = false;
-            });},
-            child: Container(
-              padding: const EdgeInsets.only(top: 5, bottom: 0, right: 20, left: 20),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      showRecommend ? '오늘의 추천 영상' : showPopular ? '실시간 인기 영상' : '',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-                  MyIcons.sortUpIcon,
-                ],
-              ),
-            ),
-          ),
-        ),
-        AnimatedContainer(
-          height: (showRecommend || showPopular) ? height / 3 : 0.0,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.fastOutSlowIn,
-          child: _carouselVideos(),
-        ),
-      ],
-    );
-  }
-
   @override
   void initState() {
     super.initState();
     _getLatelyVideos();
-    _getRecommendVideos();
-    popularVideosList = widget.popularVideosList;
-    showRecommend = false;
-    showPopular = false;
   }
 
   @override
@@ -242,13 +124,9 @@ class _KeywordsLatelyPageState extends State<KeywordsLatelyPage> {
           onRefresh: _onRefresh,
           onLoading: _onLoading,
           child: ListView.builder(
-              itemCount: latelyVideosList.length + 1,
+              itemCount: latelyVideosList.length,
               itemBuilder: (context, index) {
-                if (index == 0) {
-                  return _specialTaps(height);
-                } else {
-                  return _videosCard(index-1, width);
-                }
+                return _videosCard(index, width);
               }
           ),
         ),
