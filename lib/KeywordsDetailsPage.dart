@@ -30,7 +30,10 @@ class _KeywordsDetailsPageState extends State<KeywordsDetailsPage> {
   Map<String, Channels> channelsMap = new Map<String, Channels>();
   List<String> channelsKey = new List<String>();
 
+  bool pullUp = true;
+
   String keyword;
+  int size = 20;
   String category = CategoryId.id;
 
   Map<String, String> _getParamMap() {
@@ -38,7 +41,7 @@ class _KeywordsDetailsPageState extends State<KeywordsDetailsPage> {
       'categoryId' : category,
       'tags' : keyword,
       'random' : 'true',
-      'size' : '10'
+      'size' : size.toString()
     };
 
     return paramMap;
@@ -59,6 +62,9 @@ class _KeywordsDetailsPageState extends State<KeywordsDetailsPage> {
     Map<String, String> paramMap = _getParamMap();
     videosResponse = server.getVideoByParam(paramMap);
     videosResponse.then((value) {setState(() {
+      if (value.length < size) {
+        pullUp = false;
+      }
       videosList.addAll(value);
     });});
 
@@ -163,6 +169,9 @@ class _KeywordsDetailsPageState extends State<KeywordsDetailsPage> {
     Map<String, String> paramMap = _getParamMap();
     videosResponse = server.getVideoByParam(paramMap);
     videosResponse.then((value) {setState(() {
+      if (value.length < size) {
+        pullUp = false;
+      }
       videosList = value;
       value.forEach((e) {
         if (!channelsKey.contains(e.channels.channelId)) {
@@ -192,7 +201,7 @@ class _KeywordsDetailsPageState extends State<KeywordsDetailsPage> {
       body: CheckNetwork(
         body: SmartRefresher(
           enablePullDown: true,
-          enablePullUp: true,
+          enablePullUp: pullUp ? true : false,
           header: MaterialClassicHeader(),
           footer: CustomFooter(
             loadStyle: LoadStyle.ShowWhenLoading,
