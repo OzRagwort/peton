@@ -24,22 +24,10 @@ class _SearchPageState extends State<SearchPage> {
   String keyword = '';
   int size = 20;
   String category = CategoryId.id;
+  bool pullUp = true;
 
   void _onLoading() async{
-
-    int index = listVideos.length ~/ size;
-
-    Map<String, String> paramMap = {
-      'categoryId' : category,
-      'search' : keyword,
-      'size' : size.toString(),
-      'page' : index.toString()
-    };
-    videosResponse = server.getVideoByParam(paramMap);
-    videosResponse.then((value) => listVideos.addAll(value));
-
-    if(mounted)
-      setState(() {});
+    _getSearchVideos();
 
     _refreshController.loadComplete();
   }
@@ -57,15 +45,22 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _getSearchVideos() {
+    int page = listVideos.length ~/ size;
+
     listVideos = new List<VideosResponse>();
     Map<String, String> paramMap = {
       'categoryId' : category,
       'search' : keyword,
       'size' : size.toString(),
-      'page' : '0'
+      'page' : page.toString()
     };
     videosResponse = server.getVideoByParam(paramMap);
-    videosResponse.then((value) => setState(() => listVideos = value));
+    videosResponse.then((value) {setState(() {
+      if (value.length < size) {
+        pullUp = false;
+      }
+      listVideos.addAll(value);
+    });});
   }
 
   @override
@@ -106,7 +101,7 @@ class _SearchPageState extends State<SearchPage> {
       body: CheckNetwork(
         body: SmartRefresher(
           enablePullDown: false,
-          enablePullUp: true,
+          enablePullUp: pullUp ? true : false,
           header: MaterialClassicHeader(),
           footer: CustomFooter(
             loadStyle: LoadStyle.ShowWhenLoading,
