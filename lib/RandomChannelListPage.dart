@@ -3,11 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peton/ChannelInfoPage.dart';
 import 'package:peton/Server.dart';
+import 'package:peton/UserRequestChannelPage.dart';
 import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/enums/CategoryId.dart';
 import 'package:peton/model/Channels.dart';
 import 'package:peton/model/VideosResponse.dart';
 import 'package:peton/widgets/Cards.dart';
+import 'package:peton/widgets/Line.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:search_choices/search_choices.dart';
 
@@ -96,6 +98,29 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
         _videosCard(videosResponse[0], width - 40),
         _videosCard(videosResponse[1], width - 40),
         _videosCard(videosResponse[2], width - 40),
+      ],
+    );
+  }
+
+  /// 원하는 채널이 없을 때 요청
+  Widget _requestChannelsPage() {
+    return Column(
+      children: [
+        divline,
+        Container(
+          height: 24,
+          alignment: Alignment.center,
+          child: RaisedButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => UserRequestChannelPage()),
+            ),
+            color: Colors.transparent,
+            elevation: 0,
+            child: Text("찾는 채널이 없을 때 알려주기", style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodyText1.color),),
+          ),
+        ),
+        divline
       ],
     );
   }
@@ -211,12 +236,13 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
         onLoading: _onLoading,
         child: ListView.builder(
             controller: _scrollController,
-            itemCount: map.length + 1,
+            itemCount: map.length + 2,
             itemBuilder: (context, index) {
               if (index == 0) {
                 return Container(
-                  padding: const EdgeInsets.all(10),
-                  height: 64,
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                  alignment: Alignment.center,
+                  height: 54,
                   child: RaisedButton(
                     onPressed: () {
 
@@ -275,9 +301,10 @@ class _RandomChannelListPageState extends State<RandomChannelListPage> {
                     ),
                   ),
                 );
-
+              } else if (index == 1) {
+                return _requestChannelsPage();
               } else {
-                return _channelsCard(index - 1, MediaQuery.of(context).size.width);
+                return _channelsCard(index - 2, MediaQuery.of(context).size.width);
               }
             }
         ),

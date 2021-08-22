@@ -127,5 +127,27 @@ class Server {
     }
   }
 
+  /// 사용자가 원하는 채널 제안
+  Future<bool> postRequestChannel(String content) async {
+    Response response;
+    Dio dio = new Dio();
+
+    Map<String, String> map = {
+      'appName' : 'AnimalBom',
+      'content' : content
+    };
+
+    response = await dio.post(
+        ServerInfo.serverURL + '/admin/channels/requests',
+        data: map
+    );
+
+    if (response.statusCode == 200) {
+      return response.data['response'];
+    } else {
+      throw Exception('Faliled to request');
+    }
+  }
+
 }
 
