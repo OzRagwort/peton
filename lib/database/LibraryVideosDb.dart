@@ -34,7 +34,10 @@ class LibraryVideosDb {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, 'peton_library_videos_db.db');
 
-    Map<int, String> versionColumn = {1:'channelId, channelName, channelThumbnail, videoId, videoName, videoThumbnail, videoPublishedDate'};
+    Map<int, String> versionColumn = {
+      1:'channelId, channelName, channelThumbnail, videoId, videoName, videoThumbnail, videoPublishedDate, videoEmbeddable',
+      2:'channelId, channelName, channelThumbnail, videoId, videoName, videoThumbnail, videoPublishedDate'
+    };
     var createTableQueryNew = '''
           CREATE TABLE $TableName(
             channelId TEXT, 
@@ -56,15 +59,16 @@ class LibraryVideosDb {
         onUpgrade: (db, oldVersion, newVersion) async {
           String TableNameOld = TableNameOrig + oldVersion.toString();
 
+          await db.execute(createTableQueryNew);
+
           var insertTableQuery = '''
             INSERT INTO $TableName 
             (${versionColumn[newVersion]}) 
-              select ${versionColumn[oldVersion]}
+              select ${versionColumn[newVersion]}
               from $TableNameOld
           ''';
           var deleteTableQuery = "DROP TABLE IF EXISTS $TableNameOld";
 
-          await db.execute(createTableQueryNew);
           await db.execute(insertTableQuery);
           await db.execute(deleteTableQuery);
         }
