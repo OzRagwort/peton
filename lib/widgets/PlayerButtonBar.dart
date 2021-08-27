@@ -1,7 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:peton/AdMobManager.dart';
 import 'package:peton/VideoplayerPage.dart';
 import 'package:peton/enums/MyIcons.dart';
 import 'package:peton/function/LaunchYoutube.dart';
@@ -18,12 +17,8 @@ class PlayerButtonBar extends StatelessWidget {
   VideosResponse videosResponse;
   String nextVideo;
 
-  AdMobManager adMobManager = new AdMobManager();
-
   @override
   Widget build(BuildContext context) {
-    adMobManager.initInterstitial();
-
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15),
       child: Row(

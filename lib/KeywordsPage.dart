@@ -1,7 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:peton/AdMobManager.dart';
 import 'package:peton/KeywordsLatelyPage.dart';
 import 'package:peton/KeywordsPopularChannelsPage.dart';
 import 'package:peton/KeywordsRecommendPage.dart';
@@ -26,8 +25,6 @@ class KeywordsPage extends StatefulWidget {
 }
 
 class _KeywordsPageState extends State<KeywordsPage> {
-
-  AdMobManager adMobManager = new AdMobManager();
 
   ScrollController _scrollController;
 
@@ -105,8 +102,6 @@ class _KeywordsPageState extends State<KeywordsPage> {
     _recommend();
     _popularChannels();
     _smallChannels();
-
-    adMobManager.initInterstitial();
   }
 
   @override
@@ -163,7 +158,7 @@ class _KeywordsPageState extends State<KeywordsPage> {
                   divline,
 
                   /// 그리드뷰
-                  KeywordsGridView(width, context, adMobManager),
+                  KeywordsGridView(width, context),
                   divline,
 
                   /// 추천 영상
