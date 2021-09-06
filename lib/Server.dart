@@ -15,10 +15,10 @@ class Server {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v2/videos?videoId=' + videoId);
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v2/videos/' + videoId);
 
     if (response.statusCode == 200) {
-      return VideosResponse.fromJson(response.data['response'][0]);
+      return VideosResponse.fromJson(response.data['response']);
     } else {
       throw Exception('Faliled to load getData');
     }
@@ -30,10 +30,10 @@ class Server {
     Response response;
     Dio dio = new Dio();
 
-    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v2/channels?channelId=' + channelId);
+    response = await dio.get(ServerInfo.serverURL + '/api/moaon/v2/channels/' + channelId);
 
     if (response.statusCode == 200) {
-      return Channels.fromJson(response.data['response'][0]);
+      return Channels.fromJson(response.data['response']);
     } else {
       throw Exception('Faliled to load channels data');
     }
